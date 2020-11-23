@@ -16,6 +16,8 @@ Loading libraries:
 
 ```r
 library(xfun)
+library(dplyr)
+library(scales)
 ```
 
 # Intro {-}
@@ -120,6 +122,89 @@ The complete list includes these proteins: `HSF1`, `HSF2`, `HSF4`, `HSF5`, `HSFX
 Since this cluster is closer to the second one, it point to us the fact that the included non-DbTFs have molecular functions that are more similar to DbTFs compared with the far off first supercluster that includes the *pure* (so-to-speak) DbTFs.
 :::
 
+## GREEKC curated DbTF list {-}
+
+Members of the [GREEKC](https://www.greekc.org/) consortium curated a list of DbTFs.
+Comparing this list with the proteins that have the GO term `DNA binding` in the TF checkpoint dataset we have the following contingency table ($1$ corresponds to a DbTF label, $0$ to a non-DbTF label):
+
+```r
+dbtf_stats = readRDS(file = 'data/dbtfs_go_greekc_stats.rds')
+knitr::kable(dbtf_stats)
+```
+
+
+
+|GO-DbTF |GREEKC-DbTF |    n|
+|:-------|:-----------|----:|
+|0       |0           | 2751|
+|1       |0           |  512|
+|0       |1           |   86|
+|1       |1           | 1356|
+
+We calculate the percent agreement and Cohen's $\kappa$:
+
+```r
+n_total = dbtf_stats$n %>% sum()
+data_00 = dbtf_stats %>% filter(`GO-DbTF` == 0, `GREEKC-DbTF` == 0) %>% pull(n)
+data_10 = dbtf_stats %>% filter(`GO-DbTF` == 1, `GREEKC-DbTF` == 0) %>% pull(n)
+data_01 = dbtf_stats %>% filter(`GO-DbTF` == 0, `GREEKC-DbTF` == 1) %>% pull(n)
+data_11 = dbtf_stats %>% filter(`GO-DbTF` == 1, `GREEKC-DbTF` == 1) %>% pull(n)
+
+# calculate percent agreement
+percent = (data_00 + data_11)/n_total
+scales::percent(percent)
+```
+
+```
+[1] "87%"
+```
+
+```r
+# Cohen's kappa
+p0 = (data_00 + data_01)/n_total * (data_00 + data_10)/n_total
+p1 = (data_11 + data_01)/n_total * (data_11 + data_10)/n_total
+p_rand = p0 + p1
+cohen_k = (percent - p_rand)/(1 - p_rand)
+scales::percent(cohen_k)
+```
+
+```
+[1] "72%"
+```
+
+:::{.green-box}
+There is a **substantial level of agreement** between the GO DNA-binding annotation and the DbTF GREEKC list.
+:::
+
+Using the UMAP coordinates with $12$ neighbors, we color the data points according to the GREEKC annotated DbTFs labels:
+
+```r
+knitr::include_graphics(path = 'img/tf_umap_12n_greekc.png')
+```
+
+<div class="figure">
+<img src="img/tf_umap_12n_greekc.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding." width="1050" />
+<p class="caption">(\#fig:umap-12n-greekc)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding.</p>
+</div>
+
+We also color the same points according to the values presented in the contingency table above (including thus all $4$ cases of proteins as annotated by the GREEKC and the DNA-binding GO term):
+
+```r
+knitr::include_graphics(path = 'img/tf_umap_12n_go_greekc.png')
+```
+
+<div class="figure">
+<img src="img/tf_umap_12n_go_greekc.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs." width="1050" />
+<p class="caption">(\#fig:umap-12n-go-greekc)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs.</p>
+</div>
+
+:::{.green-box}
+- There are a lot more DbTFs now residing inside the non-DbTF supercluster (top right)
+- The bottom left supercluster with no DbTFs has become a bit more distinguished, i.e. almost all it's points are non-DbTFs according to the GREEKC list information.
+- Maybe the curated list better reflects the clustered data than the DNA-binding GO term thus?
+:::
+
+
 ## Tuning minimum distance {-}
 
 Choosing $15$ as a base value for the number of neighbors, we will tune the `min_dist` UMAP parameter which is the effective minimum distance between the embedded points (the default value presented in the previous figures was $0.01$).
@@ -184,13 +269,19 @@ Locale:
   LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 Package version:
-  base64enc_0.1.3 bookdown_0.21   compiler_3.6.3  digest_0.6.27  
-  evaluate_0.14   glue_1.4.2      graphics_3.6.3  grDevices_3.6.3
-  highr_0.8       htmltools_0.5.0 jsonlite_1.7.1  knitr_1.30     
-  magrittr_1.5    markdown_1.1    methods_3.6.3   mime_0.9       
-  png_0.1-7       rlang_0.4.8     rmarkdown_2.5   stats_3.6.3    
-  stringi_1.5.3   stringr_1.4.0   tinytex_0.26    tools_3.6.3    
-  utils_3.6.3     xfun_0.18       yaml_2.2.1     
+  assertthat_0.2.1   base64enc_0.1.3    bookdown_0.21      cli_2.1.0         
+  colorspace_1.4-1   compiler_3.6.3     crayon_1.3.4       digest_0.6.27     
+  dplyr_1.0.2        ellipsis_0.3.1     evaluate_0.14      fansi_0.4.1       
+  farver_2.0.3       generics_0.0.2     glue_1.4.2         graphics_3.6.3    
+  grDevices_3.6.3    highr_0.8          htmltools_0.5.0    jsonlite_1.7.1    
+  knitr_1.30         labeling_0.4.2     lifecycle_0.2.0    magrittr_1.5      
+  markdown_1.1       methods_3.6.3      mime_0.9           munsell_0.5.0     
+  pillar_1.4.6       pkgconfig_2.0.3    png_0.1-7          purrr_0.3.4       
+  R6_2.4.1           RColorBrewer_1.1.2 rlang_0.4.8        rmarkdown_2.5     
+  scales_1.1.1       stats_3.6.3        stringi_1.5.3      stringr_1.4.0     
+  tibble_3.0.4       tidyselect_1.1.0   tinytex_0.26       tools_3.6.3       
+  utf8_1.1.4         utils_3.6.3        vctrs_0.3.4        viridisLite_0.3.0 
+  xfun_0.18          yaml_2.2.1        
 ```
 
 # References {-}

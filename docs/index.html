@@ -876,6 +876,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path=""><a href="#analysis"><i class="fa fa-check"></i>Analysis</a>
 <ul>
 <li class="chapter" data-level="" data-path=""><a href="#tuning-the-number-of-neighbors"><i class="fa fa-check"></i>Tuning the number of neighbors</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#greekc-curated-dbtf-list"><i class="fa fa-check"></i>GREEKC curated DbTF list</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#tuning-minimum-distance"><i class="fa fa-check"></i>Tuning minimum distance</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#r-session-info"><i class="fa fa-check"></i>R session info</a></li>
@@ -908,7 +909,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="input" class="section level1 unnumbered" number="">
 <h1>Input</h1>
 <p>Loading libraries:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(xfun)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(xfun)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(scales)</span></code></pre></div>
 </div>
 <div id="intro" class="section level1 unnumbered" number="">
 <h1>Intro</h1>
@@ -991,33 +994,115 @@ Since this cluster is closer to the second one, it point to us the fact that the
 </ol>
 </div>
 </div>
+<div id="greekc-curated-dbtf-list" class="section level2 unnumbered" number="">
+<h2>GREEKC curated DbTF list</h2>
+<p>Members of the <a href="https://www.greekc.org/">GREEKC</a> consortium curated a list of DbTFs.
+Comparing this list with the proteins that have the GO term <code>DNA binding</code> in the TF checkpoint dataset we have the following contingency table (<span class="math inline">\(1\)</span> corresponds to a DbTF label, <span class="math inline">\(0\)</span> to a non-DbTF label):</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>dbtf_stats =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;data/dbtfs_go_greekc_stats.rds&#39;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>knitr<span class="op">::</span><span class="kw">kable</span>(dbtf_stats)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">GO-DbTF</th>
+<th align="left">GREEKC-DbTF</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="right">2751</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="right">512</td>
+</tr>
+<tr class="odd">
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="right">86</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="right">1356</td>
+</tr>
+</tbody>
+</table>
+<p>We calculate the percent agreement and Cohen’s <span class="math inline">\(\kappa\)</span>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>n_total =<span class="st"> </span>dbtf_stats<span class="op">$</span>n <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sum</span>()</span>
+<span id="cb9-2"><a href="#cb9-2"></a>data_<span class="dv">00</span> =<span class="st"> </span>dbtf_stats <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">GO-DbTF</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="st">`</span><span class="dt">GREEKC-DbTF</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(n)</span>
+<span id="cb9-3"><a href="#cb9-3"></a>data_<span class="dv">10</span> =<span class="st"> </span>dbtf_stats <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">GO-DbTF</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">`</span><span class="dt">GREEKC-DbTF</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(n)</span>
+<span id="cb9-4"><a href="#cb9-4"></a>data_<span class="dv">01</span> =<span class="st"> </span>dbtf_stats <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">GO-DbTF</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="st">`</span><span class="dt">GREEKC-DbTF</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(n)</span>
+<span id="cb9-5"><a href="#cb9-5"></a>data_<span class="dv">11</span> =<span class="st"> </span>dbtf_stats <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(<span class="st">`</span><span class="dt">GO-DbTF</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">`</span><span class="dt">GREEKC-DbTF</span><span class="st">`</span> <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(n)</span>
+<span id="cb9-6"><a href="#cb9-6"></a></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co"># calculate percent agreement</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a>percent =<span class="st"> </span>(data_<span class="dv">00</span> <span class="op">+</span><span class="st"> </span>data_<span class="dv">11</span>)<span class="op">/</span>n_total</span>
+<span id="cb9-9"><a href="#cb9-9"></a>scales<span class="op">::</span><span class="kw">percent</span>(percent)</span></code></pre></div>
+<pre><code>[1] &quot;87%&quot;</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Cohen&#39;s kappa</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>p0 =<span class="st"> </span>(data_<span class="dv">00</span> <span class="op">+</span><span class="st"> </span>data_<span class="dv">01</span>)<span class="op">/</span>n_total <span class="op">*</span><span class="st"> </span>(data_<span class="dv">00</span> <span class="op">+</span><span class="st"> </span>data_<span class="dv">10</span>)<span class="op">/</span>n_total</span>
+<span id="cb11-3"><a href="#cb11-3"></a>p1 =<span class="st"> </span>(data_<span class="dv">11</span> <span class="op">+</span><span class="st"> </span>data_<span class="dv">01</span>)<span class="op">/</span>n_total <span class="op">*</span><span class="st"> </span>(data_<span class="dv">11</span> <span class="op">+</span><span class="st"> </span>data_<span class="dv">10</span>)<span class="op">/</span>n_total</span>
+<span id="cb11-4"><a href="#cb11-4"></a>p_rand =<span class="st"> </span>p0 <span class="op">+</span><span class="st"> </span>p1</span>
+<span id="cb11-5"><a href="#cb11-5"></a>cohen_k =<span class="st"> </span>(percent <span class="op">-</span><span class="st"> </span>p_rand)<span class="op">/</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_rand)</span>
+<span id="cb11-6"><a href="#cb11-6"></a>scales<span class="op">::</span><span class="kw">percent</span>(cohen_k)</span></code></pre></div>
+<pre><code>[1] &quot;72%&quot;</code></pre>
+<div class="green-box">
+<p>There is a <strong>substantial level of agreement</strong> between the GO DNA-binding annotation and the DbTF GREEKC list.</p>
+</div>
+<p>Using the UMAP coordinates with <span class="math inline">\(12\)</span> neighbors, we color the data points according to the GREEKC annotated DbTFs labels:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_12n_greekc.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:umap-12n-greekc"></span>
+<img src="img/tf_umap_12n_greekc.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding." width="1050" />
+<p class="caption">
+Figure 7: Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding.
+</p>
+</div>
+<p>We also color the same points according to the values presented in the contingency table above (including thus all <span class="math inline">\(4\)</span> cases of proteins as annotated by the GREEKC and the DNA-binding GO term):</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_12n_go_greekc.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:umap-12n-go-greekc"></span>
+<img src="img/tf_umap_12n_go_greekc.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs." width="1050" />
+<p class="caption">
+Figure 8: Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs.
+</p>
+</div>
+<div class="green-box">
+<ul>
+<li>There are a lot more DbTFs now residing inside the non-DbTF supercluster (top right)</li>
+<li>The bottom left supercluster with no DbTFs has become a bit more distinguished, i.e. almost all it’s points are non-DbTFs according to the GREEKC list information.</li>
+<li>Maybe the curated list better reflects the clustered data than the DNA-binding GO term thus?</li>
+</ul>
+</div>
+</div>
 <div id="tuning-minimum-distance" class="section level2 unnumbered" number="">
 <h2>Tuning minimum distance</h2>
 <p>Choosing <span class="math inline">\(15\)</span> as a base value for the number of neighbors, we will tune the <code>min_dist</code> UMAP parameter which is the effective minimum distance between the embedded points (the default value presented in the previous figures was <span class="math inline">\(0.01\)</span>).
 As the documentation says, smaller <code>min_dist</code> values will result in a more clustered/clumped embedding where nearby points on the manifold are drawn closer together, while larger values will result on a more even dispersal of points.
 The idea here is to keep the separation of the <span class="math inline">\(3\)</span> superclusters as much as possible, while <em>spreading out</em> the embedded points.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.05.png&#39;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.1.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.05.png&#39;</span>)</span>
+<span id="cb15-2"><a href="#cb15-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.1.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-min-dist-1"></span>
 <img src="img/tf_umap_15n_mindist_0.05.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n_mindist_0.1.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" />
 <p class="caption">
-Figure 7: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
+Figure 9: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
 </p>
 </div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.3.png&#39;</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.5.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.3.png&#39;</span>)</span>
+<span id="cb16-2"><a href="#cb16-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.5.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-min-dist-2"></span>
 <img src="img/tf_umap_15n_mindist_0.3.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n_mindist_0.5.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" />
 <p class="caption">
-Figure 8: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
+Figure 10: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
 </p>
 </div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.7.png&#39;</span>)</span>
-<span id="cb10-2"><a href="#cb10-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_1.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.7.png&#39;</span>)</span>
+<span id="cb17-2"><a href="#cb17-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_1.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-min-dist-3"></span>
 <img src="img/tf_umap_15n_mindist_0.7.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n_mindist_1.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" />
 <p class="caption">
-Figure 9: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
+Figure 11: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
 </p>
 </div>
 <div class="green-box">
@@ -1027,7 +1112,7 @@ Figure 9: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and d
 </div>
 <div id="r-session-info" class="section level1 unnumbered" number="">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 20.04.1 LTS
@@ -1041,13 +1126,19 @@ Locale:
   LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 Package version:
-  base64enc_0.1.3 bookdown_0.21   compiler_3.6.3  digest_0.6.27  
-  evaluate_0.14   glue_1.4.2      graphics_3.6.3  grDevices_3.6.3
-  highr_0.8       htmltools_0.5.0 jsonlite_1.7.1  knitr_1.30     
-  magrittr_1.5    markdown_1.1    methods_3.6.3   mime_0.9       
-  png_0.1-7       rlang_0.4.8     rmarkdown_2.5   stats_3.6.3    
-  stringi_1.5.3   stringr_1.4.0   tinytex_0.26    tools_3.6.3    
-  utils_3.6.3     xfun_0.18       yaml_2.2.1     </code></pre>
+  assertthat_0.2.1   base64enc_0.1.3    bookdown_0.21      cli_2.1.0         
+  colorspace_1.4-1   compiler_3.6.3     crayon_1.3.4       digest_0.6.27     
+  dplyr_1.0.2        ellipsis_0.3.1     evaluate_0.14      fansi_0.4.1       
+  farver_2.0.3       generics_0.0.2     glue_1.4.2         graphics_3.6.3    
+  grDevices_3.6.3    highr_0.8          htmltools_0.5.0    jsonlite_1.7.1    
+  knitr_1.30         labeling_0.4.2     lifecycle_0.2.0    magrittr_1.5      
+  markdown_1.1       methods_3.6.3      mime_0.9           munsell_0.5.0     
+  pillar_1.4.6       pkgconfig_2.0.3    png_0.1-7          purrr_0.3.4       
+  R6_2.4.1           RColorBrewer_1.1.2 rlang_0.4.8        rmarkdown_2.5     
+  scales_1.1.1       stats_3.6.3        stringi_1.5.3      stringr_1.4.0     
+  tibble_3.0.4       tidyselect_1.1.0   tinytex_0.26       tools_3.6.3       
+  utf8_1.1.4         utils_3.6.3        vctrs_0.3.4        viridisLite_0.3.0 
+  xfun_0.18          yaml_2.2.1        </code></pre>
 </div>
 <div id="references" class="section level1 unnumbered" number="">
 <h1>References</h1>
