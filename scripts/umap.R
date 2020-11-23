@@ -10,8 +10,12 @@ gg_data = readr::read_delim(file = 'data/genes2go_result_tfcheckpoint2_data.txt'
 # remove column with gene names and make it a matrix
 gg_mat = gg_data %>% select(-one_of("Gene_Ids/GO_Terms")) %>% as.matrix()
 
+# for subsetting the data
 indexes = sample(x = 1:nrow(gg_mat), size = 100)
 
+#############################################
+# UMAP + DNA binding annotation (neighbors) #
+#############################################
 neighbors = c(2,4,6,8,10,12,14,15,17,20)
 for (n_neighbors in neighbors) {
   print(paste0('Number of neighbors: ', n_neighbors))
@@ -26,6 +30,7 @@ for (n_neighbors in neighbors) {
   }
 }
 
+# save plots
 for (n_neighbors in neighbors) {
   print(paste0('Number of neighbors: ', n_neighbors))
 
@@ -45,24 +50,33 @@ for (n_neighbors in neighbors) {
       guides(colour = guide_legend(title = "DNA Binding",
         label.theme = element_text(size = 12),
         override.aes = list(shape = 19, size = 12))) +
-      labs(title = paste0("TFchechpoint - UMAP (", n_neighbors," Neighbors)")) +
+      labs(title = paste0("TFcheckpoint - UMAP (", n_neighbors," Neighbors)")) +
       theme_classic() +
       theme(plot.title = element_text(hjust = 0.5))
     ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
   }
 }
 
-# find the protein that is a DNA binding TF, but is clustered with the non-binding ones
+###############################################################
+# AHDC1: a DNA-binding TF in the non-DNA binding supercluster #
+###############################################################
+
+# UMAP coordinates with 20 neighbors
+gg_umap = readRDS(file = 'data/tf_umap_20n.rds')
+
 gg = gg_umap %>%
   `colnames<-` (c("X", "Y")) %>%
   tibble::as_tibble() %>%
   tibble::add_column(is_dna_binding = gg_data %>% pull(`DNA binding`) %>% as.factor())
 
+# Y < 0 clearly defines the non-DNA binding supercluster
 pr_index = which(gg$Y < 0 & gg$is_dna_binding == 1)
 gg_data %>% slice(pr_index) %>% pull(`Gene_Ids/GO_Terms`)
 # [1] "AHDC1"
 
-# play with `min_dist`
+############################################
+# UMAP + DNA binding annotation (min_dist) #
+############################################
 min_dists = c(0.05, 0.1, 0.3, 0.5, 0.7, 1)
 n_neighbors = 15
 
@@ -79,6 +93,7 @@ for (min_dist in min_dists) {
   }
 }
 
+# save plots
 for (min_dist in min_dists) {
   print(paste0('15 neighbors and min_dist = ', min_dist))
 
