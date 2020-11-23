@@ -114,7 +114,7 @@ if (!file.exists(image_file)) {
 ############################################
 # UMAP + DNA binding annotation (min_dist) #
 ############################################
-min_dists = c(0.05, 0.1, 0.3, 0.5, 0.7, 1)
+min_dists = c(0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1)
 n_neighbors = 15
 
 for (min_dist in min_dists) {
