@@ -85,31 +85,6 @@ The complete list includes these proteins: `HSF1`, `HSF2`, `HSF4`, `HSF5`, `HSFX
 Since this cluster is closer to the second one, it point to us the fact that the included non-DbTFs have molecular functions that are more similar to DbTFs compared with the far off first supercluster that includes the *pure* (so-to-speak) DbTFs.
 :::
 
-## Tuning minimum distance {-}
-
-Choosing $15$ as a base value for the number of neighbors, we will tune the `min_dist` UMAP parameter which is the effective minimum distance between the embedded points (the default value presented in the previous figures was $0.01$).
-As the documentation says, smaller `min_dist` values will result in a more clustered/clumped embedding where nearby points on the manifold are drawn closer together, while larger values will result on a more even dispersal of points.
-The idea here is to keep the separation of the $3$ superclusters as much as possible, while *spreading out* the embedded points.
-
-```{r umap-min-dist-1, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding.'}
-knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.05.png')
-knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.1.png')
-```
-
-```{r umap-min-dist-2, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding.'}
-knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.3.png')
-knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.5.png')
-```
-
-```{r umap-min-dist-3, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding.'}
-knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.7.png')
-knitr::include_graphics(path = 'img/tf_umap_15n_mindist_1.png')
-```
-
-:::{.green-box}
-For `min_dist` $\gt 0.1$, the separation of the superclusters (specifically for the $2$ top-left ones) dissolves.
-:::
-
 ## GREEKC curated DbTF list {-}
 
 Members of the [GREEKC](https://www.greekc.org/) consortium curated a list of DbTFs.
@@ -157,6 +132,32 @@ knitr::include_graphics(path = 'img/tf_umap_12n_go_greekc.png')
 - There are a lot more DbTFs now residing inside the non-DbTF supercluster (top right)
 - The bottom left supercluster with no DbTFs has become a bit more distinguished, i.e. almost all it's points are non-DbTFs according to the GREEKC list information.
 - Maybe the curated list better reflects the clustered data than the DNA-binding GO term thus?
+:::
+
+
+## Tuning minimum distance {-}
+
+Choosing $15$ as a base value for the number of neighbors, we will tune the `min_dist` UMAP parameter which is the effective minimum distance between the embedded points (the default value presented in the previous figures was $0.01$).
+As the documentation says, smaller `min_dist` values will result in a more clustered/clumped embedding where nearby points on the manifold are drawn closer together, while larger values will result on a more even dispersal of points.
+The idea here is to keep the separation of the $3$ superclusters as much as possible, while *spreading out* the embedded points.
+
+```{r umap-min-dist-1, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.05.png')
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.1.png')
+```
+
+```{r umap-min-dist-2, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.3.png')
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.5.png')
+```
+
+```{r umap-min-dist-3, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.7.png')
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_1.png')
+```
+
+:::{.green-box}
+For `min_dist` $\gt 0.1$, the separation of the superclusters (specifically for the $2$ top-left ones) dissolves.
 :::
 
 # R session info {-}
