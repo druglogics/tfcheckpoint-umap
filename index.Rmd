@@ -31,7 +31,7 @@ These groups are indicated by varying size clusters in the 2D plane.
 # Analysis {-}
 
 :::{.blue-box}
-See script [umap.R](https://github.com/druglogics/tfcheckpoint-umap/scripts for more details about the presented analysis.
+See script [umap.R](https://github.com/druglogics/tfcheckpoint-umap/scripts) for more details about the presented analysis.
 :::
 
 # R session info {-}
