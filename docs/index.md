@@ -35,7 +35,7 @@ These groups are indicated by varying size clusters in the 2D plane.
 See script [umap.R](https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/umap.R) for more details about the presented analysis.
 :::
 
-## Tuning number of neighbors {-}
+## Tuning the number of neighbors {-}
 
 We first run the UMAP on the dataset in unsupervised mode to see how well it clusters the GO-enriched protein data.
 We used the default *euclidean* distance metric to find nearest neighbors for every data point (GO-annotated protein).
@@ -49,8 +49,8 @@ knitr::include_graphics(path = 'img/tf_umap_4n.png')
 ```
 
 <div class="figure">
-<img src="img/tf_umap_2n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_4n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
-<p class="caption">(\#fig:umap-neigh-1)Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 number of neighbors. DbTFs are colored atop the 2D embedding.</p>
+<img src="img/tf_umap_2n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_4n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
+<p class="caption">(\#fig:umap-neigh-1)Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 neighbors. DbTFs are colored atop the 2D embedding.</p>
 </div>
 
 
@@ -60,8 +60,8 @@ knitr::include_graphics(path = 'img/tf_umap_8n.png')
 ```
 
 <div class="figure">
-<img src="img/tf_umap_6n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_8n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
-<p class="caption">(\#fig:umap-neigh-2)Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 number of neighbors. DbTFs are colored atop the 2D embedding.</p>
+<img src="img/tf_umap_6n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_8n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
+<p class="caption">(\#fig:umap-neigh-2)Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 neighbors. DbTFs are colored atop the 2D embedding.</p>
 </div>
 
 
@@ -71,8 +71,8 @@ knitr::include_graphics(path = 'img/tf_umap_12n.png')
 ```
 
 <div class="figure">
-<img src="img/tf_umap_10n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 number of neighbors. DbTFs proteins are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_12n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 number of neighbors. DbTFs proteins are colored atop the 2D embedding." width="50%" />
-<p class="caption">(\#fig:umap-neigh-3)Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 number of neighbors. DbTFs proteins are colored atop the 2D embedding.</p>
+<img src="img/tf_umap_10n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 neighbors. DbTFs proteins are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_12n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 neighbors. DbTFs proteins are colored atop the 2D embedding." width="50%" />
+<p class="caption">(\#fig:umap-neigh-3)Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 neighbors. DbTFs proteins are colored atop the 2D embedding.</p>
 </div>
 
 
@@ -82,8 +82,8 @@ knitr::include_graphics(path = 'img/tf_umap_15n.png')
 ```
 
 <div class="figure">
-<img src="img/tf_umap_14n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
-<p class="caption">(\#fig:umap-neigh-4)Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 number of neighbors. DbTFs are colored atop the 2D embedding.</p>
+<img src="img/tf_umap_14n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
+<p class="caption">(\#fig:umap-neigh-4)Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 neighbors. DbTFs are colored atop the 2D embedding.</p>
 </div>
 
 
@@ -93,16 +93,29 @@ knitr::include_graphics(path = 'img/tf_umap_20n.png')
 ```
 
 <div class="figure">
-<img src="img/tf_umap_17n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_20n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
-<p class="caption">(\#fig:umap-neigh-5)Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 number of neighbors. DbTFs are colored atop the 2D embedding.</p>
+<img src="img/tf_umap_17n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_20n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
+<p class="caption">(\#fig:umap-neigh-5)Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 neighbors. DbTFs are colored atop the 2D embedding.</p>
+</div>
+
+Lastly, using as basis the embedding with $12$ neighbors, we annotate two cases of DbTFs that stand out from the clustered data:
+
+```r
+knitr::include_graphics(path = 'img/tf_umap_12n_annot.png')
+```
+
+<div class="figure">
+<img src="img/tf_umap_12n_annot.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins." width="1050" />
+<p class="caption">(\#fig:umap-neigh-annot)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins.</p>
 </div>
 
 :::{.green-box}
 For $\ge 8-10$ neighbors, UMAP splits the dataset to $3$ distinct TF protein superclusters:
 
-1. One of superclusters has strictly non-DbTFs and can be clearly identified by one of the **reduced dimensions** (it does not matter which one you choose, e.g. $X>0 \text{ or } Y<0$).
-Interestingly, there is only one protein that is a DbTF and resides within this cluster: [AHDC1](https://en.wikipedia.org/wiki/AHDC1).
+1. One of superclusters has strictly non-DbTFs and can be practically identified by one of the **reduced dimensions** (it does not matter which one you choose when observing more global views of the dataset, i.e. with larger number of neighbors, the following is enough: $X>0 \text{ or } Y<0$).
+Interestingly, there is only one protein that is a DbTF and resides within this cluster as shown above and that protein is [AHDC1](https://en.wikipedia.org/wiki/AHDC1).
 2. One supercluster has **mostly DbTFs**.
+A set of them is somewhat apart from the parent supercluster, namely the **Heat shock factor proteins**.
+The complete list includes these proteins: `HSF1`, `HSF2`, `HSF4`, `HSF5`, `HSFX1`, `HSFY1`, `HSFY2`, `HSFX2`, `HSFX3`, `HSFX4` (their $(X,Y)$ coordinates are really close and are thus presented as one point in the map).
 3. One supercluster has **a mix of both DbTFs and non-DbTFs**.
 Since this cluster is closer to the second one, it point to us the fact that the included non-DbTFs have molecular functions that are more similar to DbTFs compared with the far off first supercluster that includes the *pure* (so-to-speak) DbTFs.
 :::
@@ -175,9 +188,9 @@ Package version:
   evaluate_0.14   glue_1.4.2      graphics_3.6.3  grDevices_3.6.3
   highr_0.8       htmltools_0.5.0 jsonlite_1.7.1  knitr_1.30     
   magrittr_1.5    markdown_1.1    methods_3.6.3   mime_0.9       
-  rlang_0.4.8     rmarkdown_2.5   stats_3.6.3     stringi_1.5.3  
-  stringr_1.4.0   tinytex_0.26    tools_3.6.3     utils_3.6.3    
-  xfun_0.18       yaml_2.2.1     
+  png_0.1-7       rlang_0.4.8     rmarkdown_2.5   stats_3.6.3    
+  stringi_1.5.3   stringr_1.4.0   tinytex_0.26    tools_3.6.3    
+  utils_3.6.3     xfun_0.18       yaml_2.2.1     
 ```
 
 # References {-}

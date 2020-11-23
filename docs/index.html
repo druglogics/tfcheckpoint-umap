@@ -875,7 +875,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path=""><a href="#intro"><i class="fa fa-check"></i>Intro</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#analysis"><i class="fa fa-check"></i>Analysis</a>
 <ul>
-<li class="chapter" data-level="" data-path=""><a href="#tuning-number-of-neighbors"><i class="fa fa-check"></i>Tuning number of neighbors</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#tuning-the-number-of-neighbors"><i class="fa fa-check"></i>Tuning the number of neighbors</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#tuning-minimum-distance"><i class="fa fa-check"></i>Tuning minimum distance</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#r-session-info"><i class="fa fa-check"></i>R session info</a></li>
@@ -924,8 +924,8 @@ These groups are indicated by varying size clusters in the 2D plane.</p>
 <div class="blue-box">
 <p>See script <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/umap.R">umap.R</a> for more details about the presented analysis.</p>
 </div>
-<div id="tuning-number-of-neighbors" class="section level2 unnumbered" number="">
-<h2>Tuning number of neighbors</h2>
+<div id="tuning-the-number-of-neighbors" class="section level2 unnumbered" number="">
+<h2>Tuning the number of neighbors</h2>
 <p>We first run the UMAP on the dataset in unsupervised mode to see how well it clusters the GO-enriched protein data.
 We used the default <em>euclidean</em> distance metric to find nearest neighbors for every data point (GO-annotated protein).
 We first tune one of the most important parameters, i.e. the <strong>number of neighbors</strong>, where larger values result in more <em>global</em> views of the dataset, while smaller values result in more <em>local</em> data being preserved.
@@ -933,49 +933,59 @@ After UMAP returns the 2D optimized coordinates for the proteins, we color each 
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_2n.png&#39;</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_4n.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-neigh-1"></span>
-<img src="img/tf_umap_2n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_4n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
+<img src="img/tf_umap_2n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_4n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
 <p class="caption">
-Figure 1: Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 number of neighbors. DbTFs are colored atop the 2D embedding.
+Figure 1: Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 neighbors. DbTFs are colored atop the 2D embedding.
 </p>
 </div>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_6n.png&#39;</span>)</span>
 <span id="cb3-2"><a href="#cb3-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_8n.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-neigh-2"></span>
-<img src="img/tf_umap_6n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_8n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
+<img src="img/tf_umap_6n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_8n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
 <p class="caption">
-Figure 2: Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 number of neighbors. DbTFs are colored atop the 2D embedding.
+Figure 2: Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 neighbors. DbTFs are colored atop the 2D embedding.
 </p>
 </div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_10n.png&#39;</span>)</span>
 <span id="cb4-2"><a href="#cb4-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_12n.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-neigh-3"></span>
-<img src="img/tf_umap_10n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 number of neighbors. DbTFs proteins are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_12n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 number of neighbors. DbTFs proteins are colored atop the 2D embedding." width="50%" />
+<img src="img/tf_umap_10n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 neighbors. DbTFs proteins are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_12n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 neighbors. DbTFs proteins are colored atop the 2D embedding." width="50%" />
 <p class="caption">
-Figure 3: Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 number of neighbors. DbTFs proteins are colored atop the 2D embedding.
+Figure 3: Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 neighbors. DbTFs proteins are colored atop the 2D embedding.
 </p>
 </div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_14n.png&#39;</span>)</span>
 <span id="cb5-2"><a href="#cb5-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-neigh-4"></span>
-<img src="img/tf_umap_14n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
+<img src="img/tf_umap_14n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
 <p class="caption">
-Figure 4: Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 number of neighbors. DbTFs are colored atop the 2D embedding.
+Figure 4: Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 neighbors. DbTFs are colored atop the 2D embedding.
 </p>
 </div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_17n.png&#39;</span>)</span>
 <span id="cb6-2"><a href="#cb6-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_20n.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-neigh-5"></span>
-<img src="img/tf_umap_17n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_20n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 number of neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
+<img src="img/tf_umap_17n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 neighbors. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_20n.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 neighbors. DbTFs are colored atop the 2D embedding." width="50%" />
 <p class="caption">
-Figure 5: Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 number of neighbors. DbTFs are colored atop the 2D embedding.
+Figure 5: Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 neighbors. DbTFs are colored atop the 2D embedding.
+</p>
+</div>
+<p>Lastly, using as basis the embedding with <span class="math inline">\(12\)</span> neighbors, we annotate two cases of DbTFs that stand out from the clustered data:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_12n_annot.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:umap-neigh-annot"></span>
+<img src="img/tf_umap_12n_annot.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins." width="1050" />
+<p class="caption">
+Figure 6: Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins.
 </p>
 </div>
 <div class="green-box">
 <p>For <span class="math inline">\(\ge 8-10\)</span> neighbors, UMAP splits the dataset to <span class="math inline">\(3\)</span> distinct TF protein superclusters:</p>
 <ol style="list-style-type: decimal">
-<li>One of superclusters has strictly non-DbTFs and can be clearly identified by one of the <strong>reduced dimensions</strong> (it does not matter which one you choose, e.g. <span class="math inline">\(X&gt;0 \text{ or } Y&lt;0\)</span>).
-Interestingly, there is only one protein that is a DbTF and resides within this cluster: <a href="https://en.wikipedia.org/wiki/AHDC1">AHDC1</a>.</li>
-<li>One supercluster has <strong>mostly DbTFs</strong>.</li>
+<li>One of superclusters has strictly non-DbTFs and can be practically identified by one of the <strong>reduced dimensions</strong> (it does not matter which one you choose when observing more global views of the dataset, i.e. with larger number of neighbors, the following is enough: <span class="math inline">\(X&gt;0 \text{ or } Y&lt;0\)</span>).
+Interestingly, there is only one protein that is a DbTF and resides within this cluster as shown above and that protein is <a href="https://en.wikipedia.org/wiki/AHDC1">AHDC1</a>.</li>
+<li>One supercluster has <strong>mostly DbTFs</strong>.
+A set of them is somewhat apart from the parent supercluster, namely the <strong>Heat shock factor proteins</strong>.
+The complete list includes these proteins: <code>HSF1</code>, <code>HSF2</code>, <code>HSF4</code>, <code>HSF5</code>, <code>HSFX1</code>, <code>HSFY1</code>, <code>HSFY2</code>, <code>HSFX2</code>, <code>HSFX3</code>, <code>HSFX4</code> (their <span class="math inline">\((X,Y)\)</span> coordinates are really close and are thus presented as one point in the map).</li>
 <li>One supercluster has <strong>a mix of both DbTFs and non-DbTFs</strong>.
 Since this cluster is closer to the second one, it point to us the fact that the included non-DbTFs have molecular functions that are more similar to DbTFs compared with the far off first supercluster that includes the <em>pure</em> (so-to-speak) DbTFs.</li>
 </ol>
@@ -986,28 +996,28 @@ Since this cluster is closer to the second one, it point to us the fact that the
 <p>Choosing <span class="math inline">\(15\)</span> as a base value for the number of neighbors, we will tune the <code>min_dist</code> UMAP parameter which is the effective minimum distance between the embedded points (the default value presented in the previous figures was <span class="math inline">\(0.01\)</span>).
 As the documentation says, smaller <code>min_dist</code> values will result in a more clustered/clumped embedding where nearby points on the manifold are drawn closer together, while larger values will result on a more even dispersal of points.
 The idea here is to keep the separation of the <span class="math inline">\(3\)</span> superclusters as much as possible, while <em>spreading out</em> the embedded points.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.05.png&#39;</span>)</span>
-<span id="cb7-2"><a href="#cb7-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.1.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.05.png&#39;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.1.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-min-dist-1"></span>
 <img src="img/tf_umap_15n_mindist_0.05.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n_mindist_0.1.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" />
-<p class="caption">
-Figure 6: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
-</p>
-</div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.3.png&#39;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.5.png&#39;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:umap-min-dist-2"></span>
-<img src="img/tf_umap_15n_mindist_0.3.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n_mindist_0.5.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" />
 <p class="caption">
 Figure 7: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
 </p>
 </div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.7.png&#39;</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_1.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.3.png&#39;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.5.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:umap-min-dist-2"></span>
+<img src="img/tf_umap_15n_mindist_0.3.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n_mindist_0.5.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" />
+<p class="caption">
+Figure 8: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
+</p>
+</div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_0.7.png&#39;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_15n_mindist_1.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-min-dist-3"></span>
 <img src="img/tf_umap_15n_mindist_0.7.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" /><img src="img/tf_umap_15n_mindist_1.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding." width="50%" />
 <p class="caption">
-Figure 8: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
+Figure 9: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. DbTFs are colored atop the 2D embedding.
 </p>
 </div>
 <div class="green-box">
@@ -1017,7 +1027,7 @@ Figure 8: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and d
 </div>
 <div id="r-session-info" class="section level1 unnumbered" number="">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 20.04.1 LTS
@@ -1035,9 +1045,9 @@ Package version:
   evaluate_0.14   glue_1.4.2      graphics_3.6.3  grDevices_3.6.3
   highr_0.8       htmltools_0.5.0 jsonlite_1.7.1  knitr_1.30     
   magrittr_1.5    markdown_1.1    methods_3.6.3   mime_0.9       
-  rlang_0.4.8     rmarkdown_2.5   stats_3.6.3     stringi_1.5.3  
-  stringr_1.4.0   tinytex_0.26    tools_3.6.3     utils_3.6.3    
-  xfun_0.18       yaml_2.2.1     </code></pre>
+  png_0.1-7       rlang_0.4.8     rmarkdown_2.5   stats_3.6.3    
+  stringi_1.5.3   stringr_1.4.0   tinytex_0.26    tools_3.6.3    
+  utils_3.6.3     xfun_0.18       yaml_2.2.1     </code></pre>
 </div>
 <div id="references" class="section level1 unnumbered" number="">
 <h1>References</h1>

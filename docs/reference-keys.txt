@@ -3,6 +3,7 @@ fig:umap-neigh-2
 fig:umap-neigh-3
 fig:umap-neigh-4
 fig:umap-neigh-5
+fig:umap-neigh-annot
 fig:umap-min-dist-1
 fig:umap-min-dist-2
 fig:umap-min-dist-3
