@@ -77,7 +77,7 @@ For $\ge 8-10$ neighbors, UMAP splits the dataset to $3$ distinct TF protein sup
 1. One of superclusters has strictly non-DbTFs and can be practically identified by one of the **reduced dimensions** (it does not matter which one you choose when observing more global views of the dataset, i.e. with larger number of neighbors, the following is enough: $X>0 \text{ or } Y<0$).
 Interestingly, there is only one protein that is a DbTF and resides within this cluster as shown above and that protein is [AHDC1](https://en.wikipedia.org/wiki/AHDC1).
 2. One supercluster has **mostly DbTFs**.
-A set of them is somewhat apart from the parent supercluster, namely the **Heat shock factor proteins**.
+A set of them is somewhat apart from the parent supercluster, namely the [heat shock factor proteins](https://en.wikipedia.org/wiki/Heat_shock_factor).
 The complete list includes these proteins: `HSF1`, `HSF2`, `HSF4`, `HSF5`, `HSFX1`, `HSFY1`, `HSFY2`, `HSFX2`, `HSFX3`, `HSFX4` (their $(X,Y)$ coordinates are really close and are thus presented as one point in the map).
 3. One supercluster has **a mix of both DbTFs and non-DbTFs**.
 Since this cluster is closer to the second one, it point to us the fact that the included non-DbTFs have molecular functions that are more similar to DbTFs compared with the far off first supercluster that includes the *pure* (so-to-speak) DbTFs.
