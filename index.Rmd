@@ -22,7 +22,7 @@ library(xfun)
 TFcheckpoint [@Chawla2013] is a curated database with sequence-specific DNA-binding RNA polymerase II transcription-factor proteins (DbTF).
 
 The form of the dataset is as follows: a total of $4705$ proteins, each one represented by a row, are enriched with GO annotations (a total of $8621$ GO terms [@Carbon2019]) that indicate the presence ($1$) or absence ($0$) of a particular molecular function. 
-The dataset is provided as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/data).
+The dataset is provided as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/genes2go_result_tfcheckpoint2_data.txt).
 
 In this analysis we present a 2D visualization of this dataset using the non-linear dimension reduction method UMAP [@McInnes2018a].
 This method will reduce the size of the dataset from $(4705 \times 8621)$ to $(4705 \times 2)$ while efficiently identifying groups of proteins with the same molecular characterization. 
@@ -31,7 +31,7 @@ These groups are indicated by varying size clusters in the 2D plane.
 # Analysis {-}
 
 :::{.blue-box}
-See script [umap.R](https://github.com/druglogics/tfcheckpoint-umap/scripts) for more details about the presented analysis.
+See script [umap.R](https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/umap.R) for more details about the presented analysis.
 :::
 
 # R session info {-}
