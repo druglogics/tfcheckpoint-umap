@@ -5,7 +5,10 @@ library(uwot)
 
 # genes-to-GO terms data
 gg_data = readr::read_delim(file = 'data/genes2go_result_tfcheckpoint2_data.txt',
-  delim = '\t', skip = 2)
+  delim = '\t', skip = 2, progress = TRUE)
+
+# protein list
+protein_names = gg_data %>% pull(`Gene_Ids/GO_Terms`)
 
 # remove column with gene names and make it a matrix
 gg_mat = gg_data %>% select(-one_of("Gene_Ids/GO_Terms")) %>% as.matrix()
@@ -70,7 +73,7 @@ gg_umap = gg_umap %>%
   `colnames<-` (c("X", "Y")) %>%
   tibble::as_tibble() %>%
   tibble::add_column(is_dna_binding = gg_data %>% pull(`DNA binding`) %>% as.factor()) %>%
-  tibble::add_column(name = gg_data %>% pull(`Gene_Ids/GO_Terms`))
+  tibble::add_column(name = protein_names)
 
 # X > 0 clearly defines the non-DbTF supercluster
 gg_umap %>%
@@ -156,4 +159,71 @@ for (min_dist in min_dists) {
       theme(plot.title = element_text(hjust = 0.5))
     ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
   }
+}
+
+###################################
+# UMAP + GREEKC curated DbTF list #
+###################################
+
+greekc_dbtfs = readr::read_csv(file = 'data/dbTF_gene_product_set_greekc.csv',
+  col_names = c('name', 'id'), col_types = 'cc') %>% pull(name)
+
+# all GREEKC annotated proteins are in the TFcheckpoint list
+stopifnot(greekc_dbtfs %in% protein_names)
+
+# UMAP coordinates with 12 neighbors
+gg_umap = readRDS(file = 'data/tf_umap_12n.rds')
+
+# tidy up data
+gg_umap = gg_umap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(is_dna_binding = gg_data %>% pull(`DNA binding`) %>% as.factor()) %>%
+  tibble::add_column(name = protein_names) %>%
+  mutate(is_greekc_dbtf = ifelse(name %in% greekc_dbtfs, 1, 0)) %>% # add GREEKC annotation
+  mutate(is_greekc_dbtf = is_greekc_dbtf %>% as.factor())
+
+# GO-DbTFs vs GREEKC-DbTFs contingency table
+dbtf_stats = table(gg_umap$is_dna_binding, gg_umap$is_greekc_dbtf,
+  dnn = c('GO-DbTF', 'GREEKC-DbTF')) %>% as_tibble()
+stats_file = 'data/dbtfs_go_greekc_stats.rds'
+if (!file.exists(stats_file)) {
+  saveRDS(object = dbtf_stats, file = stats_file)
+}
+
+# save plots
+image_file = 'img/tf_umap_12n_greekc.png'
+if (!file.exists(image_file)) {
+  gg_umap %>%
+    ggplot(aes(x = X, y = Y, color = is_greekc_dbtf)) +
+    geom_point(shape = '.') +
+    scale_colour_brewer(palette = "Set1", labels = c("NO", "YES")) +
+    guides(colour = guide_legend(title = "GREEKC (DbTF)",
+      label.theme = element_text(size = 12),
+      override.aes = list(shape = 19, size = 12))) +
+    labs(title = 'TFchechpoint - UMAP (12 Neighbors)') +
+    theme_classic() +
+    theme(plot.title = element_text(hjust = 0.5))
+  ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+
+  data_00 = dbtf_stats %>% filter(`GO-DbTF` == 0, `GREEKC-DbTF` == 0) %>% pull(n)
+  data_10 = dbtf_stats %>% filter(`GO-DbTF` == 1, `GREEKC-DbTF` == 0) %>% pull(n)
+  data_01 = dbtf_stats %>% filter(`GO-DbTF` == 0, `GREEKC-DbTF` == 1) %>% pull(n)
+  data_11 = dbtf_stats %>% filter(`GO-DbTF` == 1, `GREEKC-DbTF` == 1) %>% pull(n)
+
+  # GREEKC DbTFs vs GO DNA-binding annotated proteins
+  gg_umap %>%
+    ggplot(aes(x = X, y = Y,
+      color = interaction(is_dna_binding, is_greekc_dbtf, sep = '-', lex.order = TRUE))) +
+    geom_point(shape = '.') +
+    scale_colour_brewer(palette = "Set1", labels = c(paste0("0-0 (",data_00,")"),
+      paste0("0-1 (", data_01, ")"), paste0("1-0 (", data_10, ")"),
+      paste0("1-1 (", data_11, ")"))) +
+    guides(colour = guide_legend(title = "DbTFs: GO vs GREEKC",
+      label.theme = element_text(size = 12),
+      override.aes = list(shape = 19, size = 12))) +
+    labs(title = 'TFchechpoint - UMAP (12 Neighbors)') +
+    theme_classic() +
+    theme(plot.title = element_text(hjust = 0.5))
+  ggsave(filename = 'img/tf_umap_12n_go_greekc.png', width = 7, height = 5, dpi = 'print')
 }
