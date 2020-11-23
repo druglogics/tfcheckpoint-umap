@@ -10,8 +10,8 @@ gg_data = readr::read_delim(file = 'data/genes2go_result_tfcheckpoint2_data.txt'
 # remove column with gene names and make it a matrix
 gg_mat = gg_data %>% select(-one_of("Gene_Ids/GO_Terms")) %>% as.matrix()
 
-# for subsetting the data
-indexes = sample(x = 1:nrow(gg_mat), size = 100)
+# for testing
+# indexes = sample(x = 1:nrow(gg_mat), size = 100)
 
 #############################################
 # UMAP + DNA binding annotation (neighbors) #
@@ -57,22 +57,59 @@ for (n_neighbors in neighbors) {
   }
 }
 
-###############################################################
-# AHDC1: a DNA-binding TF in the non-DNA binding supercluster #
-###############################################################
+##################################################################
+# AHDC1: a DbTF in the non-DbTF supercluster                     #
+# SHF: a set of DbTFs a little bit different then the rest DbTFs #
+##################################################################
 
-# UMAP coordinates with 20 neighbors
-gg_umap = readRDS(file = 'data/tf_umap_20n.rds')
+# UMAP coordinates with 12 neighbors
+gg_umap = readRDS(file = 'data/tf_umap_12n.rds')
 
-gg = gg_umap %>%
+# tidy up data
+gg_umap = gg_umap %>%
   `colnames<-` (c("X", "Y")) %>%
   tibble::as_tibble() %>%
-  tibble::add_column(is_dna_binding = gg_data %>% pull(`DNA binding`) %>% as.factor())
+  tibble::add_column(is_dna_binding = gg_data %>% pull(`DNA binding`) %>% as.factor()) %>%
+  tibble::add_column(name = gg_data %>% pull(`Gene_Ids/GO_Terms`))
 
-# Y < 0 clearly defines the non-DNA binding supercluster
-pr_index = which(gg$Y < 0 & gg$is_dna_binding == 1)
-gg_data %>% slice(pr_index) %>% pull(`Gene_Ids/GO_Terms`)
-# [1] "AHDC1"
+# X > 0 clearly defines the non-DbTF supercluster
+gg_umap %>%
+  filter(gg_umap$X > 0 & gg_umap$is_dna_binding == 1)
+# AHDC1 with UMAP coordinates: (17.8, 4.41)
+
+# -5 < X < 0 clearly identifies the extra DbTF that is a little bit more far away
+# from the main cluster of DbTFs
+gg_umap %>%
+  filter(gg_umap$X > -5 & gg_umap$X < 0 & gg_umap$is_dna_binding == 1)
+# HSF proteins with UMAP coordinates: (-3.99, 3.22)
+
+image_file = 'img/tf_umap_12n_annot.png'
+if (!file.exists(image_file)) {
+  gg_umap %>%
+    ggplot(aes(x = X, y = Y, color = is_dna_binding)) +
+    geom_point(shape = '.') +
+    # add `AHDC1` annotation
+    annotate(
+      geom = "curve", x = 10, y = 10, xend = 17.7, yend = 4.41,
+      curvature = 0.3, arrow = arrow(length = unit(1.5, "mm"))
+    ) +
+    annotate(geom = "text", x = 10, y = 10.5, label = "AHDC1") +
+    # add `HSF` annotation
+    annotate(
+      geom = "curve", x = 2, y = 5, xend = -3.7, yend = 3.22,
+      curvature = -0.3, arrow = arrow(length = unit(1.5, "mm"))
+    ) +
+    annotate(geom = "text", x = 2, y = 5.6, label = "Heat shock factors (HSF)") +
+    scale_colour_brewer(palette = "Set1", labels = c("NO", "YES")) +
+    guides(colour = guide_legend(title = "DNA Binding",
+      label.theme = element_text(size = 12),
+      override.aes = list(shape = 19, size = 12))) +
+    labs(title = paste0("TFcheckpoint - UMAP (12 Neighbors)")) +
+    theme_classic() +
+    theme(plot.title = element_text(hjust = 0.5))
+  ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+  # ggsave(filename = 'img/tf_umap_12n_annot.svg', width = 7, height = 5) # only with library(svglite)
+}
 
 ############################################
 # UMAP + DNA binding annotation (min_dist) #
