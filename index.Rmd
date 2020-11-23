@@ -19,7 +19,7 @@ library(xfun)
 
 # Intro {-}
 
-TFcheckpoint [@Chawla2013] is a curated database with sequence-specific DNA-binding RNA polymerase II transcription-factor proteins (DbTF).
+TFcheckpoint [@Chawla2013] is a curated database with sequence-specific DNA-binding RNA polymerase II transcription-factor proteins (**DbTFs**).
 
 The form of the dataset is as follows: a total of $4705$ proteins, each one represented by a row, are enriched with GO annotations (a total of $8621$ GO terms [@Carbon2019]) that indicate the presence ($1$) or absence ($0$) of a particular molecular function. 
 The dataset is provided as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/genes2go_result_tfcheckpoint2_data.txt).
@@ -32,6 +32,73 @@ These groups are indicated by varying size clusters in the 2D plane.
 
 :::{.blue-box}
 See script [umap.R](https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/umap.R) for more details about the presented analysis.
+:::
+
+## Tuning number of neighbors {-}
+
+We first run the UMAP on the dataset in unsupervised mode to see how well it clusters the GO-enriched protein data.
+We used the default *euclidean* distance metric to find nearest neighbors for every data point (GO-annotated protein).
+We first tune one of the most important parameters, i.e. the **number of neighbors**, where larger values result in more *global* views of the dataset, while smaller values result in more *local* data being preserved.
+After UMAP returns the 2D optimized coordinates for the proteins, we color each protein according to its corresponding value for the *DNA binding* GO term, in order to assess if UMAP can at least distinguish between DNA binding (DbTFs) and non DNA-binding TFs (non-DbTFs).
+
+```{r umap-neigh-1, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 2 and 4 number of neighbors. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_2n.png')
+knitr::include_graphics(path = 'img/tf_umap_4n.png')
+```
+
+```{r umap-neigh-2, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 6 and 8 number of neighbors. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_6n.png')
+knitr::include_graphics(path = 'img/tf_umap_8n.png')
+```
+
+```{r umap-neigh-3, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 10 and 12 number of neighbors. DbTFs proteins are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_10n.png')
+knitr::include_graphics(path = 'img/tf_umap_12n.png')
+```
+
+```{r umap-neigh-4, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 14 and 15 number of neighbors. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_14n.png')
+knitr::include_graphics(path = 'img/tf_umap_15n.png')
+```
+
+```{r umap-neigh-5, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 number of neighbors. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_17n.png')
+knitr::include_graphics(path = 'img/tf_umap_20n.png')
+```
+
+:::{.green-box}
+For $\ge 8-10$ neighbors, UMAP splits the dataset to $3$ distinct TF protein superclusters:
+
+1. One of superclusters has strictly non-DbTFs and can be clearly identified by one of the **reduced dimensions** (it does not matter which one you choose, e.g. $X>0 \text{ or } Y<0$).
+Interestingly, there is only one protein that is a DbTF and resides within this cluster: [AHDC1](https://en.wikipedia.org/wiki/AHDC1).
+2. One supercluster has **mostly DbTFs**.
+3. One supercluster has **a mix of both DbTFs and non-DbTFs**.
+Since this cluster is closer to the second one, it point to us the fact that the included non-DbTFs have molecular functions that are more similar to DbTFs compared with the far off first supercluster that includes the *pure* (so-to-speak) DbTFs.
+:::
+
+## Tuning minimum distance {-}
+
+Choosing $15$ as a base value for the number of neighbors, we will tune the `min_dist` UMAP parameter which is the effective minimum distance between the embedded points (the default value presented in the previous figures was $0.01$).
+As the documentation says, smaller `min_dist` values will result in a more clustered/clumped embedding where nearby points on the manifold are drawn closer together, while larger values will result on a more even dispersal of points.
+The idea here is to keep the separation of the $3$ superclusters as much as possible, while *spreading out* the embedded points.
+
+```{r umap-min-dist-1, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.05.png')
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.1.png')
+```
+
+```{r umap-min-dist-2, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.3.png')
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.5.png')
+```
+
+```{r umap-min-dist-3, fig.show='hold', out.width='50%', fig.cap='Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. DbTFs are colored atop the 2D embedding.'}
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_0.7.png')
+knitr::include_graphics(path = 'img/tf_umap_15n_mindist_1.png')
+```
+
+:::{.green-box}
+For `min_dist` $\gt 0.1$, the separation of the superclusters (specifically for the $2$ top-left ones) dissolves.
 :::
 
 # R session info {-}
