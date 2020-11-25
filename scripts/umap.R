@@ -16,9 +16,9 @@ gg_mat = gg_data %>% select(-one_of("Gene_Ids/GO_Terms")) %>% as.matrix()
 # for testing
 # indexes = sample(x = 1:nrow(gg_mat), size = 100)
 
-#############################################
-# UMAP + DNA binding annotation (neighbors) #
-#############################################
+##########################################################
+# Unsupervised UMAP + DNA binding annotation (neighbors) #
+##########################################################
 neighbors = c(2,4,6,8,10,12,14,15,17,20)
 for (n_neighbors in neighbors) {
   print(paste0('Number of neighbors: ', n_neighbors))
@@ -86,7 +86,8 @@ gg_umap %>%
   filter(gg_umap$X > -5 & gg_umap$X < 0 & gg_umap$is_dna_binding == 1)
 # HSF proteins with UMAP coordinates: (-3.99, 3.22)
 
-image_file = 'img/tf_umap_12n_annot.png'
+print('UMPA, 12 neighbors + annotations of AHDC1 and HSF proteins')
+image_file = 'img/12n_extra/tf_umap_12n_annot.png'
 if (!file.exists(image_file)) {
   gg_umap %>%
     ggplot(aes(x = X, y = Y, color = is_dna_binding)) +
@@ -114,9 +115,9 @@ if (!file.exists(image_file)) {
   # ggsave(filename = 'img/tf_umap_12n_annot.svg', width = 7, height = 5) # only with library(svglite)
 }
 
-############################################
-# UMAP + DNA binding annotation (min_dist) #
-############################################
+#########################################################
+# Unsupervised UMAP + DNA binding annotation (min_dist) #
+#########################################################
 min_dists = c(0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1)
 n_neighbors = 15
 
@@ -153,7 +154,7 @@ for (min_dist in min_dists) {
       guides(colour = guide_legend(title = "DNA Binding",
         label.theme = element_text(size = 12),
         override.aes = list(shape = 19, size = 12))) +
-      labs(title = paste0("TFchechpoint - UMAP (15 Neighbors, min_dist = ",
+      labs(title = paste0("TFcheckpoint - UMAP (15 Neighbors, min_dist = ",
         min_dist, ")")) +
       theme_classic() +
       theme(plot.title = element_text(hjust = 0.5))
@@ -161,9 +162,9 @@ for (min_dist in min_dists) {
   }
 }
 
-###################################
-# UMAP + GREEKC curated DbTF list #
-###################################
+#########################################################################
+# Unsupervised UMAP + GREEKC curated DbTF list (vs GO DNA Binding term) #
+#########################################################################
 
 greekc_dbtfs = readr::read_csv(file = 'data/dbTF_gene_product_set_greekc.csv',
   col_names = c('name', 'id'), col_types = 'cc') %>% pull(name)
@@ -180,7 +181,7 @@ gg_umap = gg_umap %>%
   tibble::as_tibble() %>%
   tibble::add_column(is_dna_binding = gg_data %>% pull(`DNA binding`) %>% as.factor()) %>%
   tibble::add_column(name = protein_names) %>%
-  mutate(is_greekc_dbtf = ifelse(name %in% greekc_dbtfs, 1, 0)) %>% # add GREEKC annotation
+  mutate(is_greekc_dbtf = ifelse(name %in% greekc_dbtfs, 1, 0)) %>% # add GREEKC DbTF annotation
   mutate(is_greekc_dbtf = is_greekc_dbtf %>% as.factor())
 
 # GO-DbTFs vs GREEKC-DbTFs contingency table
@@ -192,7 +193,8 @@ if (!file.exists(stats_file)) {
 }
 
 # save plots
-image_file = 'img/tf_umap_12n_greekc.png'
+print('12 Neighbors: GREEK DbTFs and comparison with the GO term DNA Binding')
+image_file = 'img/12n_extra/tf_umap_12n_greekc_dbtfs.png'
 if (!file.exists(image_file)) {
   gg_umap %>%
     ggplot(aes(x = X, y = Y, color = is_greekc_dbtf)) +
@@ -201,7 +203,7 @@ if (!file.exists(image_file)) {
     guides(colour = guide_legend(title = "GREEKC (DbTF)",
       label.theme = element_text(size = 12),
       override.aes = list(shape = 19, size = 12))) +
-    labs(title = 'TFchechpoint - UMAP (12 Neighbors)') +
+    labs(title = 'TFcheckpoint - UMAP (12 Neighbors)') +
     theme_classic() +
     theme(plot.title = element_text(hjust = 0.5))
   ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
@@ -222,8 +224,90 @@ if (!file.exists(image_file)) {
     guides(colour = guide_legend(title = "DbTFs: GO vs GREEKC",
       label.theme = element_text(size = 12),
       override.aes = list(shape = 19, size = 12))) +
-    labs(title = 'TFchechpoint - UMAP (12 Neighbors)') +
+    labs(title = 'TFcheckpoint - UMAP (12 Neighbors)') +
     theme_classic() +
     theme(plot.title = element_text(hjust = 0.5))
-  ggsave(filename = 'img/tf_umap_12n_go_greekc.png', width = 7, height = 5, dpi = 'print')
+  ggsave(filename = 'img/12n_extra/tf_umap_12n_go_vs_greekc_dbtfs.png', width = 7, height = 5, dpi = 'print')
 }
+
+########################################################
+# Unsupervised UMAP + GREEKC curated DbTF + coTFs list #
+########################################################
+
+greekc_cotfs = readr::read_csv(file = 'data/coTF_list.csv',
+  col_names = c('id', 'name'), col_types = 'cc') %>% pull(name)
+
+# not all coTFs are part of the TFcheckpoint dataset, so subset only to the ones that are
+greekc_cotfs = greekc_cotfs[greekc_cotfs %in% protein_names]
+
+# tidy up data (we use the UMAP coordinates with 12 neighbors from above)
+gg_umap = gg_umap %>%
+  mutate(is_greekc_cotf = ifelse(name %in% greekc_cotfs, 1, 0)) %>% # add GREEKC coTF annotation
+  mutate(is_greekc_cotf = is_greekc_cotf %>% as.factor())
+
+# GREEKC-DbTFs vs GREEKC-coTFs contingency table
+db_cotf_stats = table(gg_umap$is_greekc_dbtf, gg_umap$is_greekc_cotf,
+  dnn = c('GREEKC-DbTF', 'GREEKC-coTF')) %>% as_tibble()
+
+stats_file = 'data/db_cotf_stats.rds'
+if (!file.exists(stats_file)) {
+  saveRDS(object = db_cotf_stats, file = stats_file)
+}
+
+data_00 = db_cotf_stats %>% filter(`GREEKC-coTF` == 0, `GREEKC-DbTF` == 0) %>% pull(n)
+data_01 = db_cotf_stats %>% filter(`GREEKC-coTF` == 0, `GREEKC-DbTF` == 1) %>% pull(n)
+data_10 = db_cotf_stats %>% filter(`GREEKC-coTF` == 1, `GREEKC-DbTF` == 0) %>% pull(n)
+# zero
+data_11 = db_cotf_stats %>% filter(`GREEKC-coTF` == 1, `GREEKC-DbTF` == 1) %>% pull(n)
+
+print('GREEKC coTFs vs GREEKC DbTFs (12 neighbors)')
+gg_umap %>%
+  ggplot(aes(x = X, y = Y,
+    color = interaction(is_greekc_cotf, is_greekc_dbtf, sep = '-', lex.order = TRUE))) +
+  geom_point(shape = '.') +
+  scale_colour_brewer(palette = "Set1", labels = c(paste0("Neither (",data_00,")"),
+    paste0("DbTFs only (", data_01, ")"), paste0("co-TFs only (", data_10, ")"))) +
+  guides(colour = guide_legend(title = "co-TFs vs DbTFs",
+    label.theme = element_text(size = 12),
+    override.aes = list(shape = 19, size = 12))) +
+  labs(title = 'TFcheckpoint - UMAP (12 Neighbors)') +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = 'img/12n_extra/tf_umap_12n_co_vs_dbtfs.png', width = 7, height = 5, dpi = 'print')
+
+print('GREEKC coTFs vs GREEKC DbTFs (15 neighbors, different min_dist)')
+for (min_dist in min_dists) {
+  print(paste0('min_dist = ', min_dist))
+
+  image_file = paste0('img/cotf_vs_dbtf/tf_umap_15n_mindist_', min_dist, '.png')
+
+  if (!file.exists(image_file)) {
+    umap_file = paste0('data/tf_umap_15n_mindist_', min_dist, '.rds')
+    gg_umap = readRDS(file = umap_file)
+    gg_umap %>%
+      `colnames<-` (c("X", "Y")) %>%
+      tibble::as_tibble() %>%
+      tibble::add_column(is_dna_binding = gg_data %>% pull(`DNA binding`) %>% as.factor()) %>%
+      tibble::add_column(name = protein_names) %>%
+      mutate(is_greekc_dbtf = ifelse(name %in% greekc_dbtfs, 1, 0)) %>% # add GREEKC DbTF annotation
+      mutate(is_greekc_dbtf = is_greekc_dbtf %>% as.factor()) %>%
+      mutate(is_greekc_cotf = ifelse(name %in% greekc_cotfs, 1, 0)) %>% # add GREEKC coTF annotation
+      mutate(is_greekc_cotf = is_greekc_cotf %>% as.factor()) %>%
+      ggplot(aes(x = X, y = Y, color = interaction(is_greekc_cotf, is_greekc_dbtf, sep = '-', lex.order = TRUE))) +
+      geom_point(shape = '.') +
+      scale_colour_brewer(palette = "Set1", labels = c(paste0("Neither (",data_00,")"),
+        paste0("DbTFs only (", data_01, ")"), paste0("co-TFs only (", data_10, ")"))) +
+      guides(colour = guide_legend(title = "co-TFs vs DbTFs",
+        label.theme = element_text(size = 12),
+        override.aes = list(shape = 19, size = 12))) +
+      labs(title = paste0('TFcheckpoint - UMAP (15 Neighbors, min_dist = ',
+        min_dist, ')')) +
+      theme_classic() +
+      theme(plot.title = element_text(hjust = 0.5))
+    ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+  }
+}
+
+###################
+# Supervised UMAP #
+###################
