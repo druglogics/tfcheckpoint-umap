@@ -354,7 +354,7 @@ for (n_neighbors in neighbors) {
       guides(colour = guide_legend(title = "Target Class",
         label.theme = element_text(size = 12),
         override.aes = list(shape = 19, size = 12))) +
-      labs(title = paste0("TFcheckpoint - UMAP (", n_neighbors," Neighbors)")) +
+      labs(title = paste0("TFcheckpoint - Supervised UMAP (", n_neighbors," Neighbors)")) +
       theme_classic() +
       theme(plot.title = element_text(hjust = 0.5))
     ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
