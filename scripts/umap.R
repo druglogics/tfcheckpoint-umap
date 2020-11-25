@@ -311,3 +311,52 @@ for (min_dist in min_dists) {
 ###################
 # Supervised UMAP #
 ###################
+neighbors = c(6,8,10,12,14,20)
+
+# target class: 'non-TF: 0, DbTF: 1, co-TF: 2'
+target_class = sapply(protein_names, function(name) {
+  is_dbtf = name %in% greekc_dbtfs
+  is_cotf = name %in% greekc_cotfs
+  if (!is_dbtf & !is_cotf) return(0) # none of the 2
+  if (is_dbtf) return(1) # DbTF
+  else return(2) # co-TF
+}, USE.NAMES = FALSE) %>% as.factor()
+
+for (n_neighbors in neighbors) {
+  print(paste0('Number of neighbors (supervised UMAP): ', n_neighbors))
+
+  data_file = paste0('data/tf_sumap_', n_neighbors, 'n.rds')
+  if (!file.exists(data_file)) {
+    set.seed(42)
+    gg_umap = uwot::umap(X = gg_mat, n_threads = 4, y = target_class,
+      n_neighbors = n_neighbors, metric = 'euclidean',
+      verbose = TRUE)
+    saveRDS(object = gg_umap, file = data_file)
+  }
+}
+
+# save plots
+for (n_neighbors in neighbors) {
+  print(paste0('Number of neighbors: ', n_neighbors))
+
+  image_file = paste0('img/sumap/tf_sumap_', n_neighbors, 'n.png')
+
+  if (!file.exists(image_file)) {
+    umap_file = paste0('data/tf_sumap_', n_neighbors, 'n.rds')
+    gg_umap = readRDS(file = umap_file)
+    gg_umap %>%
+      `colnames<-` (c("X", "Y")) %>%
+      tibble::as_tibble() %>%
+      tibble::add_column(target = target_class) %>%
+      ggplot(aes(x = X, y = Y, color = target)) +
+      geom_point(shape = '.') +
+      scale_colour_brewer(palette = "Set1", labels = c("no-TFs", "DbTFs", "co-TFs")) +
+      guides(colour = guide_legend(title = "Target Class",
+        label.theme = element_text(size = 12),
+        override.aes = list(shape = 19, size = 12))) +
+      labs(title = paste0("TFcheckpoint - UMAP (", n_neighbors," Neighbors)")) +
+      theme_classic() +
+      theme(plot.title = element_text(hjust = 0.5))
+    ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+  }
+}
