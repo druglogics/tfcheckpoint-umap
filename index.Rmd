@@ -220,7 +220,7 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_20n.png')
 
 :::{.green-box}
 - $2$ clusters of no-TF proteins
-- $2$ clusters of DbTF proteins 
+- $2$ clusters of DbTF proteins
 - The main co-TF cluster is now cut-off from the other two and more dispersed (note that there are some co-TFs in the no-TF cluster still, as there are few examples of proteins belonging to a different class than the cluster tag they reside into indicates)
 :::
 
