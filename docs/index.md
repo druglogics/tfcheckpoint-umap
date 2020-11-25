@@ -1,7 +1,7 @@
 ---
 title: "TFcheckpoint Dataset visualization using UMAP"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 23 November, 2020"
+date: "Last updated: 25 November, 2020"
 description: "Description"
 url: 'https\://druglogics.github.io/tfcheckpoint-umap/'
 github-repo: "druglogics/tfcheckpoint-umap"
@@ -102,11 +102,11 @@ knitr::include_graphics(path = 'img/tf_umap_20n.png')
 Lastly, using as basis the embedding with $12$ neighbors, we annotate two cases of DbTFs that stand out from the clustered data:
 
 ```r
-knitr::include_graphics(path = 'img/tf_umap_12n_annot.png')
+knitr::include_graphics(path = 'img/12n_extra/tf_umap_12n_annot.png')
 ```
 
 <div class="figure">
-<img src="img/tf_umap_12n_annot.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins." width="1050" />
+<img src="img/12n_extra/tf_umap_12n_annot.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins." width="1050" />
 <p class="caption">(\#fig:umap-neigh-annot)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins.</p>
 </div>
 
@@ -179,23 +179,23 @@ There is a **substantial level of agreement** between the GO DNA-binding annotat
 Using the UMAP coordinates with $12$ neighbors, we color the data points according to the GREEKC annotated DbTFs labels:
 
 ```r
-knitr::include_graphics(path = 'img/tf_umap_12n_greekc.png')
+knitr::include_graphics(path = 'img/12n_extra/tf_umap_12n_greekc_dbtfs.png')
 ```
 
 <div class="figure">
-<img src="img/tf_umap_12n_greekc.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding." width="1050" />
-<p class="caption">(\#fig:umap-12n-greekc)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding.</p>
+<img src="img/12n_extra/tf_umap_12n_greekc_dbtfs.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding." width="1050" />
+<p class="caption">(\#fig:umap-12n-greekc-dbtfs)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding.</p>
 </div>
 
 We also color the same points according to the values presented in the contingency table above (including thus all $4$ cases of proteins as annotated by the GREEKC and the DNA-binding GO term):
 
 ```r
-knitr::include_graphics(path = 'img/tf_umap_12n_go_greekc.png')
+knitr::include_graphics(path = 'img/12n_extra/tf_umap_12n_go_vs_greekc_dbtfs.png')
 ```
 
 <div class="figure">
-<img src="img/tf_umap_12n_go_greekc.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs." width="1050" />
-<p class="caption">(\#fig:umap-12n-go-greekc)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs.</p>
+<img src="img/12n_extra/tf_umap_12n_go_vs_greekc_dbtfs.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs." width="1050" />
+<p class="caption">(\#fig:umap-12n-go-vs-greekc-dbtfs)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs.</p>
 </div>
 
 :::{.green-box}
@@ -203,7 +203,6 @@ knitr::include_graphics(path = 'img/tf_umap_12n_go_greekc.png')
 - The bottom left supercluster with no DbTFs has become a bit more distinguished, i.e. almost all it's points are non-DbTFs according to the GREEKC list information.
 - Maybe the curated list better reflects the clustered data than the DNA-binding GO term thus?
 :::
-
 
 ## Tuning minimum distance {-}
 
@@ -246,6 +245,68 @@ knitr::include_graphics(path = 'img/tf_umap_15n_mindist_1.png')
 
 :::{.green-box}
 For `min_dist` $\gt 0.1$, the separation of the superclusters (specifically for the $2$ top-left ones) dissolves.
+:::
+
+## GREEKC curated co-TF list {-}
+
+Members of the [GREEKC](https://www.greekc.org/) consortium curated also a list of co-TFs.
+This list has a total of $522$ proteins, out of which only $239$ are included in the TFcheckpoint dataset.
+
+Comparing this list of proteins with the curated list of DbTFs we have the following contingency table ($1$ corresponds to the existence of a particular label, $0$ to it's absence), where no protein has been labeled both as a co-TF and a DbTF:
+
+```r
+db_cotf_stats = readRDS(file = 'data/db_cotf_stats.rds')
+knitr::kable(db_cotf_stats)
+```
+
+
+
+|GREEKC-DbTF |GREEKC-coTF |    n|
+|:-----------|:-----------|----:|
+|0           |0           | 3024|
+|1           |0           | 1442|
+|0           |1           |  239|
+|1           |1           |    0|
+
+We now use the unsupervised UMAP result with $12$ neighbors and color the proteins according to the three categories described above:
+
+```r
+knitr::include_graphics(path = 'img/12n_extra/tf_umap_12n_co_vs_dbtfs.png')
+```
+
+<div class="figure">
+<img src="img/12n_extra/tf_umap_12n_co_vs_dbtfs.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="1050" />
+<p class="caption">(\#fig:umap-12n-co-vs-dbtf)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding</p>
+</div>
+
+We perform the same coloring with the UMAP coordinates from the $15$ neighbors and different values of `min_dist`, to have a better picture of the clustering results:
+
+```r
+knitr::include_graphics(path = 'img/cotf_vs_dbtf/tf_umap_15n_mindist_0.05.png')
+knitr::include_graphics(path = 'img/cotf_vs_dbtf/tf_umap_15n_mindist_0.1.png')
+```
+
+<div class="figure">
+<img src="img/cotf_vs_dbtf/tf_umap_15n_mindist_0.05.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="50%" /><img src="img/cotf_vs_dbtf/tf_umap_15n_mindist_0.1.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="50%" />
+<p class="caption">(\#fig:umap-15n-co-vs-dbtf-1)Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding</p>
+</div>
+
+
+```r
+knitr::include_graphics(path = 'img/cotf_vs_dbtf/tf_umap_15n_mindist_0.3.png')
+knitr::include_graphics(path = 'img/cotf_vs_dbtf/tf_umap_15n_mindist_0.5.png')
+```
+
+<div class="figure">
+<img src="img/cotf_vs_dbtf/tf_umap_15n_mindist_0.3.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="50%" /><img src="img/cotf_vs_dbtf/tf_umap_15n_mindist_0.5.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="50%" />
+<p class="caption">(\#fig:umap-15n-co-vs-dbtf-2)Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding</p>
+</div>
+
+:::{.green-box}
+All above figures point to the following observations:
+- There are **two distinct superclusters**, one of them with mostly non-DbTFs and the other with a mix of co-TFs, DbTFs and non-DbTFs.
+- **Non-DbTFs**, as also observed in previous figures, do not reside in one, but **two separate clusters**, denoting two families of non-DbTF proteins.
+- The co-TF cluster (green) seems to be a pure subset of the non-DbTF cluster.
 :::
 
 # R session info {-}

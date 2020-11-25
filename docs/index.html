@@ -878,6 +878,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path=""><a href="#tuning-the-number-of-neighbors"><i class="fa fa-check"></i>Tuning the number of neighbors</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#greekc-curated-dbtf-list"><i class="fa fa-check"></i>GREEKC curated DbTF list</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#tuning-minimum-distance"><i class="fa fa-check"></i>Tuning minimum distance</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#greekc-curated-co-tf-list"><i class="fa fa-check"></i>GREEKC curated co-TF list</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#r-session-info"><i class="fa fa-check"></i>R session info</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#references"><i class="fa fa-check"></i>References</a></li>
@@ -904,7 +905,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">TFcheckpoint Dataset visualization using UMAP</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 23 November, 2020</em></p>
+<p class="date"><em>Last updated: 25 November, 2020</em></p>
 </div>
 <div id="input" class="section level1 unnumbered" number="">
 <h1>Input</h1>
@@ -974,9 +975,9 @@ Figure 5: Unsupervised UMAP of the TFcheckpoint dataset using 17 and 20 neighbor
 </p>
 </div>
 <p>Lastly, using as basis the embedding with <span class="math inline">\(12\)</span> neighbors, we annotate two cases of DbTFs that stand out from the clustered data:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_12n_annot.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/12n_extra/tf_umap_12n_annot.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:umap-neigh-annot"></span>
-<img src="img/tf_umap_12n_annot.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins." width="1050" />
+<img src="img/12n_extra/tf_umap_12n_annot.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins." width="1050" />
 <p class="caption">
 Figure 6: Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins are colored atop the 2D embedding. Two distinct examples of DbTFs have been annotated: the AHDC1 and the Heat shock factor proteins.
 </p>
@@ -1053,17 +1054,17 @@ Comparing this list with the proteins that have the GO term <code>DNA binding</c
 <p>There is a <strong>substantial level of agreement</strong> between the GO DNA-binding annotation and the DbTF GREEKC list.</p>
 </div>
 <p>Using the UMAP coordinates with <span class="math inline">\(12\)</span> neighbors, we color the data points according to the GREEKC annotated DbTFs labels:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_12n_greekc.png&#39;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:umap-12n-greekc"></span>
-<img src="img/tf_umap_12n_greekc.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding." width="1050" />
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/12n_extra/tf_umap_12n_greekc_dbtfs.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:umap-12n-greekc-dbtfs"></span>
+<img src="img/12n_extra/tf_umap_12n_greekc_dbtfs.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding." width="1050" />
 <p class="caption">
 Figure 7: Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding.
 </p>
 </div>
 <p>We also color the same points according to the values presented in the contingency table above (including thus all <span class="math inline">\(4\)</span> cases of proteins as annotated by the GREEKC and the DNA-binding GO term):</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/tf_umap_12n_go_greekc.png&#39;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:umap-12n-go-greekc"></span>
-<img src="img/tf_umap_12n_go_greekc.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs." width="1050" />
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/12n_extra/tf_umap_12n_go_vs_greekc_dbtfs.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:umap-12n-go-vs-greekc-dbtfs"></span>
+<img src="img/12n_extra/tf_umap_12n_go_vs_greekc_dbtfs.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs." width="1050" />
 <p class="caption">
 Figure 8: Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Proteins are pre-assigned to 4 groups depending on the value of the corresponding DNA-binding GO term and if are in the curated GREEKC list of DbTFs.
 </p>
@@ -1109,10 +1110,80 @@ Figure 11: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and 
 <p>For <code>min_dist</code> <span class="math inline">\(\gt 0.1\)</span>, the separation of the superclusters (specifically for the <span class="math inline">\(2\)</span> top-left ones) dissolves.</p>
 </div>
 </div>
+<div id="greekc-curated-co-tf-list" class="section level2 unnumbered" number="">
+<h2>GREEKC curated co-TF list</h2>
+<p>Members of the <a href="https://www.greekc.org/">GREEKC</a> consortium curated also a list of co-TFs.
+This list has a total of <span class="math inline">\(522\)</span> proteins, out of which only <span class="math inline">\(239\)</span> are included in the TFcheckpoint dataset.</p>
+<p>Comparing this list of proteins with the curated list of DbTFs we have the following contingency table (<span class="math inline">\(1\)</span> corresponds to the existence of a particular label, <span class="math inline">\(0\)</span> to it’s absence), where no protein has been labeled both as a co-TF and a DbTF:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>db_cotf_stats =<span class="st"> </span><span class="kw">readRDS</span>(<span class="dt">file =</span> <span class="st">&#39;data/db_cotf_stats.rds&#39;</span>)</span>
+<span id="cb18-2"><a href="#cb18-2"></a>knitr<span class="op">::</span><span class="kw">kable</span>(db_cotf_stats)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">GREEKC-DbTF</th>
+<th align="left">GREEKC-coTF</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="right">3024</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="right">1442</td>
+</tr>
+<tr class="odd">
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="right">239</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>We now use the unsupervised UMAP result with <span class="math inline">\(12\)</span> neighbors and color the proteins according to the three categories described above:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/12n_extra/tf_umap_12n_co_vs_dbtfs.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:umap-12n-co-vs-dbtf"></span>
+<img src="img/12n_extra/tf_umap_12n_co_vs_dbtfs.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="1050" />
+<p class="caption">
+Figure 12: Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding
+</p>
+</div>
+<p>We perform the same coloring with the UMAP coordinates from the <span class="math inline">\(15\)</span> neighbors and different values of <code>min_dist</code>, to have a better picture of the clustering results:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cotf_vs_dbtf/tf_umap_15n_mindist_0.05.png&#39;</span>)</span>
+<span id="cb20-2"><a href="#cb20-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cotf_vs_dbtf/tf_umap_15n_mindist_0.1.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:umap-15n-co-vs-dbtf-1"></span>
+<img src="img/cotf_vs_dbtf/tf_umap_15n_mindist_0.05.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="50%" /><img src="img/cotf_vs_dbtf/tf_umap_15n_mindist_0.1.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="50%" />
+<p class="caption">
+Figure 13: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding
+</p>
+</div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cotf_vs_dbtf/tf_umap_15n_mindist_0.3.png&#39;</span>)</span>
+<span id="cb21-2"><a href="#cb21-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/cotf_vs_dbtf/tf_umap_15n_mindist_0.5.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:umap-15n-co-vs-dbtf-2"></span>
+<img src="img/cotf_vs_dbtf/tf_umap_15n_mindist_0.3.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="50%" /><img src="img/cotf_vs_dbtf/tf_umap_15n_mindist_0.5.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the `mind_dist` parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding" width="50%" />
+<p class="caption">
+Figure 14: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and different values of the <code>mind_dist</code> parameter. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF GREEKC lists atop the 2D embedding
+</p>
+</div>
+<div class="green-box">
+<p>All above figures point to the following observations:
+- There are <strong>two distinct superclusters</strong>, one of them with mostly non-DbTFs and the other with a mix of co-TFs, DbTFs and non-DbTFs.
+- <strong>Non-DbTFs</strong>, as also observed in previous figures, do not reside in one, but <strong>two separate clusters</strong>, denoting two families of non-DbTF proteins.
+- The co-TF cluster (green) seems to be a pure subset of the non-DbTF cluster.</p>
+</div>
+</div>
 </div>
 <div id="r-session-info" class="section level1 unnumbered" number="">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 20.04.1 LTS
