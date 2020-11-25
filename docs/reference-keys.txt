@@ -12,3 +12,6 @@ fig:umap-min-dist-3
 fig:umap-12n-co-vs-dbtf
 fig:umap-15n-co-vs-dbtf-1
 fig:umap-15n-co-vs-dbtf-2
+fig:sumap-1
+fig:sumap-2
+fig:sumap-3

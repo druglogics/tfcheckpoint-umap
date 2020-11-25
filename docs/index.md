@@ -304,9 +304,58 @@ knitr::include_graphics(path = 'img/cotf_vs_dbtf/tf_umap_15n_mindist_0.5.png')
 
 :::{.green-box}
 All above figures point to the following observations:
-- There are **two distinct superclusters**, one of them with mostly non-DbTFs and the other with a mix of co-TFs, DbTFs and non-DbTFs.
-- **Non-DbTFs**, as also observed in previous figures, do not reside in one, but **two separate clusters**, denoting two families of non-DbTF proteins.
-- The co-TF cluster (green) seems to be a pure subset of the non-DbTF cluster.
+
+- There are **two distinct superclusters**, one of them with mostly no-TFs and the other with a mix of co-TFs, DbTFs and no-TFs.
+- The proteins that are labeled neither as DbTF nor co-TF, do not reside in one, but **two separate clusters**, denoting thus two families of non-DbTF, non-co-TF proteins.
+- The **DbTFs** also seem to be grouped into **two clusters**, a main one and a one more dispersed across the protein map.
+- The co-TF cluster (green) seems to be a pure subset of the second no-TF cluster.
+:::
+
+In order to make more clear the distinction between the clusters, we proceed to execute UMAP in *supervised* mode.
+The target data is exactly the $3$ classes of proteins as demonstrated above: 
+
+- The class of GREEKC-curated DbTFs proteins
+- The class of co-TFs
+- The proteins that don't belong to neither of the above two classes
+
+The resulting UMAP coordinates, colored with the above protein classification are as follows (for different number of neighbors):
+
+```r
+knitr::include_graphics(path = 'img/sumap/tf_sumap_6n.png')
+knitr::include_graphics(path = 'img/sumap/tf_sumap_8n.png')
+```
+
+<div class="figure">
+<img src="img/sumap/tf_sumap_6n.png" alt="Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" /><img src="img/sumap/tf_sumap_8n.png" alt="Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" />
+<p class="caption">(\#fig:sumap-1)Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.</p>
+</div>
+
+
+```r
+knitr::include_graphics(path = 'img/sumap/tf_sumap_10n.png')
+knitr::include_graphics(path = 'img/sumap/tf_sumap_12n.png')
+```
+
+<div class="figure">
+<img src="img/sumap/tf_sumap_10n.png" alt="Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" /><img src="img/sumap/tf_sumap_12n.png" alt="Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" />
+<p class="caption">(\#fig:sumap-2)Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.</p>
+</div>
+
+
+```r
+knitr::include_graphics(path = 'img/sumap/tf_sumap_14n.png')
+knitr::include_graphics(path = 'img/sumap/tf_sumap_20n.png')
+```
+
+<div class="figure">
+<img src="img/sumap/tf_sumap_14n.png" alt="Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" /><img src="img/sumap/tf_sumap_20n.png" alt="Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" />
+<p class="caption">(\#fig:sumap-3)Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.</p>
+</div>
+
+:::{.green-box}
+- $2$ clusters of no-TF proteins
+- $2$ clusters of DbTF proteins 
+- The main co-TF cluster is now cut-off from the other two and more dispersed (note that there are some co-TFs in the no-TF cluster still, as there are few examples of proteins belonging to a different class than the cluster tag they reside into indicates)
 :::
 
 # R session info {-}

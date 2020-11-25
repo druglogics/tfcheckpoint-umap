@@ -1174,16 +1174,58 @@ Figure 14: Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors and 
 </p>
 </div>
 <div class="green-box">
-<p>All above figures point to the following observations:
-- There are <strong>two distinct superclusters</strong>, one of them with mostly non-DbTFs and the other with a mix of co-TFs, DbTFs and non-DbTFs.
-- <strong>Non-DbTFs</strong>, as also observed in previous figures, do not reside in one, but <strong>two separate clusters</strong>, denoting two families of non-DbTF proteins.
-- The co-TF cluster (green) seems to be a pure subset of the non-DbTF cluster.</p>
+<p>All above figures point to the following observations:</p>
+<ul>
+<li>There are <strong>two distinct superclusters</strong>, one of them with mostly no-TFs and the other with a mix of co-TFs, DbTFs and no-TFs.</li>
+<li>The proteins that are labeled neither as DbTF nor co-TF, do not reside in one, but <strong>two separate clusters</strong>, denoting thus two families of non-DbTF, non-co-TF proteins.</li>
+<li>The <strong>DbTFs</strong> also seem to be grouped into <strong>two clusters</strong>, a main one and a one more dispersed across the protein map.</li>
+<li>The co-TF cluster (green) seems to be a pure subset of the second no-TF cluster.</li>
+</ul>
+</div>
+<p>In order to make more clear the distinction between the clusters, we proceed to execute UMAP in <em>supervised</em> mode.
+The target data is exactly the <span class="math inline">\(3\)</span> classes of proteins as demonstrated above:</p>
+<ul>
+<li>The class of GREEKC-curated DbTFs proteins</li>
+<li>The class of co-TFs</li>
+<li>The proteins that don’t belong to neither of the above two classes</li>
+</ul>
+<p>The resulting UMAP coordinates, colored with the above protein classification are as follows (for different number of neighbors):</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/sumap/tf_sumap_6n.png&#39;</span>)</span>
+<span id="cb22-2"><a href="#cb22-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/sumap/tf_sumap_8n.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:sumap-1"></span>
+<img src="img/sumap/tf_sumap_6n.png" alt="Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" /><img src="img/sumap/tf_sumap_8n.png" alt="Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" />
+<p class="caption">
+Figure 15: Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.
+</p>
+</div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/sumap/tf_sumap_10n.png&#39;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/sumap/tf_sumap_12n.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:sumap-2"></span>
+<img src="img/sumap/tf_sumap_10n.png" alt="Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" /><img src="img/sumap/tf_sumap_12n.png" alt="Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" />
+<p class="caption">
+Figure 16: Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.
+</p>
+</div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/sumap/tf_sumap_14n.png&#39;</span>)</span>
+<span id="cb24-2"><a href="#cb24-2"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/sumap/tf_sumap_20n.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:sumap-3"></span>
+<img src="img/sumap/tf_sumap_14n.png" alt="Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" /><img src="img/sumap/tf_sumap_20n.png" alt="Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" />
+<p class="caption">
+Figure 17: Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.
+</p>
+</div>
+<div class="green-box">
+<ul>
+<li><span class="math inline">\(2\)</span> clusters of no-TF proteins</li>
+<li><span class="math inline">\(2\)</span> clusters of DbTF proteins</li>
+<li>The main co-TF cluster is now cut-off from the other two and more dispersed (note that there are some co-TFs in the no-TF cluster still, as there are few examples of proteins belonging to a different class than the cluster tag they reside into indicates)</li>
+</ul>
 </div>
 </div>
 </div>
 <div id="r-session-info" class="section level1 unnumbered" number="">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 20.04.1 LTS
