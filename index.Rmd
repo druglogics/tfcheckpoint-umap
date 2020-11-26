@@ -232,7 +232,6 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_annot.png')
 :::{.blue-box}
 In the script [interesting_cases.R](https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/interesting_cases.R) we have filtered and extracted all the interesting cases that arise from the above figure, where proteins annotated in a particular category end up being in a cluster of another class: e.g. which co-TFs or no-TFs co-cluster with the DbTF-clusters $1$ and $2$?
 Are there DbTFs in clusters $4$ and $5$ (since it's pretty hard to see in the above figure)?
-
 See respective files in the [online directory](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/interesting_cases).
 The notation follows the above figure ($1$ means the respective DbTF cluster, $3$ the co-TF cluster, etc.).
 
