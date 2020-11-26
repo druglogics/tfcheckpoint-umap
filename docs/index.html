@@ -905,7 +905,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">TFcheckpoint Dataset visualization using UMAP</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 25 November, 2020</em></p>
+<p class="date"><em>Last updated: 26 November, 2020</em></p>
 </div>
 <div id="input" class="section level1 unnumbered" number="">
 <h1>Input</h1>
@@ -1221,11 +1221,33 @@ Figure 17: Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop 
 <li>The main co-TF cluster is now cut-off from the other two and more dispersed (note that there are some co-TFs in the no-TF cluster still, as there are few examples of proteins belonging to a different class than the cluster tag they reside into indicates)</li>
 </ul>
 </div>
+<p>In order to make the distinction even more clear, we take the <span class="math inline">\(14\)</span> neighbors supervised case and annotate the respective clusters:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="dt">path =</span> <span class="st">&#39;img/sumap/tf_sumap_14n_annot.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:sumap-4"></span>
+<img src="img/sumap/tf_sumap_14n_annot.png" alt="Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number." width="1050" />
+<p class="caption">
+Figure 18: Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number.
+</p>
+</div>
+<div class="blue-box">
+<p>In the script <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/interesting_cases.R">interesting_cases.R</a> we have filtered and extracted all the interesting cases that arise from the above figure, where proteins annotated in a particular category end up being in a cluster of another class: e.g. which co-TFs or no-TFs co-cluster with the DbTF-clusters <span class="math inline">\(1\)</span> and <span class="math inline">\(2\)</span>?
+Are there DbTFs in clusters <span class="math inline">\(4\)</span> and <span class="math inline">\(5\)</span> (since it’s pretty hard to see in the above figure)?</p>
+<p>See respective files in the <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/interesting_cases">online directory</a>.
+The notation follows the above figure (<span class="math inline">\(1\)</span> means the respective DbTF cluster, <span class="math inline">\(3\)</span> the co-TF cluster, etc.).</p>
+<p>Some distinct examples are:</p>
+<ul>
+<li><code>SMAD6</code> is annotated as a co-TF, but resides in the DbTF cluster No.<span class="math inline">\(2\)</span></li>
+<li>The proteins <code>CAMTA1</code>, <code>HOPX</code>, <code>NR0B1</code> are annotated as no-TFs, but reside in the DbTFs cluster No.<span class="math inline">\(2\)</span></li>
+<li>Most members of the <code>THAP</code> family of proteins are annotated as no-TFs, but reside in the co-TF cluster No.<span class="math inline">\(3\)</span></li>
+<li>Most members of the <code>DUX</code> and <code>ZNF</code> family of proteins, are annotated as DbTFs, but reside in the no-TF cluster No.<span class="math inline">\(4\)</span></li>
+<li><code>PGBD1</code> is annotated as a DbTF, but resides in the no-TF cluster No.<span class="math inline">\(5\)</span></li>
+</ul>
+</div>
 </div>
 </div>
 <div id="r-session-info" class="section level1 unnumbered" number="">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>xfun<span class="op">::</span><span class="kw">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 20.04.1 LTS

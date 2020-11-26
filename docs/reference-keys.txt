@@ -15,3 +15,4 @@ fig:umap-15n-co-vs-dbtf-2
 fig:sumap-1
 fig:sumap-2
 fig:sumap-3
+fig:sumap-4
