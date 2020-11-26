@@ -110,7 +110,7 @@ readr::write_lines(x = notfs_2, file = 'data/interesting_cases/notfs_2.txt')
 dbtfs_2 = gg_sumap %>%
   filter(X > -22, X < -18, Y > 10, Y < 13) %>%
   filter(target == 1) %>% pull(name)
-readr::write_lines(x = dbtfs_2, file = 'data/interesting_cases/dbtfs_1.txt')
+readr::write_lines(x = dbtfs_2, file = 'data/interesting_cases/dbtfs_2.txt')
 
 # 3 (co-TF cluster)
 ## only co-TFs and some no-TFs here
