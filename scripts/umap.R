@@ -1,5 +1,6 @@
 library(dplyr)
 library(tibble)
+library(readr)
 library(ggplot2)
 library(uwot)
 
@@ -313,7 +314,7 @@ for (min_dist in min_dists) {
 ###################
 neighbors = c(6,8,10,12,14,20)
 
-# target class: 'non-TF: 0, DbTF: 1, co-TF: 2'
+# target class: 'no-TF: 0, DbTF: 1, co-TF: 2'
 target_class = sapply(protein_names, function(name) {
   is_dbtf = name %in% greekc_dbtfs
   is_cotf = name %in% greekc_cotfs
