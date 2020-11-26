@@ -224,6 +224,27 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_20n.png')
 - The main co-TF cluster is now cut-off from the other two and more dispersed (note that there are some co-TFs in the no-TF cluster still, as there are few examples of proteins belonging to a different class than the cluster tag they reside into indicates)
 :::
 
+In order to make the distinction even more clear, we take the $14$ neighbors supervised case and annotate the respective clusters:
+```{r sumap-4, fig.cap = 'Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number.'}
+knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_annot.png')
+```
+
+:::{.blue-box}
+In the script [interesting_cases.R](https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/interesting_cases.R) we have filtered and extracted all the interesting cases that arise from the above figure, where proteins annotated in a particular category end up being in a cluster of another class: e.g. which co-TFs or no-TFs co-cluster with the DbTF-clusters $1$ and $2$?
+Are there DbTFs in clusters $4$ and $5$ (since it's pretty hard to see in the above figure)?
+
+See respective files in the [online directory](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/interesting_cases).
+The notation follows the above figure ($1$ means the respective DbTF cluster, $3$ the co-TF cluster, etc.).
+
+Some distinct examples are:
+
+- `SMAD6` is annotated as a co-TF, but resides in the DbTF cluster No.$2$
+- The proteins `CAMTA1`, `HOPX`, `NR0B1` are annotated as no-TFs, but reside in the DbTFs cluster No.$2$
+- Most members of the `THAP` family of proteins are annotated as no-TFs, but reside in the co-TF cluster No.$3$
+- Most members of the `DUX` and `ZNF` family of proteins, are annotated as DbTFs, but reside in the no-TF cluster No.$4$
+- `PGBD1` is annotated as a DbTF, but resides in the no-TF cluster No.$5$
+:::
+
 # R session info {-}
 
 ```{r session info, comment="", class.source = 'fold-show'}
