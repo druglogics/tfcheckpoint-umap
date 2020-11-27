@@ -1,7 +1,7 @@
 ---
 title: "TFcheckpoint Dataset visualization using UMAP"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 26 November, 2020"
+date: "Last updated: 27 November, 2020"
 description: "Description"
 url: 'https\://druglogics.github.io/tfcheckpoint-umap/'
 github-repo: "druglogics/tfcheckpoint-umap"
@@ -176,15 +176,15 @@ scales::percent(cohen_k)
 There is a **substantial level of agreement** between the GO DNA-binding annotation and the DbTF GREEKC list.
 :::
 
-Using the UMAP coordinates with $12$ neighbors, we color the data points according to the GREEKC annotated DbTFs labels:
+Using the UMAP coordinates with $12$ neighbors, we color the data points according to the GREEKC annotated DbTFs labels and *boxify* the corresponding superclusters:
 
 ```r
 knitr::include_graphics(path = 'img/12n_extra/tf_umap_12n_greekc_dbtfs.png')
 ```
 
 <div class="figure">
-<img src="img/12n_extra/tf_umap_12n_greekc_dbtfs.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding." width="1050" />
-<p class="caption">(\#fig:umap-12n-greekc-dbtfs)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding.</p>
+<img src="img/12n_extra/tf_umap_12n_greekc_dbtfs.png" alt="Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding. The three protein superclusters have been given corresponding ids." width="1050" />
+<p class="caption">(\#fig:umap-12n-greekc-dbtfs)Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. DbTFs proteins according to the curated GREEKC list are colored atop the 2D embedding. The three protein superclusters have been given corresponding ids.</p>
 </div>
 
 We also color the same points according to the values presented in the contingency table above (including thus all $4$ cases of proteins as annotated by the GREEKC and the DNA-binding GO term):
@@ -199,9 +199,11 @@ knitr::include_graphics(path = 'img/12n_extra/tf_umap_12n_go_vs_greekc_dbtfs.png
 </div>
 
 :::{.green-box}
-- There are a lot more DbTFs now residing inside the non-DbTF supercluster (top right)
-- The bottom left supercluster with no DbTFs has become a bit more distinguished, i.e. almost all it's points are non-DbTFs according to the GREEKC list information.
+- There are a lot more DbTFs now residing inside the non-DbTF supercluster (No. $3$)
+- The No. $1$ supercluster with no DbTFs has become a bit more distinguished, i.e. almost all it's points are non-DbTFs according to the GREEKC list information.
 - Maybe the curated list better reflects the clustered data than the DNA-binding GO term thus?
+
+For more info, see the [data file](https://github.com/druglogics/tfcheckpoint-umap/tree/main/data/12n_dbtf_cluster_annot.tsv) with the protein names, the cluster id, the GREEKC DbTF and the GO term DNA binding annotation.
 :::
 
 ## Tuning minimum distance {-}
