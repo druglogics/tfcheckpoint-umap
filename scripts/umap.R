@@ -183,7 +183,16 @@ gg_umap = gg_umap %>%
   tibble::add_column(is_dna_binding = gg_data %>% pull(`DNA binding`) %>% as.factor()) %>%
   tibble::add_column(name = protein_names) %>%
   mutate(is_greekc_dbtf = ifelse(name %in% greekc_dbtfs, 1, 0)) %>% # add GREEKC DbTF annotation
-  mutate(is_greekc_dbtf = is_greekc_dbtf %>% as.factor())
+  mutate(is_greekc_dbtf = is_greekc_dbtf %>% as.factor()) %>%
+  mutate(cluster_id = case_when(X > 10 ~ 3, Y > -1 ~ 2, TRUE ~ 1)) %>% # add cluster id info
+  mutate(cluster_id = cluster_id %>% as.factor())
+
+# save data
+umap_cluster_res_file = 'data/12n_dbtf_cluster_annot.txt'
+if (!file.exists(umap_cluster_res_file)) {
+  readr::write_tsv(x = gg_umap %>% select(name, is_dna_binding, is_greekc_dbtf, cluster_id),
+    file = umap_cluster_res_file, col_names = TRUE)
+}
 
 # GO-DbTFs vs GREEKC-DbTFs contingency table
 dbtf_stats = table(gg_umap$is_dna_binding, gg_umap$is_greekc_dbtf,
@@ -205,6 +214,15 @@ if (!file.exists(image_file)) {
       label.theme = element_text(size = 12),
       override.aes = list(shape = 19, size = 12))) +
     labs(title = 'TFcheckpoint - UMAP (12 Neighbors)') +
+    # 1st cluster
+    annotate("rect", xmin = -17, xmax = -8, ymin = -8.5, ymax = -1, alpha = 0.05, size = 0.3, color = 'black') +
+    annotate("text", x = -7, y = -5, size = 7, label = "1") +
+    # 2nd cluster
+    annotate("rect", xmin = -11, xmax = -3, ymin = -0.8, ymax = 4, alpha = 0.05, size = 0.3, color = 'black') +
+    annotate("text", x = -2, y = 5, size = 7, label = "2") +
+    # 3rd cluster
+    annotate("rect", xmin = 12, xmax = 25.2, ymin = 1, ymax = 16, alpha = 0.05, size = 0.3, color = 'black') +
+    annotate("text", x = 11, y = 1, size = 7, label = "3") +
     theme_classic() +
     theme(plot.title = element_text(hjust = 0.5))
   ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
