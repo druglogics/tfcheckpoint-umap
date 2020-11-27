@@ -4,7 +4,7 @@ library(readr)
 library(ggplot2)
 
 # genes-to-GO terms data
-gg_data = readr::read_delim(file = 'data/genes2go_result_tfcheckpoint2_data.txt',
+gg_data = readr::read_delim(file = 'data/genes2go_result_tfcheckpoint2_data.tsv',
   delim = '\t', skip = 2, progress = TRUE)
 
 # protein list
