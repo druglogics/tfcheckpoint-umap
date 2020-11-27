@@ -188,7 +188,7 @@ gg_umap = gg_umap %>%
   mutate(cluster_id = cluster_id %>% as.factor())
 
 # save data
-umap_cluster_res_file = 'data/12n_dbtf_cluster_annot.txt'
+umap_cluster_res_file = 'data/12n_dbtf_cluster_annot.tsv'
 if (!file.exists(umap_cluster_res_file)) {
   readr::write_tsv(x = gg_umap %>% select(name, is_dna_binding, is_greekc_dbtf, cluster_id),
     file = umap_cluster_res_file, col_names = TRUE)
