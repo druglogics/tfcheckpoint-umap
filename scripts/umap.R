@@ -3,6 +3,7 @@ library(tibble)
 library(readr)
 library(ggplot2)
 library(uwot)
+library(VennDiagram)
 
 # genes-to-GO terms data
 gg_data = readr::read_delim(file = 'data/genes2go_result_tfcheckpoint2_data.tsv',
@@ -286,7 +287,7 @@ gg_umap %>%
   geom_point(shape = '.') +
   scale_colour_brewer(palette = "Set1", labels = c(paste0("Neither (",data_00,")"),
     paste0("DbTFs only (", data_01, ")"), paste0("co-TFs only (", data_10, ")"))) +
-  guides(colour = guide_legend(title = "co-TFs vs DbTFs",
+  guides(colour = guide_legend(title = "co-TFs vs GREEKC DbTFs",
     label.theme = element_text(size = 12),
     override.aes = list(shape = 19, size = 12))) +
   labs(title = 'TFcheckpoint - UMAP (12 Neighbors)') +
@@ -316,7 +317,7 @@ for (min_dist in min_dists) {
       geom_point(shape = '.') +
       scale_colour_brewer(palette = "Set1", labels = c(paste0("Neither (",data_00,")"),
         paste0("DbTFs only (", data_01, ")"), paste0("co-TFs only (", data_10, ")"))) +
-      guides(colour = guide_legend(title = "co-TFs vs DbTFs",
+      guides(colour = guide_legend(title = "co-TFs vs GREEKC DbTFs",
         label.theme = element_text(size = 12),
         override.aes = list(shape = 19, size = 12))) +
       labs(title = paste0('TFcheckpoint - UMAP (15 Neighbors, min_dist = ',
@@ -347,10 +348,10 @@ for (n_neighbors in neighbors) {
   data_file = paste0('data/tf_sumap_', n_neighbors, 'n.rds')
   if (!file.exists(data_file)) {
     set.seed(42)
-    gg_umap = uwot::umap(X = gg_mat, n_threads = 4, y = target_class,
+    gg_sumap = uwot::umap(X = gg_mat, n_threads = 4, y = target_class,
       n_neighbors = n_neighbors, metric = 'euclidean',
       verbose = TRUE)
-    saveRDS(object = gg_umap, file = data_file)
+    saveRDS(object = gg_sumap, file = data_file)
   }
 }
 
@@ -378,4 +379,186 @@ for (n_neighbors in neighbors) {
       theme(plot.title = element_text(hjust = 0.5))
     ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
   }
+}
+
+################################################################
+# Unsupervised UMAP + GREEKC DbTF + coTFs list [@Schmeier2017] #
+################################################################
+
+schmeier_cotfs = readr::read_csv(file = 'data/TcoF-DB_v2.csv') %>% pull(Symbol)
+
+# get the GREEKC co-TF list again
+greekc_cotfs = readr::read_csv(file = 'data/coTF_list.csv',
+  col_names = c('id', 'name'), col_types = 'cc') %>% pull(name)
+
+# 3 colors
+set1_col = RColorBrewer::brewer.pal(n = 3, 'Set1')
+
+output_venn_file = 'img/co_tf_venn.png'
+if (!file.exists(output_venn_file)) {
+  # supress logger output
+  futile.logger::flog.threshold(futile.logger::ERROR, name = "VennDiagramLogger")
+  VennDiagram::venn.diagram(x = list(protein_names, greekc_cotfs, schmeier_cotfs),
+    category.names = c("TFcheckpoint" , "GREEKC co-TFs" , "Schmeier co-TFs"),
+    filename = 'img/co_tf_venn.png', output = TRUE, imagetype = "png",
+    lty = 'blank', fill = set1_col, cex = 2, margin = 0.1, cat.cex = 1.6)
+}
+
+# not all coTFs are part of the TFcheckpoint dataset, so subset only to the ones that are
+schmeier_cotfs = schmeier_cotfs[schmeier_cotfs %in% protein_names]
+
+# UMAP coordinates with 12 neighbors
+gg_umap = readRDS(file = 'data/tf_umap_12n.rds')
+
+# tidy up data
+gg_umap = gg_umap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(name = protein_names) %>%
+  mutate(is_greekc_dbtf = ifelse(name %in% greekc_dbtfs, 1, 0)) %>% # add GREEKC DbTF annotation
+  mutate(is_greekc_dbtf = is_greekc_dbtf %>% as.factor()) %>%
+  mutate(is_schmeier_cotf = ifelse(name %in% schmeier_cotfs, 1, 0)) %>% # add Schmeier coTF annotation
+  mutate(is_schmeier_cotf = is_schmeier_cotf %>% as.factor())
+
+# GREEKC-DbTFs vs Schmeier-coTFs contingency table
+db_schmeier_cotf_stats = table(gg_umap$is_greekc_dbtf, gg_umap$is_schmeier_cotf,
+  dnn = c('GREEKC-DbTF', 'Schmeier co-TF')) %>% as_tibble()
+
+stats_file = 'data/db_schmeier_cotf_stats.rds'
+if (!file.exists(stats_file)) {
+  saveRDS(object = db_schmeier_cotf_stats, file = stats_file)
+}
+
+data_00 = db_schmeier_cotf_stats %>% filter(`Schmeier co-TF` == 0, `GREEKC-DbTF` == 0) %>% pull(n)
+data_01 = db_schmeier_cotf_stats %>% filter(`Schmeier co-TF` == 0, `GREEKC-DbTF` == 1) %>% pull(n)
+data_10 = db_schmeier_cotf_stats %>% filter(`Schmeier co-TF` == 1, `GREEKC-DbTF` == 0) %>% pull(n)
+data_11 = db_schmeier_cotf_stats %>% filter(`Schmeier co-TF` == 1, `GREEKC-DbTF` == 1) %>% pull(n)
+
+print('Schmeier coTFs vs GREEKC DbTFs (12 neighbors)')
+gg_umap %>%
+  ggplot(aes(x = X, y = Y,
+    color = interaction(is_schmeier_cotf, is_greekc_dbtf, sep = '-', lex.order = TRUE))) +
+  geom_point(shape = '.') +
+  scale_colour_brewer(palette = "Set1", labels = c(paste0("Neither (",data_00,")"),
+    paste0("DbTFs only (", data_01, ")"), paste0("co-TFs only (", data_10, ")"),
+    paste0("Both (", data_11, ")"))) +
+  guides(colour = guide_legend(title = "Schmeier coTFs vs GREEKC DbTFs",
+    title.theme = element_text(size = 10), label.theme = element_text(size = 12),
+    override.aes = list(shape = 19, size = 12))) +
+  labs(title = 'TFcheckpoint - UMAP (12 Neighbors)') +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = 'img/12n_extra/tf_umap_12n_co_vs_dbtfs_schmeier.png', width = 7, height = 5, dpi = 'print')
+
+print('Schmeier coTFs vs GREEKC DbTFs (15 neighbors, different min_dist)')
+for (min_dist in min_dists) {
+  print(paste0('min_dist = ', min_dist))
+
+  image_file = paste0('img/cotf_vs_dbtf/tf_umap_15n_mindist_', min_dist, '_schmeier.png')
+
+  if (!file.exists(image_file)) {
+    umap_file = paste0('data/tf_umap_15n_mindist_', min_dist, '.rds')
+    gg_umap = readRDS(file = umap_file)
+    gg_umap %>%
+      `colnames<-` (c("X", "Y")) %>%
+      tibble::as_tibble() %>%
+      tibble::add_column(name = protein_names) %>%
+      mutate(is_greekc_dbtf = ifelse(name %in% greekc_dbtfs, 1, 0)) %>% # add GREEKC DbTF annotation
+      mutate(is_greekc_dbtf = is_greekc_dbtf %>% as.factor()) %>%
+      mutate(is_schmeier_cotf = ifelse(name %in% schmeier_cotfs, 1, 0)) %>% # add Schmeier coTF annotation
+      mutate(is_schmeier_cotf = is_schmeier_cotf %>% as.factor()) %>%
+      ggplot(aes(x = X, y = Y, color = interaction(is_schmeier_cotf, is_greekc_dbtf, sep = '-', lex.order = TRUE))) +
+      geom_point(shape = '.') +
+      scale_colour_brewer(palette = "Set1", labels = c(paste0("Neither (",data_00,")"),
+        paste0("DbTFs only (", data_01, ")"), paste0("co-TFs only (", data_10, ")"),
+        paste0("Both (", data_11, ")"))) +
+      guides(colour = guide_legend(title = "Schmeier coTFs vs GREEKC DbTFs",
+        title.theme = element_text(size = 10), label.theme = element_text(size = 12),
+        override.aes = list(shape = 19, size = 12))) +
+      labs(title = paste0('TFcheckpoint - UMAP (15 Neighbors, min_dist = ', min_dist, ')')) +
+      theme_classic() +
+      theme(plot.title = element_text(hjust = 0.5))
+    ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+  }
+}
+
+##############################################################
+# Supervised UMAP + GREEKC DbTF + coTFs list [@Schmeier2017] #
+##############################################################
+
+neighbors = c(6,8,10,12,14,20)
+
+# target class: 'no-TF: 0, DbTF: 1, co-TF: 2, Both: 3'
+target_class = sapply(protein_names, function(name) {
+  is_dbtf = name %in% greekc_dbtfs
+  is_cotf = name %in% schmeier_cotfs
+  if (!is_dbtf & !is_cotf) return(0) # none of the 2
+  if (is_dbtf & !is_cotf) return(1) # DbTF
+  if (!is_dbtf & is_cotf) return(2) # co-TF
+  return(3) # Both
+}, USE.NAMES = FALSE) %>% as.factor()
+
+for (n_neighbors in neighbors) {
+  print(paste0('Number of neighbors (supervised UMAP with Schmeier co-TF list): ', n_neighbors))
+
+  data_file = paste0('data/tf_sumap_', n_neighbors, 'n_schmeier.rds')
+  if (!file.exists(data_file)) {
+    set.seed(42)
+    gg_sumap = uwot::umap(X = gg_mat, n_threads = 4, y = target_class,
+      n_neighbors = n_neighbors, metric = 'euclidean',
+      verbose = TRUE)
+    saveRDS(object = gg_sumap, file = data_file)
+  }
+}
+
+# save plots
+for (n_neighbors in neighbors) {
+  print(paste0('Number of neighbors: ', n_neighbors))
+
+  image_file = paste0('img/sumap/tf_sumap_', n_neighbors, 'n_schmeier.png')
+
+  if (!file.exists(image_file)) {
+    umap_file = paste0('data/tf_sumap_', n_neighbors, 'n.rds')
+    gg_umap = readRDS(file = umap_file)
+    gg_umap %>%
+      `colnames<-` (c("X", "Y")) %>%
+      tibble::as_tibble() %>%
+      tibble::add_column(target = target_class) %>%
+      ggplot(aes(x = X, y = Y, color = target)) +
+      geom_point(shape = '.') +
+      scale_colour_brewer(palette = "Set1", labels = c("no-TFs", "DbTFs", "co-TFs", "Both")) +
+      guides(colour = guide_legend(title = "Target Class",
+        label.theme = element_text(size = 12),
+        override.aes = list(shape = 19, size = 12))) +
+      labs(title = paste0("TFcheckpoint - Supervised UMAP (", n_neighbors," Neighbors)")) +
+      theme_classic() +
+      theme(plot.title = element_text(hjust = 0.5))
+    ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+  }
+}
+
+print('Supervised UMAP, 14 neighbors, target = 1')
+data_file = 'data/tf_sumap_14n_schmeier_w1.rds'
+
+if (!file.exists(data_file)) {
+  set.seed(42)
+  gg_sumap = uwot::umap(X = gg_mat, n_threads = 4, y = target_class, target_weight = 1,
+    n_neighbors = 14, metric = 'euclidean', verbose = TRUE)
+  saveRDS(object = gg_sumap, file = 'data/tf_sumap_14n_schmeier_w1.rds')
+
+  # save plot
+  gg_sumap %>%
+    `colnames<-` (c("X", "Y")) %>%
+    tibble::as_tibble() %>%
+    tibble::add_column(target = target_class) %>%
+    ggplot(aes(x = X, y = Y, color = target)) +
+    geom_point(shape = '.') +
+    scale_colour_brewer(palette = "Set1", labels = c("no-TFs", "DbTFs", "co-TFs", "Both")) +
+    guides(colour = guide_legend(title = "Target Class",
+      label.theme = element_text(size = 12),
+      override.aes = list(shape = 19, size = 12))) +
+    labs(title = paste0("TFcheckpoint - Supervised UMAP (14 Neighbors)")) +
+    theme_classic() +
+    theme(plot.title = element_text(hjust = 0.5))
+  ggsave(filename = 'img/sumap/tf_sumap_14n_w1_schmeier.png', width = 7, height = 5, dpi = 'print')
 }
