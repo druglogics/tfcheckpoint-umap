@@ -472,10 +472,11 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_schmeier.png')
 </div>
 
 :::{.green-box}
-We make the same observations as [above](#sumap-res) regarding the resulting clusters, with the addition of the now very pronounced co-TF cluster that resides within one of the two no-TF clusters.
+We make the same observations as [above](#sumap-res) regarding the resulting clusters ($2$ clusters in each category: no-TFs, DbTFs, co-TFs).
+The co-TF cluster that resides within one of the two no-TF clusters is now much more pronounced, since the current co-TF list is larger than the GREEKC one.
 :::
 
-If we use a weighting factor exclusively dependent on the target topology, we get:
+If we use a weighting factor exclusively dependent on the target topology, we get a better separation of the clusters (as expected):
 
 ```r
 knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_w1_schmeier.png')
