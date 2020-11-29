@@ -24,7 +24,7 @@ library(scales)
 TFcheckpoint [@Chawla2013] is a curated database with sequence-specific DNA-binding RNA polymerase II transcription-factor proteins (**DbTFs**).
 
 The form of the dataset is as follows: a total of $4705$ proteins, each one represented by a row, are enriched with GO annotations (a total of $8621$ GO terms [@Carbon2019]) that indicate the presence ($1$) or absence ($0$) of a particular molecular function. 
-The dataset is provided as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/genes2go_result_tfcheckpoint2_data.txt).
+The dataset is provided as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/genes2go_result_tfcheckpoint2_data.tsv).
 
 In this analysis we present a 2D visualization of this dataset using the non-linear dimension reduction method UMAP [@McInnes2018a].
 This method will reduce the size of the dataset from $(4705 \times 8621)$ to $(4705 \times 2)$ while efficiently identifying groups of proteins with the same molecular characterization. 
@@ -165,7 +165,7 @@ For `min_dist` $\gt 0.1$, the separation of the superclusters (specifically for 
 
 ## GREEKC curated co-TF list {-}
 
-Members of the [GREEKC](https://www.greekc.org/) consortium curated also a list of co-TFs.
+Members of the [GREEKC](https://www.greekc.org/) consortium curated also a list of co-TFs (if I understood correctly this was created from the TcoF database (v1) and a previous version of TFcheckpoint so it's an old list of co-TFs).
 This list has a total of $522$ proteins, out of which only $239$ are included in the TFcheckpoint dataset.
 
 Comparing this list of proteins with the curated list of DbTFs we have the following contingency table ($1$ corresponds to the existence of a particular label, $0$ to it's absence), where no protein has been labeled both as a co-TF and a DbTF:
@@ -190,7 +190,7 @@ knitr::include_graphics(path = 'img/cotf_vs_dbtf/tf_umap_15n_mindist_0.3.png')
 knitr::include_graphics(path = 'img/cotf_vs_dbtf/tf_umap_15n_mindist_0.5.png')
 ```
 
-:::{.green-box}
+:::{.green-box #cotf-vs-dbtf-obs}
 All above figures point to the following observations:
 
 - There are **two distinct superclusters**, one of them with mostly no-TFs and the other with a mix of co-TFs, DbTFs and no-TFs.
@@ -200,11 +200,13 @@ All above figures point to the following observations:
 :::
 
 In order to make more clear the distinction between the clusters, we proceed to execute UMAP in *supervised* mode.
-The target data is exactly the $3$ classes of proteins as demonstrated above: 
+The target data is exactly the $3$ classes of proteins as demonstrated above:
 
 - The class of GREEKC-curated DbTFs proteins
 - The class of co-TFs
 - The proteins that don't belong to neither of the above two classes
+
+Note that the default weighting factor between data topology and target topology has been used for the following classifications ($0.5$).
 
 The resulting UMAP coordinates, colored with the above protein classification are as follows (for different number of neighbors):
 ```{r sumap-1, fig.show='hold', out.width='50%', fig.cap = 'Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.'}
@@ -222,7 +224,7 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_14n.png')
 knitr::include_graphics(path = 'img/sumap/tf_sumap_20n.png')
 ```
 
-:::{.green-box}
+:::{.green-box #sumap-res}
 - $2$ clusters of no-TF proteins
 - $2$ clusters of DbTF proteins
 - The main co-TF cluster is now cut-off from the other two and more dispersed (note that there are some co-TFs in the no-TF cluster still, as there are few examples of proteins belonging to a different class than the cluster tag they reside into indicates)
@@ -247,6 +249,62 @@ Some distinct examples are:
 - Most members of the `DUX` and `ZNF` family of proteins, are annotated as DbTFs, but reside in the no-TF cluster No.$4$
 - `PGBD1` is annotated as a DbTF, but resides in the no-TF cluster No.$5$
 :::
+
+## [@Schmeier2017] co-TF list {-}
+
+The [@Schmeier2017] paper describes the 2nd (updated) version of a co-TF database.
+The full list includes $958$ co-TFs and is given as a file [here](https://github.com/druglogics/tfcheckpoint-umap/tree/main/data/TcoF-DB_v2.csv).
+From this co-TF list, $426$ are included in the TFcheckpoint dataset (so a lot more than the GREEKC co-TF list) and a total of $205$ co-TFs are common between the two co-TF lists.
+
+Comparing the $2$ co-TF sets with TFcheckpoint proteins, we have the following Venn diagram:
+```{r venn-1, fig.cap='Venn Diagram comparing the proteins listed in the TFcheckpoint dataset, the co-TF GREEKC list and the co-TF Schmeier2017 et. al (2017) database'}
+knitr::include_graphics(path = 'img/co_tf_venn.png')
+```
+
+Comparing the Schmeier et. al co-TF protein list with the GREEKC curated list of DbTFs we have the following contingency table ($1$ corresponds to the existence of a particular label, $0$ to it's absence), where $5$ proteins have been labeled as a co-TF and a DbTF:
+```{r cotf-vs-dbtf, cache=TRUE}
+db_cotf_stats = readRDS(file = 'data/db_schmeier_cotf_stats.rds')
+knitr::kable(db_cotf_stats)
+```
+
+We now use the unsupervised UMAP result with $12$ neighbors and color the proteins according to the four categories described above:
+```{r umap-12n-co-vs-dbtf-schmeier, fig.cap = 'Unsupervised UMAP of the TFcheckpoint dataset using 12 neighbors. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF Schmeier lists atop the 2D embedding'}
+knitr::include_graphics(path = 'img/12n_extra/tf_umap_12n_co_vs_dbtfs_schmeier.png')
+```
+
+We perform the same coloring with the UMAP coordinates from the $15$ neighbors and two different values of `min_dist`, to have a better picture of the clustering results:
+```{r umap-15n-co-vs-dbtf-schmeier, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint dataset using 15 neighbors. Data points (proteins) have been colored according to their classification in the joint DbTF and co-TF Schmeier lists atop the 2D embedding'}
+knitr::include_graphics(path = 'img/cotf_vs_dbtf/tf_umap_15n_mindist_0.05_schmeier.png')
+knitr::include_graphics(path = 'img/cotf_vs_dbtf/tf_umap_15n_mindist_0.5_schmeier.png')
+```
+
+:::{.green-box}
+We observe the same things as [before](#cotf-vs-dbtf-obs) regarding the generated clusters, only with a larger proportion of co-TFs in the corresponding cluster.
+
+The $5$ proteins that are annotated as both co-TFs and DbTFs are: `ZNF587B`, `CC2D1A`, `NACC2`, `PGBD1`, `NACC1`.
+:::
+
+In order to make more clear the distinction between the clusters, we proceed to execute UMAP in *supervised* mode.
+The target data is exactly the $4$ classes of proteins as demonstrated above:
+
+- The class of GREEKC-curated DbTFs proteins
+- The class of co-TFs from [@Schmeier2017]
+- The proteins that don't belong to neither of the above two classes
+- The $5$ proteins that are annotated as both DbTFs and co-TFs
+
+The resulting UMAP coordinates, colored with the above protein classification are as follows (we present only the result with $14$ neighbors):
+```{r sumap-14n-schmeier, fig.cap='Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)'}
+knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_schmeier.png')
+```
+
+:::{.green-box}
+We make the same observations as [above](#sumap-res) regarding the resulting clusters, with the addition of the now very pronounced co-TF cluster that resides within one of the two no-TF clusters.
+:::
+
+If we use a weighting factor exclusively dependent on the target topology, we get:
+```{r sumap-14n-schmeier-w1, fig.cap='Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. The weighting factor between data topology and target topology is 1 (mostly target topology/labeling is considered)'}
+knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_w1_schmeier.png')
+```
 
 # R session info {-}
 
