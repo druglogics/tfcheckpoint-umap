@@ -463,17 +463,19 @@ The target data is exactly the $4$ classes of proteins as demonstrated above:
 The resulting UMAP coordinates, colored with the above protein classification are as follows (we present only the result with $14$ neighbors):
 
 ```r
-knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_schmeier.png')
+knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_schmeier_annot.png')
 ```
 
 <div class="figure">
-<img src="img/sumap/tf_sumap_14n_schmeier.png" alt="Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)" width="1050" />
-<p class="caption">(\#fig:sumap-14n-schmeier)Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)</p>
+<img src="img/sumap/tf_sumap_14n_schmeier_annot.png" alt="Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number. Default weighting factor between data topology and target topology has been used (0.5)" width="1050" />
+<p class="caption">(\#fig:sumap-14n-schmeier)Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number. Default weighting factor between data topology and target topology has been used (0.5)</p>
 </div>
 
 :::{.green-box}
 We make the same observations as [above](#sumap-res) regarding the resulting clusters ($2$ clusters in each category: no-TFs, DbTFs, co-TFs).
 The co-TF cluster that resides within one of the two no-TF clusters is now much more pronounced, since the current co-TF list is larger than the GREEKC one.
+
+Access the cluster annotated data from the above figure [here](https://github.com/druglogics/tfcheckpoint-umap/tree/main/data/14n_sumap_schmeier_cluster_annot.tsv).
 :::
 
 If we use a weighting factor exclusively dependent on the target topology, we get a better separation of the clusters (as expected):
