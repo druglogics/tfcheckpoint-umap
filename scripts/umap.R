@@ -498,6 +498,15 @@ target_class = sapply(protein_names, function(name) {
   return(3) # Both
 }, USE.NAMES = FALSE) %>% as.factor()
 
+target_class_name = sapply(protein_names, function(name) {
+  is_dbtf = name %in% greekc_dbtfs
+  is_cotf = name %in% schmeier_cotfs
+  if (!is_dbtf & !is_cotf) return('no-TF') # none of the 2
+  if (is_dbtf & !is_cotf) return('DbTF') # DbTF
+  if (!is_dbtf & is_cotf) return('co-TF') # co-TF
+  return('Both') # Both
+}, USE.NAMES = FALSE) %>% as.factor()
+
 for (n_neighbors in neighbors) {
   print(paste0('Number of neighbors (supervised UMAP with Schmeier co-TF list): ', n_neighbors))
 
@@ -519,8 +528,8 @@ for (n_neighbors in neighbors) {
 
   if (!file.exists(image_file)) {
     umap_file = paste0('data/tf_sumap_', n_neighbors, 'n.rds')
-    gg_umap = readRDS(file = umap_file)
-    gg_umap %>%
+    gg_sumap = readRDS(file = umap_file)
+    gg_sumap %>%
       `colnames<-` (c("X", "Y")) %>%
       tibble::as_tibble() %>%
       tibble::add_column(target = target_class) %>%
@@ -535,6 +544,61 @@ for (n_neighbors in neighbors) {
       theme(plot.title = element_text(hjust = 0.5))
     ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
   }
+}
+
+print('Supervised UMAP, 14 neighbors, cluster annotated')
+umap_file = paste0('data/tf_sumap_14n.rds')
+gg_sumap = readRDS(file = umap_file)
+
+gg_sumap = gg_sumap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(target = target_class) %>%
+  tibble::add_column(target_class = target_class_name) %>%
+  tibble::add_column(name = protein_names) %>%
+  mutate(cluster_id =
+    case_when(Y > 14 ~ 1, Y > 10 ~ 2, X < -5 ~ 3, X < 13 ~ 4, TRUE ~ 5)) %>% # add cluster id info
+  mutate(cluster_id = cluster_id %>% as.factor())
+
+# save data
+sumap_cluster_res_file = 'data/14n_sumap_schmeier_cluster_annot.tsv'
+if (!file.exists(sumap_cluster_res_file)) {
+  readr::write_tsv(x = gg_sumap %>% select(name, target_class, cluster_id),
+    file = sumap_cluster_res_file, col_names = TRUE)
+}
+
+image_file = 'img/sumap/tf_sumap_14n_schmeier_annot.png'
+if (!file.exists(image_file)) {
+  gg_sumap %>%
+    ggplot(aes(x = X, y = Y, color = target)) +
+    geom_point(shape = '.') +
+    scale_colour_brewer(palette = "Set1", labels = c("no-TFs", "DbTFs", "co-TFs", "Both")) +
+    guides(colour = guide_legend(title = "Target Class",
+      label.theme = element_text(size = 12),
+      override.aes = list(shape = 19, size = 12))) +
+    # DbTFs: 2 blocks
+    annotate("rect", xmin = -21.5, xmax = -15.5, ymin = 14, ymax = 20, alpha = 0.05, size = 0.3, color = set1_col[2]) +
+    annotate("text", x = -14, y = 20, size = 7, label = "1", color = set1_col[2]) +
+    annotate("rect", xmin = -22, xmax = -18, ymin = 10, ymax = 13, alpha = 0.05, size = 0.3, color = set1_col[2]) +
+    annotate("text", x = -16.5, y = 12, size = 7, label = "2", color = set1_col[2]) +
+    # co-TFs: 1 block
+    annotate("rect", xmin = -16, xmax = -7, ymin = -3, ymax = 8, alpha = 0.05, size = 0.3, color = set1_col[3]) +
+    annotate("text", x = -6, y = 9, size = 7, label = "3", color = set1_col[3]) +
+    # no-TFs: 2 blocks (second has also co-TFs)
+    annotate("rect", xmin = -5, xmax = 11, ymin = -11, ymax = -2, alpha = 0.05, size = 0.3, color = set1_col[1]) +
+    annotate("text", x = 12, y = -1, size = 7, label = "4", color = set1_col[1]) +
+    annotate("rect", xmin = 16, xmax = 24, ymin = -10, ymax = -5, alpha = 0.05, size = 0.3, color = set1_col[1]) +
+    annotate("text", x = 25, y = -4, size = 7, label = "5", color = set1_col[1]) +
+    labs(title = paste0("TFcheckpoint - Supervised UMAP (14 Neighbors)")) +
+    theme_classic() +
+    theme(plot.title = element_text(hjust = 0.5)) +
+    # geom_hline(yintercept = 14, size = 0.1) +
+    # geom_hline(yintercept = 10, size = 0.1) +
+    # geom_hline(yintercept = -2.45, size = 0.1) +
+    # geom_vline(xintercept = -15.5, size = 0.1) +
+    # geom_vline(xintercept = -5, size = 0.1) +
+    # geom_vline(xintercept = 13, size = 0.1)
+    ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
 }
 
 print('Supervised UMAP, 14 neighbors, target = 1')
