@@ -1,7 +1,7 @@
 ---
 title: "TFcheckpoint Dataset visualization using UMAP"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 29 November, 2020"
+date: "Last updated: 30 November, 2020"
 description: "Description"
 url: 'https\://druglogics.github.io/tfcheckpoint-umap/'
 github-repo: "druglogics/tfcheckpoint-umap"
@@ -332,8 +332,8 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_8n.png')
 ```
 
 <div class="figure">
-<img src="img/sumap/tf_sumap_6n.png" alt="Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" /><img src="img/sumap/tf_sumap_8n.png" alt="Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" />
-<p class="caption">(\#fig:sumap-1)Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.</p>
+<img src="img/sumap/tf_sumap_6n.png" alt="Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)" width="50%" /><img src="img/sumap/tf_sumap_8n.png" alt="Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)" width="50%" />
+<p class="caption">(\#fig:sumap-1)Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)</p>
 </div>
 
 
@@ -343,8 +343,8 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_12n.png')
 ```
 
 <div class="figure">
-<img src="img/sumap/tf_sumap_10n.png" alt="Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" /><img src="img/sumap/tf_sumap_12n.png" alt="Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" />
-<p class="caption">(\#fig:sumap-2)Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.</p>
+<img src="img/sumap/tf_sumap_10n.png" alt="Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)" width="50%" /><img src="img/sumap/tf_sumap_12n.png" alt="Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)" width="50%" />
+<p class="caption">(\#fig:sumap-2)Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)</p>
 </div>
 
 
@@ -354,8 +354,8 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_20n.png')
 ```
 
 <div class="figure">
-<img src="img/sumap/tf_sumap_14n.png" alt="Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" /><img src="img/sumap/tf_sumap_20n.png" alt="Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data." width="50%" />
-<p class="caption">(\#fig:sumap-3)Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.</p>
+<img src="img/sumap/tf_sumap_14n.png" alt="Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)" width="50%" /><img src="img/sumap/tf_sumap_20n.png" alt="Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)" width="50%" />
+<p class="caption">(\#fig:sumap-3)Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)</p>
 </div>
 
 :::{.green-box #sumap-res}
@@ -371,8 +371,8 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_annot.png')
 ```
 
 <div class="figure">
-<img src="img/sumap/tf_sumap_14n_annot.png" alt="Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number." width="1050" />
-<p class="caption">(\#fig:sumap-4)Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number.</p>
+<img src="img/sumap/tf_sumap_14n_annot.png" alt="Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number. Default weighting factor between data topology and target topology has been used (0.5)" width="1050" />
+<p class="caption">(\#fig:sumap-4)Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number. Default weighting factor between data topology and target topology has been used (0.5)</p>
 </div>
 
 :::{.blue-box}

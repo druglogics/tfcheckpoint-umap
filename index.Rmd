@@ -209,17 +209,17 @@ The target data is exactly the $3$ classes of proteins as demonstrated above:
 Note that the default weighting factor between data topology and target topology has been used for the following classifications ($0.5$).
 
 The resulting UMAP coordinates, colored with the above protein classification are as follows (for different number of neighbors):
-```{r sumap-1, fig.show='hold', out.width='50%', fig.cap = 'Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.'}
+```{r sumap-1, fig.show='hold', out.width='50%', fig.cap = 'Supervised UMAP using 6 and 8 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)'}
 knitr::include_graphics(path = 'img/sumap/tf_sumap_6n.png')
 knitr::include_graphics(path = 'img/sumap/tf_sumap_8n.png')
 ```
 
-```{r sumap-2, fig.show='hold', out.width='50%', fig.cap = 'Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.'}
+```{r sumap-2, fig.show='hold', out.width='50%', fig.cap = 'Supervised UMAP using 10 and 12 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)'}
 knitr::include_graphics(path = 'img/sumap/tf_sumap_10n.png')
 knitr::include_graphics(path = 'img/sumap/tf_sumap_12n.png')
 ```
 
-```{r sumap-3, fig.show='hold', out.width='50%', fig.cap = 'Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data.'}
+```{r sumap-3, fig.show='hold', out.width='50%', fig.cap = 'Supervised UMAP using 14 and 20 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Default weighting factor between data topology and target topology has been used (0.5)'}
 knitr::include_graphics(path = 'img/sumap/tf_sumap_14n.png')
 knitr::include_graphics(path = 'img/sumap/tf_sumap_20n.png')
 ```
@@ -231,7 +231,7 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_20n.png')
 :::
 
 In order to make the distinction even more clear, we take the $14$ neighbors supervised case and annotate the respective clusters:
-```{r sumap-4, fig.cap = 'Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number.'}
+```{r sumap-4, fig.cap = 'Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. Each respective cluster has been associated with a number. Default weighting factor between data topology and target topology has been used (0.5)'}
 knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_annot.png')
 ```
 
