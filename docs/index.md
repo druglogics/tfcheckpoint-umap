@@ -1,7 +1,7 @@
 ---
 title: "TFcheckpoint Dataset visualization using UMAP"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 30 November, 2020"
+date: "Last updated: 22 June, 2021"
 description: "Description"
 url: 'https\://druglogics.github.io/tfcheckpoint-umap/'
 github-repo: "druglogics/tfcheckpoint-umap"
@@ -23,15 +23,30 @@ library(scales)
 # Intro {-}
 
 TFcheckpoint [@Chawla2013] is a curated database with sequence-specific DNA-binding RNA polymerase II transcription-factor proteins (**DbTFs**).
+It has been updated to include several co-TFs and other unclassified proteins since the first publication.
+
+## Old Dataset {-}
 
 The form of the dataset is as follows: a total of $4705$ proteins, each one represented by a row, are enriched with GO annotations (a total of $8621$ GO terms [@Carbon2019]) that indicate the presence ($1$) or absence ($0$) of a particular molecular function. 
 The dataset is provided as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/genes2go_result_tfcheckpoint2_data.tsv).
 
-In this analysis we present a 2D visualization of this dataset using the non-linear dimension reduction method UMAP [@McInnes2018a].
-This method will reduce the size of the dataset from $(4705 \times 8621)$ to $(4705 \times 2)$ while efficiently identifying groups of proteins with the same molecular characterization. 
+:::{.green-box}
+Analysis on this dataset was performed **November 2020**.
+:::
+
+## New Dataset {-}
+
+:::{.green-box}
+Analysis on this dataset was performed **June-July 2021** and will be featured in the second TF-checkpoint paper.
+:::
+
+## On UMAP {-}
+
+In this analysis we present a 2D visualization of the TF-checkpoint dataset using the non-linear dimension reduction method UMAP [@McInnes2018a].
+This method will reduce for example the size of the **old dataset** from $(4705 \times 8621)$ to $(4705 \times 2)$ while efficiently identifying groups of proteins with the same molecular characterization.
 These groups are indicated by varying size clusters in the 2D plane.
 
-# Analysis {-}
+# Analysis (Old Dataset) {-}
 
 :::{.blue-box}
 See script [umap.R](https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/umap.R) for more details about the presented analysis.
@@ -489,6 +504,9 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_w1_schmeier.png')
 <p class="caption">(\#fig:sumap-14n-schmeier-w1)Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D embedding based on the class that the dimension reduction used as target data. The weighting factor between data topology and target topology is 1 (mostly target topology/labeling is considered)</p>
 </div>
 
+
+# Analysis (New Dataset) {-}
+
 # R session info {-}
 
 
@@ -499,7 +517,7 @@ xfun::session_info()
 ```
 R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 20.04.1 LTS
+Running under: Ubuntu 20.04.2 LTS
 
 Locale:
   LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -510,19 +528,20 @@ Locale:
   LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 Package version:
-  assertthat_0.2.1   base64enc_0.1.3    bookdown_0.21      cli_2.1.0         
-  colorspace_1.4-1   compiler_3.6.3     crayon_1.3.4       digest_0.6.27     
-  dplyr_1.0.2        ellipsis_0.3.1     evaluate_0.14      fansi_0.4.1       
-  farver_2.0.3       generics_0.0.2     glue_1.4.2         graphics_3.6.3    
-  grDevices_3.6.3    highr_0.8          htmltools_0.5.0    jsonlite_1.7.1    
-  knitr_1.30         labeling_0.4.2     lifecycle_0.2.0    magrittr_1.5      
-  markdown_1.1       methods_3.6.3      mime_0.9           munsell_0.5.0     
-  pillar_1.4.6       pkgconfig_2.0.3    png_0.1-7          purrr_0.3.4       
-  R6_2.4.1           RColorBrewer_1.1.2 rlang_0.4.8        rmarkdown_2.5     
-  scales_1.1.1       stats_3.6.3        stringi_1.5.3      stringr_1.4.0     
-  tibble_3.0.4       tidyselect_1.1.0   tinytex_0.26       tools_3.6.3       
-  utf8_1.1.4         utils_3.6.3        vctrs_0.3.4        viridisLite_0.3.0 
-  xfun_0.18          yaml_2.2.1        
+  assertthat_0.2.1   base64enc_0.1.3    bookdown_0.22      bslib_0.2.5.1     
+  cli_2.5.0          colorspace_2.0-1   compiler_3.6.3     crayon_1.4.1      
+  DBI_1.1.1          digest_0.6.27      dplyr_1.0.6        ellipsis_0.3.2    
+  evaluate_0.14      fansi_0.5.0        farver_2.1.0       fs_1.5.0          
+  generics_0.1.0     glue_1.4.2         graphics_3.6.3     grDevices_3.6.3   
+  highr_0.9          htmltools_0.5.1.1  jquerylib_0.1.4    jsonlite_1.7.2    
+  knitr_1.33         labeling_0.4.2     lifecycle_1.0.0    magrittr_2.0.1    
+  markdown_1.1       methods_3.6.3      mime_0.10          munsell_0.5.0     
+  pillar_1.6.1       pkgconfig_2.0.3    png_0.1-7          purrr_0.3.4       
+  R6_2.5.0           rappdirs_0.3.3     RColorBrewer_1.1.2 rlang_0.4.11      
+  rmarkdown_2.8      sass_0.4.0         scales_1.1.1       stats_3.6.3       
+  stringi_1.6.2      stringr_1.4.0      tibble_3.1.2       tidyselect_1.1.1  
+  tinytex_0.32       tools_3.6.3        utf8_1.2.1         utils_3.6.3       
+  vctrs_0.3.8        viridisLite_0.4.0  xfun_0.23          yaml_2.2.1        
 ```
 
 # References {-}
