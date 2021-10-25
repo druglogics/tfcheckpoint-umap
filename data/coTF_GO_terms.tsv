@@ -1,3 +1,4 @@
+term	name
 GO:0008134	TF binding
 GO:0002039	p53 binding
 GO:0046332	SMAD binding
@@ -13,3 +14,4 @@ GO:0004407	histone deacetylase activity
 GO:0042054	histone methyltransferase activity
 GO:0016570	histone modification
 GO:0006325	chromatin organization
+GO:0003712	transcription coregulator activity
