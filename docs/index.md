@@ -519,7 +519,7 @@ We show how to expand the GO and InterPro datasets to 0-1 matrices, how we annot
 ## Protein Class Annotation {-}
 
 Each protein in TF2 can belong to one of the following 4 classes: `DbTF`, `coTF`, `Both` or `None`.
-Proteins were labeled as DNA-binding transcription factors if they belonged to the online list provided in [@Lovering2021].
+Proteins were labeled as DNA-binding transcription factors if they belonged to the online list provided in [@Lovering2021] (retrieved 2/11/2021).
 Proteins were labeled as co-transcription factors if they had at least one GO term annotation from this [online list](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coTF_GO_terms.tsv).
 Proteins that belonged to both of these lists were labeled as `Both`.
 Obviously, proteins that belonged to none of these lists were labeled as `None`.
@@ -530,7 +530,7 @@ Obviously, proteins that belonged to none of these lists were labeled as `None`.
 The unsupervised UMAP results using either the **GO matrix**, **InterPro matrix** or **both matrices combined as one** are given in the following 3 subsections.
 
 Generally, **the GO dataset was more informative** and provided more compact/cohesive classification of the proteins vs the InterPro dataset.
-Using both datasets we don't see any significant improvement in the position of the UMAP sub-clusters vs using just the GO dataset. 
+Using both datasets we don't see any significant improvement in the position of the UMAP sub-clusters vs using just the GO dataset.
 :::
 
 ### InterPro Dataset {-}
