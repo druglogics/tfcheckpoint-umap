@@ -36,7 +36,7 @@ Analysis on this dataset was performed **November 2020**.
 ## New Dataset {-}
 
 The new dataset features an updated curated list of $3875$ proteins that are part of TFcheckpoint (v2).
-For each of these proteins, we have gathered **Gene ontology (GO) IDs** and cross-referenced **InterPro domains**, using UniProt's ID mapping [online service](https://www.uniprot.org/uploadlists/) (selecting `UniProtKB` mapping `To` option and selecting the appropriate columns).
+For each of these proteins, we have gathered **Gene ontology (GO) IDs** and cross-referenced **InterPro domains**, using UniProt's ID mapping [online service](https://www.uniprot.org/uploadlists/) (`UniProtKB` for `To` mapping option and selecting the appropriate columns).
 The resulting data file is available as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfc2_all_human_go_interpro_22102021_ALL.tsv) (retrieved 22/10/2021).
 
 :::{.green-box}
@@ -330,6 +330,50 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_w1_schmeier.png')
 
 
 # Analysis (New Dataset) {-}
+
+:::{.blue-box}
+See script [new_analysis.R](https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/new_analysis.R) for more details.
+We show how to expand the GO and InterPro datasets to 0-1 matrices, how we annotated each protein's class (as `DbTF`, `coTF`, `Both` or `None`), run UMAP and produce the following figures.
+:::
+
+## Protein Class Annotation {-}
+
+Each protein in TF2 can belong to one of the following 4 classes: `DbTF`, `coTF`, `Both` or `None`.
+Proteins were labeled as DNA-binding transcription factors if they belonged to the online list provided in [@Lovering2021].
+Proteins were labeled as co-transcription factors if they had at least one GO term annotation from this [online list](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coTF_GO_terms.tsv).
+Proteins that belonged to both of these lists were labeled as `Both`.
+Obviously, proteins that belonged to none of these lists were labeled as `None`.
+
+## InterPro vs GO vs Combined Dataset {-}
+
+The unsupervised UMAP results using either the **GO matrix**, **InterPro matrix** or **both matrices combined as one** are as follows (different number of neighbors tested):
+
+### InterPro {-}
+
+```{r tfch2-umap-interpro, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.'}
+knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_6n_interpro.png')
+knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_10n_interpro.png')
+knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_14n_interpro.png')
+knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_20n_interpro.png')
+```
+
+### GO {-}
+
+```{r tfch2-umap-go, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.'}
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_6n_go.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_10n_go.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_14n_go.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go.png')
+```
+
+### Combined {-}
+
+```{r tfch2-umap-combined, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.'}
+knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_6n_combined.png')
+knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_10n_combined.png')
+knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_14n_combined.png')
+knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_20n_combined.png')
+```
 
 # R session info {-}
 
