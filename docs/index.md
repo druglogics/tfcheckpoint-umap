@@ -18,6 +18,12 @@ Loading libraries:
 library(xfun)
 library(dplyr)
 library(scales)
+library(tibble)
+library(tidyr)
+library(readr)
+library(ggplot2)
+library(uwot)
+library(VennDiagram)
 ```
 
 # Intro {-}
@@ -599,20 +605,37 @@ Locale:
   LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 Package version:
-  assertthat_0.2.1   base64enc_0.1.3    bookdown_0.24      bslib_0.3.1       
-  cli_3.0.1          colorspace_2.0-2   compiler_3.6.3     crayon_1.4.1      
-  DBI_1.1.1          digest_0.6.28      dplyr_1.0.7        ellipsis_0.3.2    
-  evaluate_0.14      fansi_0.5.0        farver_2.1.0       fastmap_1.1.0     
-  fs_1.5.0           generics_0.1.0     glue_1.4.2         graphics_3.6.3    
-  grDevices_3.6.3    highr_0.9          htmltools_0.5.2    jquerylib_0.1.4   
-  jsonlite_1.7.2     knitr_1.36         labeling_0.4.2     lifecycle_1.0.1   
-  magrittr_2.0.1     methods_3.6.3      munsell_0.5.0      pillar_1.6.3      
-  pkgconfig_2.0.3    png_0.1-7          purrr_0.3.4        R6_2.5.1          
-  rappdirs_0.3.3     RColorBrewer_1.1.2 rlang_0.4.11       rmarkdown_2.11    
-  sass_0.4.0         scales_1.1.1       stats_3.6.3        stringi_1.7.5     
-  stringr_1.4.0      tibble_3.1.5       tidyselect_1.1.1   tinytex_0.34      
-  tools_3.6.3        utf8_1.2.2         utils_3.6.3        vctrs_0.3.8       
-  viridisLite_0.4.0  xfun_0.26          yaml_2.2.1        
+  assertthat_0.2.1     base64enc_0.1.3      BH_1.75.0.0         
+  bit_4.0.4            bit64_4.0.5          bookdown_0.24       
+  bslib_0.3.1          cli_3.0.1            clipr_0.7.1         
+  colorspace_2.0-2     compiler_3.6.3       cpp11_0.4.0         
+  crayon_1.4.1         DBI_1.1.1            digest_0.6.28       
+  dplyr_1.0.7          dqrng_0.3.0          ellipsis_0.3.2      
+  evaluate_0.14        fansi_0.5.0          farver_2.1.0        
+  fastmap_1.1.0        FNN_1.1.3            formatR_1.11        
+  fs_1.5.0             futile.logger_1.4.3  futile.options_1.0.1
+  generics_0.1.0       ggplot2_3.3.5        glue_1.4.2          
+  graphics_3.6.3       grDevices_3.6.3      grid_3.6.3          
+  gtable_0.3.0         highr_0.9            hms_1.1.1           
+  htmltools_0.5.2      irlba_2.3.3          isoband_0.2.5       
+  jquerylib_0.1.4      jsonlite_1.7.2       knitr_1.36          
+  labeling_0.4.2       lambda.r_1.2.4       lattice_0.20-45     
+  lifecycle_1.0.1      magrittr_2.0.1       MASS_7.3.54         
+  Matrix_1.3-4         methods_3.6.3        mgcv_1.8.36         
+  munsell_0.5.0        nlme_3.1.153         pillar_1.6.3        
+  pkgconfig_2.0.3      png_0.1-7            prettyunits_1.1.1   
+  progress_1.2.2       purrr_0.3.4          R6_2.5.1            
+  rappdirs_0.3.3       RColorBrewer_1.1.2   Rcpp_1.0.7          
+  RcppAnnoy_0.0.19     RcppEigen_0.3.3.9.1  RcppProgress_0.4.2  
+  readr_2.0.2          rlang_0.4.11         rmarkdown_2.11      
+  RSpectra_0.16.0      sass_0.4.0           scales_1.1.1        
+  sitmo_2.0.1          splines_3.6.3        stats_3.6.3         
+  stringi_1.7.5        stringr_1.4.0        tibble_3.1.5        
+  tidyr_1.1.4          tidyselect_1.1.1     tinytex_0.34        
+  tools_3.6.3          tzdb_0.1.2           utf8_1.2.2          
+  utils_3.6.3          uwot_0.1.10          vctrs_0.3.8         
+  VennDiagram_1.6.20   viridisLite_0.4.0    vroom_1.5.5         
+  withr_2.4.2          xfun_0.26            yaml_2.2.1          
 ```
 
 # References {-}

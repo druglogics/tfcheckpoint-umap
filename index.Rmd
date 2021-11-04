@@ -17,6 +17,12 @@ Loading libraries:
 library(xfun)
 library(dplyr)
 library(scales)
+library(tibble)
+library(tidyr)
+library(readr)
+library(ggplot2)
+library(uwot)
+library(VennDiagram)
 ```
 
 # Intro {-}
