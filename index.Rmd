@@ -346,9 +346,14 @@ Obviously, proteins that belonged to none of these lists were labeled as `None`.
 
 ## InterPro vs GO vs Combined Dataset {-}
 
-The unsupervised UMAP results using either the **GO matrix**, **InterPro matrix** or **both matrices combined as one** are as follows (different number of neighbors tested):
+:::{.green-box}
+The unsupervised UMAP results using either the **GO matrix**, **InterPro matrix** or **both matrices combined as one** are given in the following 3 subsections.
 
-### InterPro {-}
+Generally, **the GO dataset was more informative** and provided more compact/cohesive classification of the proteins vs the InterPro dataset.
+Using both datasets we don't see any significant improvement in the position of the UMAP sub-clusters vs using just the GO dataset.
+:::
+
+### InterPro Dataset {-}
 
 ```{r tfch2-umap-interpro, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.'}
 knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_6n_interpro.png')
@@ -357,7 +362,7 @@ knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_14n_interpro.png')
 knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_20n_interpro.png')
 ```
 
-### GO {-}
+### GO Dataset {-}
 
 ```{r tfch2-umap-go, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.'}
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_6n_go.png')
@@ -366,7 +371,7 @@ knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_14n_go.png')
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go.png')
 ```
 
-### Combined {-}
+### Combined Dataset {-}
 
 ```{r tfch2-umap-combined, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.'}
 knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_6n_combined.png')
