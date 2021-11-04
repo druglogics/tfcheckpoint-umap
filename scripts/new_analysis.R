@@ -12,8 +12,8 @@ library(ggplot2)
 tfc2_data = readr::read_tsv(file = 'data/tfc2_all_human_go_interpro_22102021_ALL.tsv',
   col_types = 'ccc') # 3875
 protein_ids = tfc2_data %>% pull(Entry)
-domains = tfc2_data %>% pull(`Cross-reference (InterPro)`)
-go_terms = tfc2_data %>% pull(`Gene ontology IDs`)
+domains     = tfc2_data %>% pull(`Cross-reference (InterPro)`)
+go_terms    = tfc2_data %>% pull(`Gene ontology IDs`)
 
 # If matrices have already been stored as compressed R objects, don't rebuild them!
 protein_domain_file = 'data/protein_domain_mat.rds'
@@ -76,7 +76,7 @@ if ((!file.exists(protein_domain_file)) | (!file.exists(protein_go_file))) {
   saveRDS(object = protein_go_mat, file = protein_go_file)
 } else {
   protein_domain_mat = readRDS(file = protein_domain_file)
-  protein_go_mat = readRDS(file = protein_go_file)
+  protein_go_mat     = readRDS(file = protein_go_file)
 }
 
 # Check: matrix 1-sparsity or percentage of 1's (GO matrix has more 1's)
