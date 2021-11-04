@@ -35,8 +35,12 @@ Analysis on this dataset was performed **November 2020**.
 
 ## New Dataset {-}
 
+The new dataset features an updated curated list of $3875$ proteins that are part of TFcheckpoint (v2).
+For each of these proteins, we have gathered **Gene ontology (GO) IDs** and cross-referenced **InterPro domains**, using UniProt's ID mapping [online service](https://www.uniprot.org/uploadlists/) (selecting `UniProtKB` mapping `To` option and selecting the appropriate columns).
+The resulting data file is available as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfc2_all_human_go_interpro_22102021_ALL.tsv) (retrieved 22/10/2021).
+
 :::{.green-box}
-Analysis on this dataset was performed **June-July 2021** and will be featured in the second TF-checkpoint paper.
+Analysis on this dataset was performed **June-November 2021** (sporadically :) and will be featured in the second TF-checkpoint paper.
 :::
 
 ## On UMAP {-}
