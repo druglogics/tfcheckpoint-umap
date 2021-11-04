@@ -526,9 +526,14 @@ Obviously, proteins that belonged to none of these lists were labeled as `None`.
 
 ## InterPro vs GO vs Combined Dataset {-}
 
-The unsupervised UMAP results using either the **GO matrix**, **InterPro matrix** or **both matrices combined as one** are as follows (different number of neighbors tested):
+:::{.green-box}
+The unsupervised UMAP results using either the **GO matrix**, **InterPro matrix** or **both matrices combined as one** are given in the following 3 subsections.
 
-### InterPro {-}
+Generally, **the GO dataset was more informative** and provided more compact/cohesive classification of the proteins vs the InterPro dataset.
+Using both datasets we don't see any significant improvement in the position of the UMAP sub-clusters vs using just the GO dataset. 
+:::
+
+### InterPro Dataset {-}
 
 
 ```r
@@ -543,7 +548,7 @@ knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_20n_interpro.png')
 <p class="caption">(\#fig:tfch2-umap-interpro)Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.</p>
 </div>
 
-### GO {-}
+### GO Dataset {-}
 
 
 ```r
@@ -558,7 +563,7 @@ knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go.png')
 <p class="caption">(\#fig:tfch2-umap-go)Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.</p>
 </div>
 
-### Combined {-}
+### Combined Dataset {-}
 
 
 ```r

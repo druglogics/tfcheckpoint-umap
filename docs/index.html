@@ -914,9 +914,9 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path=""><a href="#protein-class-annotation"><i class="fa fa-check"></i>Protein Class Annotation</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#interpro-vs-go-vs-combined-dataset"><i class="fa fa-check"></i>InterPro vs GO vs Combined Dataset</a>
 <ul>
-<li class="chapter" data-level="" data-path=""><a href="#interpro"><i class="fa fa-check"></i>InterPro</a></li>
-<li class="chapter" data-level="" data-path=""><a href="#go"><i class="fa fa-check"></i>GO</a></li>
-<li class="chapter" data-level="" data-path=""><a href="#combined"><i class="fa fa-check"></i>Combined</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#interpro-dataset"><i class="fa fa-check"></i>InterPro Dataset</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#go-dataset"><i class="fa fa-check"></i>GO Dataset</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#combined-dataset"><i class="fa fa-check"></i>Combined Dataset</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#r-session-info"><i class="fa fa-check"></i>R session info</a></li>
@@ -1421,9 +1421,13 @@ Obviously, proteins that belonged to none of these lists were labeled as <code>N
 </div>
 <div id="interpro-vs-go-vs-combined-dataset" class="section level2 unnumbered">
 <h2>InterPro vs GO vs Combined Dataset</h2>
-<p>The unsupervised UMAP results using either the <strong>GO matrix</strong>, <strong>InterPro matrix</strong> or <strong>both matrices combined as one</strong> are as follows (different number of neighbors tested):</p>
-<div id="interpro" class="section level3 unnumbered">
-<h3>InterPro</h3>
+<div class="green-box">
+<p>The unsupervised UMAP results using either the <strong>GO matrix</strong>, <strong>InterPro matrix</strong> or <strong>both matrices combined as one</strong> are given in the following 3 subsections.</p>
+<p>Generally, <strong>the GO dataset was more informative</strong> and provided more compact/cohesive classification of the proteins vs the InterPro dataset.
+Using both datasets we don’t see any significant improvement in the position of the UMAP sub-clusters vs using just the GO dataset.</p>
+</div>
+<div id="interpro-dataset" class="section level3 unnumbered">
+<h3>InterPro Dataset</h3>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-InterPro/tfc2_umap_6n_interpro.png&#39;</span>)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-InterPro/tfc2_umap_10n_interpro.png&#39;</span>)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-InterPro/tfc2_umap_14n_interpro.png&#39;</span>)</span>
@@ -1435,8 +1439,8 @@ Figure 24: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using Inte
 </p>
 </div>
 </div>
-<div id="go" class="section level3 unnumbered">
-<h3>GO</h3>
+<div id="go-dataset" class="section level3 unnumbered">
+<h3>GO Dataset</h3>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_6n_go.png&#39;</span>)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_10n_go.png&#39;</span>)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_14n_go.png&#39;</span>)</span>
@@ -1448,8 +1452,8 @@ Figure 25: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO t
 </p>
 </div>
 </div>
-<div id="combined" class="section level3 unnumbered">
-<h3>Combined</h3>
+<div id="combined-dataset" class="section level3 unnumbered">
+<h3>Combined Dataset</h3>
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_6n_combined.png&#39;</span>)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_10n_combined.png&#39;</span>)</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_14n_combined.png&#39;</span>)</span>

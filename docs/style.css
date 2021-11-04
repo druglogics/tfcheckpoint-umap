@@ -40,3 +40,18 @@ h1,h2,h3,h4,h5 {
   background-image: url("img/note.png");
 }
 
+/* EXTRA WIDTH FOR LEFT SECTION COLUMN */
+.book .book-summary {
+  width: 350px;
+  position:absolute;
+  top:0;
+  left:-350px;
+}
+
+.book.with-summary .book-header.fixed {
+  left: 350px;
+}
+
+.book.with-summary .book-body {
+  left: 350px;
+}
