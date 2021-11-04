@@ -1,7 +1,7 @@
 ---
 title: "TFcheckpoint Dataset visualization using UMAP"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 22 June, 2021"
+date: "Last updated: 04 November, 2021"
 description: "Description"
 url: 'https\://druglogics.github.io/tfcheckpoint-umap/'
 github-repo: "druglogics/tfcheckpoint-umap"
@@ -36,8 +36,12 @@ Analysis on this dataset was performed **November 2020**.
 
 ## New Dataset {-}
 
+The new dataset features an updated curated list of $3875$ proteins that are part of TFcheckpoint (v2).
+For each of these proteins, we have gathered **Gene ontology (GO) IDs** and cross-referenced **InterPro domains**, using UniProt's ID mapping [online service](https://www.uniprot.org/uploadlists/) (`UniProtKB` for `To` mapping option and selecting the appropriate columns).
+The resulting data file is available as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfc2_all_human_go_interpro_22102021_ALL.tsv) (retrieved 22/10/2021).
+
 :::{.green-box}
-Analysis on this dataset was performed **June-July 2021** and will be featured in the second TF-checkpoint paper.
+Analysis on this dataset was performed **June-November 2021** (sporadically :) and will be featured in the second TF-checkpoint paper.
 :::
 
 ## On UMAP {-}
@@ -507,6 +511,68 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_w1_schmeier.png')
 
 # Analysis (New Dataset) {-}
 
+:::{.blue-box}
+See script [new_analysis.R](https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/new_analysis.R) for more details.
+We show how to expand the GO and InterPro datasets to 0-1 matrices, how we annotated each protein's class (as `DbTF`, `coTF`, `Both` or `None`), run UMAP and produce the following figures.
+:::
+
+## Protein Class Annotation {-}
+
+Each protein in TF2 can belong to one of the following 4 classes: `DbTF`, `coTF`, `Both` or `None`.
+Proteins were labeled as DNA-binding transcription factors if they belonged to the online list provided in [@Lovering2021].
+Proteins were labeled as co-transcription factors if they had at least one GO term annotation from this [online list](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coTF_GO_terms.tsv).
+Proteins that belonged to both of these lists were labeled as `Both`.
+Obviously, proteins that belonged to none of these lists were labeled as `None`.
+
+## InterPro vs GO vs Combined Dataset {-}
+
+The unsupervised UMAP results using either the **GO matrix**, **InterPro matrix** or **both matrices combined as one** are as follows (different number of neighbors tested):
+
+### InterPro {-}
+
+
+```r
+knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_6n_interpro.png')
+knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_10n_interpro.png')
+knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_14n_interpro.png')
+knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_20n_interpro.png')
+```
+
+<div class="figure">
+<img src="img/tfch2-InterPro/tfc2_umap_6n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-InterPro/tfc2_umap_10n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-InterPro/tfc2_umap_14n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-InterPro/tfc2_umap_20n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" />
+<p class="caption">(\#fig:tfch2-umap-interpro)Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.</p>
+</div>
+
+### GO {-}
+
+
+```r
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_6n_go.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_10n_go.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_14n_go.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go.png')
+```
+
+<div class="figure">
+<img src="img/tfch2-GO/tfc2_umap_6n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-GO/tfc2_umap_10n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-GO/tfc2_umap_14n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-GO/tfc2_umap_20n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" />
+<p class="caption">(\#fig:tfch2-umap-go)Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.</p>
+</div>
+
+### Combined {-}
+
+
+```r
+knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_6n_combined.png')
+knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_10n_combined.png')
+knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_14n_combined.png')
+knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_20n_combined.png')
+```
+
+<div class="figure">
+<img src="img/tfch2-combined/tfc2_umap_6n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-combined/tfc2_umap_10n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-combined/tfc2_umap_14n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-combined/tfc2_umap_20n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" />
+<p class="caption">(\#fig:tfch2-umap-combined)Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.</p>
+</div>
+
 # R session info {-}
 
 
@@ -517,7 +583,7 @@ xfun::session_info()
 ```
 R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 20.04.2 LTS
+Running under: Ubuntu 20.04.3 LTS
 
 Locale:
   LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -528,20 +594,20 @@ Locale:
   LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 
 Package version:
-  assertthat_0.2.1   base64enc_0.1.3    bookdown_0.22      bslib_0.2.5.1     
-  cli_2.5.0          colorspace_2.0-1   compiler_3.6.3     crayon_1.4.1      
-  DBI_1.1.1          digest_0.6.27      dplyr_1.0.6        ellipsis_0.3.2    
-  evaluate_0.14      fansi_0.5.0        farver_2.1.0       fs_1.5.0          
-  generics_0.1.0     glue_1.4.2         graphics_3.6.3     grDevices_3.6.3   
-  highr_0.9          htmltools_0.5.1.1  jquerylib_0.1.4    jsonlite_1.7.2    
-  knitr_1.33         labeling_0.4.2     lifecycle_1.0.0    magrittr_2.0.1    
-  markdown_1.1       methods_3.6.3      mime_0.10          munsell_0.5.0     
-  pillar_1.6.1       pkgconfig_2.0.3    png_0.1-7          purrr_0.3.4       
-  R6_2.5.0           rappdirs_0.3.3     RColorBrewer_1.1.2 rlang_0.4.11      
-  rmarkdown_2.8      sass_0.4.0         scales_1.1.1       stats_3.6.3       
-  stringi_1.6.2      stringr_1.4.0      tibble_3.1.2       tidyselect_1.1.1  
-  tinytex_0.32       tools_3.6.3        utf8_1.2.1         utils_3.6.3       
-  vctrs_0.3.8        viridisLite_0.4.0  xfun_0.23          yaml_2.2.1        
+  assertthat_0.2.1   base64enc_0.1.3    bookdown_0.24      bslib_0.3.1       
+  cli_3.0.1          colorspace_2.0-2   compiler_3.6.3     crayon_1.4.1      
+  DBI_1.1.1          digest_0.6.28      dplyr_1.0.7        ellipsis_0.3.2    
+  evaluate_0.14      fansi_0.5.0        farver_2.1.0       fastmap_1.1.0     
+  fs_1.5.0           generics_0.1.0     glue_1.4.2         graphics_3.6.3    
+  grDevices_3.6.3    highr_0.9          htmltools_0.5.2    jquerylib_0.1.4   
+  jsonlite_1.7.2     knitr_1.36         labeling_0.4.2     lifecycle_1.0.1   
+  magrittr_2.0.1     methods_3.6.3      munsell_0.5.0      pillar_1.6.3      
+  pkgconfig_2.0.3    png_0.1-7          purrr_0.3.4        R6_2.5.1          
+  rappdirs_0.3.3     RColorBrewer_1.1.2 rlang_0.4.11       rmarkdown_2.11    
+  sass_0.4.0         scales_1.1.1       stats_3.6.3        stringi_1.7.5     
+  stringr_1.4.0      tibble_3.1.5       tidyselect_1.1.1   tinytex_0.34      
+  tools_3.6.3        utf8_1.2.2         utils_3.6.3        vctrs_0.3.8       
+  viridisLite_0.4.0  xfun_0.26          yaml_2.2.1        
 ```
 
 # References {-}
