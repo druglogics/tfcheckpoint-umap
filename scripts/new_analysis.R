@@ -365,3 +365,8 @@ data_tbl %>% count(cluster_id)
 
 # distribution of protein classes in cluster 2
 data_tbl %>% filter(cluster_id == 2) %>% count(protein_class)
+
+# save to CSV
+data_tbl %>%
+  select(protein_id, protein_class, cluster_id) %>%
+  readr::write_csv(file = 'data/tfc2_umap_20n_GO_cluster_annot.csv')
