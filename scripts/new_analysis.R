@@ -278,3 +278,90 @@ for (n_neighbors in neighbors) {
     ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
   }
 }
+
+#########################################################################
+# Annotate UMAP result (GO dataset, 20 Neighbors) with 'boxed' clusters #
+#########################################################################
+umap_file = paste0('data/tfc2_umap_20n_go.rds')
+go_umap_20n = readRDS(file = umap_file)
+
+# Trying some clustering methods to find the clusters (DBSCAN seems to be the best!)
+# km = kmeans(x = go_umap_20n, centers = 7, iter.max = 1000) # km$centers
+# gmm = ClusterR::GMM(data = go_umap_20n, gaussian_comps = 7) # gmm#centroids
+# dbs = dbscan::dbscan(x = go_umap_20n, eps = 0.7, minPts = 3) # dbs$cluster (can't get the cluster centers)
+# We are still though going to annotate the cluster boxes using the eye-ball technique ;)
+
+go_umap_20n %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(
+    #cluster       = dbs$cluster %>% as.factor(),
+    protein_id    = protein_ids,
+    protein_class = protein_class %>% unname() %>% as.factor()) %>%
+  ggplot(aes(x = X, y = Y, color = protein_class)) +
+  geom_point(size = 0.1) +
+  scale_colour_brewer(palette = "Set1") +
+  guides(colour = guide_legend(title = "Class",
+    label.theme = element_text(size = 12),
+    override.aes = list(shape = 19, size = 12))) +
+  labs(title = paste0("TFcheckpoint2 (GO) - UMAP (", n_neighbors," Neighbors)")) +
+  # 1st cluster
+  annotate("rect", xmin = -15, xmax = -13, ymin = -13, ymax = -10,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = -15.8, y = -9.5, size = 8, label = "1") +
+  # 2nd cluster
+  annotate("rect", xmin = -11, xmax = -3, ymin = -15, ymax = -5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = -10, y = -9.5, size = 8, label = "2") +
+  # 3rd cluster
+  annotate("rect", xmin = -0.8, xmax = 0, ymin = -13, ymax = -10,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = -1.5, y = -9.5, size = 8, label = "3") +
+  # 4rd cluster
+  annotate("rect", xmin = 6, xmax = 13, ymin = 13, ymax = 22,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 6.8, y = 20.5, size = 8, label = "4") +
+  # 5th cluster
+  annotate("rect", xmin = 15, xmax = 17, ymin = 21, ymax = 24,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 14.2, y = 24, size = 8, label = "5") +
+  # 6th cluster
+  annotate("rect", xmin = 14, xmax = 16, ymin = 14, ymax = 19,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 17, y = 16.5, size = 8, label = "6") +
+  # 7th cluster
+  annotate("rect", xmin = 19, xmax = 21, ymin = 2.5, ymax = 4.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 18, y = 5, size = 8, label = "7") +
+  # 8th cluster
+  annotate("rect", xmin = 17.5, xmax = 19.5, ymin = -9, ymax = -7,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 18, y = -5, size = 8, label = "8") +
+  # geom_point(data = km$centers %>% as.data.frame(), mapping = aes(x = V1, y = V2), size = 5, color = 'black') +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = 'img/tfch2-GO/tfc2_umap_20n_GO_cluster_annot.png', width = 7, height = 5, dpi = 'print')
+
+data_tbl = go_umap_20n %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(
+    protein_id    = protein_ids,
+    protein_class = protein_class %>% unname() %>% as.factor()) %>%
+  mutate(cluster_id = case_when(
+    (X > -15  & X < -13 & Y > -13 & Y < -10) ~ 1,
+    (X > -11  & X < -3  & Y > -15 & Y < -5 ) ~ 2,
+    (X > -0.8 & X < 0   & Y > -13 & Y < -10) ~ 3,
+    (X > 6    & X < 13  & Y > 13  & Y < 22 ) ~ 4,
+    (X > 15   & X < 17  & Y > 21  & Y < 24 ) ~ 5,
+    (X > 14   & X < 16  & Y > 14  & Y < 19 ) ~ 6,
+    (X > 19   & X < 21  & Y > 2.5 & Y < 4.5) ~ 7,
+    (X > 17.5 & X < 19.5 & Y > -9 & Y < -7 ) ~ 8,
+    TRUE ~ 0 # there shouldn't be any point here!
+  ))
+
+# check: no '0' cluster ids
+data_tbl %>% count(cluster_id)
+
+# distribution of protein classes in cluster 2
+data_tbl %>% filter(cluster_id == 2) %>% count(protein_class)

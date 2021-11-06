@@ -386,6 +386,18 @@ knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_14n_combined.png')
 knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_20n_combined.png')
 ```
 
+## Cluster Annotated UMAP - GO Dataset {-}
+
+We use the UMAP embedding (**GO dataset, 20 neighbors**) to discuss several interesting cases of proteins that seem to belong in different clusters than they should be, based on the protein class annotation:
+
+```{r tfch2-umap-go-annot, fig.cap='Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms (20 neighbors). Data points (proteins) have been colored according to their their respective class annotation. Boxes signify the different protein clusters created by UMAP.'}
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_GO_cluster_annot.png')
+```
+
+:::{.green-box}
+- See [file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfc2_umap_20n_GO_cluster_annot.tsv) with the protein ids, cluster ids and protein classification.
+:::
+
 # R session info {-}
 
 ```{r session info, comment="", class.source = 'fold-show'}
