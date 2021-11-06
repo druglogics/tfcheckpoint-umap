@@ -918,6 +918,7 @@ div.csl-indent {
 <li class="chapter" data-level="" data-path=""><a href="#go-dataset"><i class="fa fa-check"></i>GO Dataset</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#combined-dataset"><i class="fa fa-check"></i>Combined Dataset</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#cluster-annotated-umap---go-dataset"><i class="fa fa-check"></i>Cluster Annotated UMAP - GO Dataset</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#r-session-info"><i class="fa fa-check"></i>R session info</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#references"><i class="fa fa-check"></i>References</a></li>
@@ -944,7 +945,7 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">TFcheckpoint Dataset visualization using UMAP</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 04 November, 2021</em></p>
+<p class="date"><em>Last updated: 06 November, 2021</em></p>
 </div>
 <div id="input" class="section level1 unnumbered">
 <h1>Input</h1>
@@ -1472,10 +1473,26 @@ Figure 26: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both
 </div>
 </div>
 </div>
+<div id="cluster-annotated-umap---go-dataset" class="section level2 unnumbered">
+<h2>Cluster Annotated UMAP - GO Dataset</h2>
+<p>We use the UMAP embedding (<strong>GO dataset, 20 neighbors</strong>) to discuss several interesting cases of proteins that seem to belong in different clusters than they should be, based on the protein class annotation:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_GO_cluster_annot.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:tfch2-umap-go-annot"></span>
+<img src="img/tfch2-GO/tfc2_umap_20n_GO_cluster_annot.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms (20 neighbors). Data points (proteins) have been colored according to their their respective class annotation. Boxes signify the different protein clusters created by UMAP." width="1050" />
+<p class="caption">
+Figure 27: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms (20 neighbors). Data points (proteins) have been colored according to their their respective class annotation. Boxes signify the different protein clusters created by UMAP.
+</p>
+</div>
+<div class="green-box">
+<ul>
+<li>See <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfc2_umap_20n_GO_cluster_annot.tsv">file</a> with the protein ids, cluster ids and protein classification.</li>
+</ul>
+</div>
+</div>
 </div>
 <div id="r-session-info" class="section level1 unnumbered">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>xfun<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>xfun<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 20.04.3 LTS

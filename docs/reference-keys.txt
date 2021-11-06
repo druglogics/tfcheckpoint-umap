@@ -24,3 +24,4 @@ fig:sumap-14n-schmeier-w1
 fig:tfch2-umap-interpro
 fig:tfch2-umap-go
 fig:tfch2-umap-combined
+fig:tfch2-umap-go-annot
