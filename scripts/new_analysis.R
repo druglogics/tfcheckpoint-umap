@@ -15,6 +15,16 @@ protein_ids = tfc2_data %>% pull(Entry)
 domains     = tfc2_data %>% pull(`Cross-reference (InterPro)`)
 go_terms    = tfc2_data %>% pull(`Gene ontology IDs`)
 
+# Map protein IDs to Gene names from file (https://www.uniprot.org/uploadlists/)
+# Duplicated entries (proteins with 2 gene names) were merged into one comma separated name
+id2name_map = readr::read_tsv(file = 'data/mapped_ids.tsv', col_types = 'cc')
+# Add 1 protein with no gene name in proper position (manually checked)
+id2name_map = id2name_map %>% tibble::add_row(protein_id = 'Q8WTZ3', name = NA, .before = 3871)
+# check order
+all(id2name_map %>% pull(protein_id) == protein_ids)
+# save names
+gene_names  = id2name_map %>% pull(name)
+
 # If matrices have already been stored as compressed R objects, don't rebuild them!
 protein_domain_file = 'data/protein_domain_mat.rds'
 protein_go_file     = 'data/protein_go_mat.rds'
@@ -82,6 +92,9 @@ if ((!file.exists(protein_domain_file)) | (!file.exists(protein_go_file))) {
 # Check: matrix 1-sparsity or percentage of 1's (GO matrix has more 1's)
 sum(protein_go_mat)/(dim(protein_go_mat)[1]*dim(protein_go_mat)[2])
 sum(protein_domain_mat)/(dim(protein_domain_mat)[1]*dim(protein_domain_mat)[2])
+
+# Check how many GO terms per protein?
+rowSums(protein_go_mat) %>% sort(decreasing = T) %>% head(20)
 
 ####################################
 # Read GREEKC DbTF list            #
@@ -347,6 +360,7 @@ data_tbl = go_umap_20n %>%
   tibble::as_tibble() %>%
   tibble::add_column(
     protein_id    = protein_ids,
+    gene_name     = gene_names,
     protein_class = protein_class %>% unname() %>% as.factor()) %>%
   mutate(cluster_id = case_when(
     (X > -15  & X < -13 & Y > -13 & Y < -10) ~ 1,
@@ -368,5 +382,5 @@ data_tbl %>% filter(cluster_id == 2) %>% count(protein_class)
 
 # save to CSV
 data_tbl %>%
-  select(protein_id, protein_class, cluster_id) %>%
-  readr::write_csv(file = 'data/tfc2_umap_20n_GO_cluster_annot.csv')
+  select(protein_id, gene_name, protein_class, cluster_id) %>%
+  readr::write_csv(file = 'data/tfch2_umap_20n_GO_cluster_annot.csv')
