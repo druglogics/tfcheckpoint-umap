@@ -1,7 +1,7 @@
 ---
 title: "TFcheckpoint Dataset visualization using UMAP"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 06 November, 2021"
+date: "Last updated: 08 November, 2021"
 description: "Description"
 url: 'https\://druglogics.github.io/tfcheckpoint-umap/'
 github-repo: "druglogics/tfcheckpoint-umap"
@@ -599,7 +599,7 @@ knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_GO_cluster_annot.png'
 </div>
 
 :::{.green-box}
-- See [file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfc2_umap_20n_GO_cluster_annot.csv) with the protein ids, cluster ids and protein classification.
+- See [file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfch2_umap_20n_GO_cluster_annot.csv) with the protein ids, gene names, cluster ids and annotated class.
 :::
 
 # R session info {-}
