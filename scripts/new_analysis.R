@@ -5,96 +5,136 @@ library(readr)
 library(uwot)
 library(ggplot2)
 
-##########################################################
-# Read Interpro domain + GO annotations for all proteins #
-# in TFch.v2 and build expanded 1/0 data matrices        #
-##########################################################
-tfc2_data = readr::read_tsv(file = 'data/tfc2_all_human_go_interpro_22102021_ALL.tsv',
-  col_types = 'ccc') # 3875
-protein_ids = tfc2_data %>% pull(Entry)
-domains     = tfc2_data %>% pull(`Cross-reference (InterPro)`)
-go_terms    = tfc2_data %>% pull(`Gene ontology IDs`)
-
-# Map protein IDs to Gene names from file (https://www.uniprot.org/uploadlists/)
-# Duplicated entries (proteins with 2 gene names) were merged into one comma separated name
-id2name_map = readr::read_tsv(file = 'data/mapped_ids.tsv', col_types = 'cc')
-# Add 1 protein with no gene name in proper position (manually checked)
-id2name_map = id2name_map %>% tibble::add_row(protein_id = 'Q8WTZ3', name = NA, .before = 3871)
-# check order
-all(id2name_map %>% pull(protein_id) == protein_ids)
-# save names
-gene_names  = id2name_map %>% pull(name)
+# Read data in TFch2 (GO data from November 8th) => 3842 proteins
+# Format
+# Entry\tName\tGO annotations\tInterpro domains\tDeepTF score\tGO annotations no IEA
+data_tbl    = readr::read_tsv(file = 'data/data_tbl_16112021.tsv')
+protein_ids = data_tbl %>% pull(Entry)
+domains     = data_tbl %>% pull(`Interpro domains`)
+gene_names  = data_tbl %>% pull(Name)
+go_terms    = data_tbl %>% pull(`GO annotations`)
+go_terms_no_iea = data_tbl %>% pull(`GO annotations no IEA`)
 
 # If matrices have already been stored as compressed R objects, don't rebuild them!
-protein_domain_file = 'data/protein_domain_mat.rds'
-protein_go_file     = 'data/protein_go_mat.rds'
-if ((!file.exists(protein_domain_file)) | (!file.exists(protein_go_file))) {
+protein_domain_rds_file        = 'data/protein_domain_mat.rds'
+protein_go_rds_file            = 'data/protein_go_mat.rds'
+protein_go_no_iea_rds_file     = 'data/protein_go_no_iea_mat.rds'
+if ((!file.exists(protein_domain_rds_file)) | (!file.exists(protein_go_rds_file)) | (!file.exists(protein_go_no_iea_rds_file))) {
   # get the unique InterPro domain IDs
   domains_unique = sapply(domains, function(domain_vec) {
     if (!is.na(domain_vec)) {
       vec = stringr::str_split(domain_vec, ";") %>% unlist() %>% head(-1)
       return(vec)
     }
-  }) %>% unlist(use.names = FALSE) %>% unique()
+  }) %>% unlist(use.names = FALSE) %>% unique() # 4637 unique domains
 
-  # get the unique GO terms
+  # get the unique GO terms (with IEA)
   go_terms_unique = sapply(go_terms, function(go_term_vec) {
     if (!is.na(go_term_vec)) {
-      vec = stringr::str_split(go_term_vec, "; ") %>% unlist()
+      vec = stringr::str_split(go_term_vec, " ") %>% unlist()
       return(vec)
     }
-  }) %>% unlist(use.names = FALSE) %>% unique()
+  }) %>% unlist(use.names = FALSE) %>% unique() # 9676 unique GO terms
+
+  # get the unique GO terms (no IEA terms)
+  go_terms_no_iea_unique = sapply(go_terms_no_iea, function(go_term_vec) {
+    if (!is.na(go_term_vec)) {
+      vec = stringr::str_split(go_term_vec, " ") %>% unlist()
+      return(vec)
+    }
+  }) %>% unlist(use.names = FALSE) %>% unique() # 8096 unique GO terms (subset of the above)
 
   # build matrices of 0's and 1's
-  protein_domain_mat = matrix(0, nrow = length(protein_ids), ncol = length(domains_unique),
+  protein_domain_mat    = matrix(0, nrow = length(protein_ids), ncol = length(domains_unique),
     dimnames = list(protein_ids, domains_unique))
-  protein_go_mat     = matrix(0, nrow = length(protein_ids), ncol = length(go_terms_unique),
+  protein_go_mat        = matrix(0, nrow = length(protein_ids), ncol = length(go_terms_unique),
     dimnames = list(protein_ids, go_terms_unique))
+  protein_go_no_iea_mat = matrix(0, nrow = length(protein_ids), ncol = length(go_terms_no_iea_unique),
+    dimnames = list(protein_ids, go_terms_no_iea_unique))
 
+  # protein - InterPro matrix
   for(id in protein_ids) {
     # get the InterPro domains for that protein ID
-    domain_vec = tfc2_data %>%
+    domain_vec = data_tbl %>%
       filter(Entry == id) %>%
-      pull(`Cross-reference (InterPro)`)
+      pull(`Interpro domains`)
 
     # ... and set them to 1 in the matrix
     if (!is.na(domain_vec)) {
       vec = stringr::str_split(domain_vec, ";") %>% unlist() %>% head(-1)
       for(domain in vec) {
-          protein_domain_mat[id, domain] = 1
+        protein_domain_mat[id, domain] = 1
       }
     }
   }
 
+  # Protein - GO matrix
   for(id in protein_ids) {
     # get the GO terms for that protein ID
-    go_term_vec = tfc2_data %>%
+    go_term_vec = data_tbl %>%
       filter(Entry == id) %>%
-      pull(`Gene ontology IDs`)
+      pull(`GO annotations`)
 
     # ... and set them to 1 in the matrix
     if (!is.na(go_term_vec)) {
-      vec = stringr::str_split(go_term_vec, "; ") %>% unlist()
+      vec = stringr::str_split(go_term_vec, " ") %>% unlist()
       for(go_term in vec) {
         protein_go_mat[id, go_term] = 1
       }
     }
   }
 
+  # Protein - GO (no IEA) matrix
+  for(id in protein_ids) {
+    # get the GO terms for that protein ID
+    go_term_vec = data_tbl %>%
+      filter(Entry == id) %>%
+      pull(`GO annotations no IEA`)
+
+    # ... and set them to 1 in the matrix
+    if (!is.na(go_term_vec)) {
+      vec = stringr::str_split(go_term_vec, " ") %>% unlist()
+      for(go_term in vec) {
+        protein_go_no_iea_mat[id, go_term] = 1
+      }
+    }
+  }
+
   # save the matrices
-  saveRDS(object = protein_domain_mat, file = protein_domain_file)
-  saveRDS(object = protein_go_mat, file = protein_go_file)
+  saveRDS(object = protein_domain_mat,    file = protein_domain_rds_file)
+  saveRDS(object = protein_go_mat,        file = protein_go_rds_file)
+  saveRDS(object = protein_go_no_iea_mat, file = protein_go_no_iea_rds_file)
 } else {
-  protein_domain_mat = readRDS(file = protein_domain_file)
-  protein_go_mat     = readRDS(file = protein_go_file)
+  protein_domain_mat    = readRDS(file = protein_domain_rds_file)
+  protein_go_mat        = readRDS(file = protein_go_rds_file)
+  protein_go_no_iea_mat = readRDS(file = protein_go_no_iea_rds_file)
 }
 
-# Check: matrix 1-sparsity or percentage of 1's (GO matrix has more 1's)
-sum(protein_go_mat)/(dim(protein_go_mat)[1]*dim(protein_go_mat)[2])
-sum(protein_domain_mat)/(dim(protein_domain_mat)[1]*dim(protein_domain_mat)[2])
+# save the GO matrices as files (do once)
+if (FALSE) {
+  go_mat        = protein_go_mat
+  go_mat_no_iea = protein_go_no_iea_mat
+
+  # change rownames
+  rownames(go_mat)        = gene_names
+  rownames(go_mat_no_iea) = gene_names
+
+  # make tibbles and move rownames to a separate column
+  go_tbl        = go_mat %>% as_tibble(rownames = 'Name')
+  go_no_iea_tbl = go_mat_no_iea %>% as_tibble(rownames = 'Name')
+
+  readr::write_csv(x = go_tbl, file = 'data/protein_go_mat.csv')
+  readr::write_csv(x = go_no_iea_tbl, file = 'data/protein_go_no_iea_mat.csv')
+}
+
+# Check: percentage of 1's (GO matrix has more 1's)
+100*sum(protein_go_mat)/(dim(protein_go_mat)[1]*dim(protein_go_mat)[2])
+100*sum(protein_go_no_iea_mat)/(dim(protein_go_no_iea_mat)[1]*dim(protein_go_no_iea_mat)[2])
+100*sum(protein_domain_mat)/(dim(protein_domain_mat)[1]*dim(protein_domain_mat)[2])
 
 # Check how many GO terms per protein?
 rowSums(protein_go_mat) %>% sort(decreasing = T) %>% head(20)
+rowSums(protein_go_no_iea_mat) %>% sort(decreasing = T) %>% head(20) # less GO terms per protein
 
 ####################################
 # Read GREEKC DbTF list            #
@@ -104,7 +144,7 @@ greekc_dbtfs_tbl = readr::read_csv(file = 'data/dbTF_online_02112021.csv',
   col_select = c("id", "symbol"))
 dbtf_ids = greekc_dbtfs_tbl %>% pull(id) # 1437 DbTF curated proteins
 
-# check: all GREEKC annotated DbTF proteins are in TFch2
+# check: all GREEKC annotated DbTF proteins are in TFch2 (YES)
 stopifnot(dbtf_ids %in% protein_ids)
 
 ###################################################
@@ -112,34 +152,20 @@ stopifnot(dbtf_ids %in% protein_ids)
 ###################################################
 cotf_go_map    = readr::read_tsv(file = 'data/coTF_GO_terms.tsv', col_types = 'cc')
 cotf_go_terms  = cotf_go_map %>% pull(term)
-total_go_terms = colnames(protein_go_mat)
+total_go_terms        = colnames(protein_go_mat)
+total_go_terms_no_iea = colnames(protein_go_no_iea_mat)
 
-# check if we can find coTF-based GO terms that are not annotated
-cotf_go_terms[!cotf_go_terms %in% total_go_terms] # GO:0001098, need to remove it!
-cotf_go_terms = cotf_go_terms[cotf_go_terms %in% total_go_terms]
+# check: all coTF GO terms are present in the GO matrices
+stopifnot(all(cotf_go_terms %in% total_go_terms))
+stopifnot(all(cotf_go_terms %in% total_go_terms_no_iea))
 
-### Some data checks
-if(FALSE) {
-  # are there dbTFs that are annotated as coTFs?
-  test_tbl = protein_go_mat %>%
-    as_tibble(rownames = 'id') %>%
-    filter(id %in% dbtf_ids) %>% # keep only the DbTFs
-    select(c('id', cotf_go_terms)) # keep only coTF GO terms
+##########################################################
+# TFch2 Protein Annotation ('relaxed', No 1)             #
+# Annotate which proteins are DbTFs, coTFs, None or Both #
+##########################################################
+cotf_ids = rownames(protein_go_mat)[rowSums(protein_go_mat[,cotf_go_terms]) > 0] # 769 proteins
 
-  # How many DbTFs are annotated with at least one coTF GO term?
-  test_tbl %>% select(cotf_go_terms) %>% as.matrix() %>% colSums()
-
-  # Show the amount of co-TF GO terms per DbTF protein in decreasing order
-  test_tbl %>% select(cotf_go_terms) %>% as.matrix() %>% rowSums() %>% sort(decreasing = TRUE) %>% head()
-
-  # 240 DbTFs have at least one co-TF GO term
-  test_tbl %>% select(cotf_go_terms) %>% as.matrix() %>% rowSums() %>% sort(decreasing = TRUE) %>% head(n = 240)
-}
-
-# Annotate which proteins are DbTFs, coTFs, None or Both
-cotf_ids = rownames(protein_go_mat)[rowSums(protein_go_mat[,cotf_go_terms]) > 0] # 848 proteins
-
-protein_class = sapply(protein_ids, function(id) {
+protein_class_1 = sapply(protein_ids, function(id) {
   if (id %in% dbtf_ids & id %in% cotf_ids) {
     return('Both')
   }
@@ -169,7 +195,7 @@ for (n_neighbors in neighbors) {
   }
 }
 
-# save plots
+# save plots (coloring with protein class annotation 1)
 for (n_neighbors in neighbors) {
   print(paste0('Number of neighbors: ', n_neighbors))
 
@@ -182,9 +208,7 @@ for (n_neighbors in neighbors) {
     interpro_umap %>%
       `colnames<-` (c("X", "Y")) %>%
       tibble::as_tibble() %>%
-      tibble::add_column(
-        protein_id    = protein_ids,
-        protein_class = protein_class %>% unname() %>% as.factor()) %>%
+      tibble::add_column(protein_class = protein_class_1 %>% unname() %>% as.factor()) %>%
       ggplot(aes(x = X, y = Y, color = protein_class)) +
       geom_point(size = 0.1) +
       scale_colour_brewer(palette = "Set1") +
@@ -198,9 +222,9 @@ for (n_neighbors in neighbors) {
   }
 }
 
-##################################
-# Unsupervised UMAP on GO matrix #
-##################################
+#########################################
+# Unsupervised UMAP on (full) GO matrix #
+#########################################
 neighbors = c(2,6,10,14,20)
 for (n_neighbors in neighbors) {
   print(paste0('Number of neighbors: ', n_neighbors))
@@ -215,7 +239,7 @@ for (n_neighbors in neighbors) {
   }
 }
 
-# save plots
+# save plots (coloring with protein class annotation 1)
 for (n_neighbors in neighbors) {
   print(paste0('Number of neighbors: ', n_neighbors))
 
@@ -229,8 +253,7 @@ for (n_neighbors in neighbors) {
       `colnames<-` (c("X", "Y")) %>%
       tibble::as_tibble() %>%
       tibble::add_column(
-        protein_id    = protein_ids,
-        protein_class = protein_class %>% unname() %>% as.factor()) %>%
+        protein_class = protein_class_1 %>% unname() %>% as.factor()) %>%
       ggplot(aes(x = X, y = Y, color = protein_class)) +
       geom_point(size = 0.1) +
       scale_colour_brewer(palette = "Set1") +
@@ -263,34 +286,42 @@ for (n_neighbors in neighbors) {
   }
 }
 
-# save plots
+# save plots (coloring with protein class annotation 1)
 for (n_neighbors in neighbors) {
   print(paste0('Number of neighbors: ', n_neighbors))
 
   image_file = paste0('img/tfch2-combined/tfc2_umap_', n_neighbors, 'n_combined.png')
 
   if (!file.exists(image_file)) {
-    umap_file = paste0('data/tfc2_umap_', n_neighbors, 'n_go.rds')
+    umap_file = paste0('data/tfc2_umap_', n_neighbors, 'n_combined.rds')
     go_umap = readRDS(file = umap_file)
 
     go_umap %>%
       `colnames<-` (c("X", "Y")) %>%
       tibble::as_tibble() %>%
       tibble::add_column(
-        protein_id    = protein_ids,
-        protein_class = protein_class %>% unname() %>% as.factor()) %>%
+        protein_class = protein_class_1 %>% unname() %>% as.factor()) %>%
       ggplot(aes(x = X, y = Y, color = protein_class)) +
       geom_point(size = 0.1) +
       scale_colour_brewer(palette = "Set1") +
       guides(colour = guide_legend(title = "Class",
         label.theme = element_text(size = 12),
         override.aes = list(shape = 19, size = 12))) +
-      labs(title = paste0("TFcheckpoint2 (GO) - UMAP (", n_neighbors," Neighbors)")) +
+      labs(title = paste0("TFcheckpoint2 (GO + InterPro) - UMAP (", n_neighbors," Neighbors)")) +
       theme_classic() +
       theme(plot.title = element_text(hjust = 0.5))
     ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
   }
 }
+
+# dbTFs (from GREEKC catalogue)
+coTFs from GO (GO:0003712)
+coTFs from TcoFdb (Schmeier)
+coTF in both GO:0003712 and TcoFdb
+both dbTF and coTF from either GO or TcoFdb
+(possibly Lambert and/or TFClass)
+Zinc-finger dbTFs
+
 
 #########################################################################
 # Annotate UMAP result (GO dataset, 20 Neighbors) with 'boxed' clusters #
