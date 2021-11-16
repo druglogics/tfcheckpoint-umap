@@ -353,6 +353,13 @@ Proteins were labeled as co-transcription factors if they had at least one GO te
 Proteins that belonged to both of these lists were labeled as `Both`.
 Obviously, proteins that belonged to none of these lists were labeled as `None`.
 
+Given the previous description, and the different GO matrices (with or without IEA) we get this distribution of the different protein classes:
+
+| GO matrix | Both | coTF | DbTF | None |
+|:-:|:-:|:-:|:-:|:-:|
+| Full   | 176 | 593 | 1261 | 1812 |
+| no IEA |  90 | 463 | 1347 | 1942 |
+
 ## InterPro vs GO (full) vs Combined Dataset {-}
 
 :::{.green-box}
