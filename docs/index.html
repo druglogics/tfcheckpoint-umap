@@ -911,8 +911,8 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#analysis-new-dataset"><i class="fa fa-check"></i>Analysis (New Dataset)</a>
 <ul>
-<li class="chapter" data-level="" data-path=""><a href="#protein-class-annotation"><i class="fa fa-check"></i>Protein Class Annotation</a></li>
-<li class="chapter" data-level="" data-path=""><a href="#interpro-vs-go-vs-combined-dataset"><i class="fa fa-check"></i>InterPro vs GO vs Combined Dataset</a>
+<li class="chapter" data-level="" data-path=""><a href="#class-annot1"><i class="fa fa-check"></i>Protein Class Annotation 1</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#interpro-vs-go-full-vs-combined-dataset"><i class="fa fa-check"></i>InterPro vs GO (full) vs Combined Dataset</a>
 <ul>
 <li class="chapter" data-level="" data-path=""><a href="#interpro-dataset"><i class="fa fa-check"></i>InterPro Dataset</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#go-dataset"><i class="fa fa-check"></i>GO Dataset</a></li>
@@ -945,7 +945,7 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">TFcheckpoint Dataset visualization using UMAP</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 08 November, 2021</em></p>
+<p class="date"><em>Last updated: 16 November, 2021</em></p>
 </div>
 <div id="input" class="section level1 unnumbered">
 <h1>Input</h1>
@@ -974,9 +974,11 @@ The dataset is provided as a <a href="https://github.com/druglogics/tfcheckpoint
 </div>
 <div id="new-dataset" class="section level2 unnumbered">
 <h2>New Dataset</h2>
-<p>The new dataset features an updated curated list of <span class="math inline">\(3875\)</span> proteins that are part of TFcheckpoint (v2).
-For each of these proteins, we have gathered <strong>Gene ontology (GO) IDs</strong> and cross-referenced <strong>InterPro domains</strong>, using UniProt’s ID mapping <a href="https://www.uniprot.org/uploadlists/">online service</a> (<code>UniProtKB</code> for <code>To</code> mapping option and selecting the appropriate columns).
-The resulting data file is available as a <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfc2_all_human_go_interpro_22102021_ALL.tsv">tab-delimited file</a> (retrieved 22/10/2021).</p>
+<p>The new dataset features an updated curated list of <span class="math inline">\(3842\)</span> proteins that are part of TFcheckpoint (TFch2, v2.0).
+For each of these proteins, we have gathered <strong>Gene ontology (GO) IDs with and without IEA</strong> (Electronic Annotation) from the <a href="http://ftp.ebi.ac.uk/pub/databases/GO/goa/HUMAN/">ftp site</a> of the GO database (files were produced on the 8th of November) and cross-referenced <strong>InterPro domains</strong>, using UniProt’s ID mapping <a href="https://www.uniprot.org/uploadlists/">online service</a> (<code>UniProtKB</code> for <code>To</code> mapping option and selecting the appropriate columns).
+Also the corresponding gene names (HGNC) were collected using the Uniprot’s uploadlist website on the 8th of November.
+For each protein in TFch2, we also calculated a score denoting the probability of a protein being a transcription factor using DeepTFactor <span class="citation">(<a href="#ref-Kim2021" role="doc-biblioref">Kim et al. 2021</a>)</span>.</p>
+<p>The resulting data file is available as a <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/data_tbl_16112021.tsv">tab-delimited file</a> (timestamp 16/11/2021).</p>
 <div class="green-box">
 <p>Analysis on this dataset was performed <strong>June-November 2021</strong> (sporadically :) and will be featured in the second TF-checkpoint paper.</p>
 </div>
@@ -1418,19 +1420,20 @@ Figure 23: Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D 
 <p>See script <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/new_analysis.R">new_analysis.R</a> for more details.
 We show how to expand the GO and InterPro datasets to 0-1 matrices, how we annotated each protein’s class (as <code>DbTF</code>, <code>coTF</code>, <code>Both</code> or <code>None</code>), run UMAP and produce the following figures.</p>
 </div>
-<div id="protein-class-annotation" class="section level2 unnumbered">
-<h2>Protein Class Annotation</h2>
-<p>Each protein in TF2 can belong to one of the following 4 classes: <code>DbTF</code>, <code>coTF</code>, <code>Both</code> or <code>None</code>.
+<div id="class-annot1" class="section level2 unnumbered">
+<h2>Protein Class Annotation 1</h2>
+<p>Each protein in TFch2 can belong to one of the following 4 classes: <code>DbTF</code>, <code>coTF</code>, <code>Both</code> or <code>None</code>.
 Proteins were labeled as DNA-binding transcription factors if they belonged to the online list provided in <span class="citation">(<a href="#ref-Lovering2021" role="doc-biblioref">Lovering et al. 2021</a>)</span> (retrieved 2/11/2021).
 Proteins were labeled as co-transcription factors if they had at least one GO term annotation from this <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coTF_GO_terms.tsv">online list</a>.
 Proteins that belonged to both of these lists were labeled as <code>Both</code>.
 Obviously, proteins that belonged to none of these lists were labeled as <code>None</code>.</p>
 </div>
-<div id="interpro-vs-go-vs-combined-dataset" class="section level2 unnumbered">
-<h2>InterPro vs GO vs Combined Dataset</h2>
+<div id="interpro-vs-go-full-vs-combined-dataset" class="section level2 unnumbered">
+<h2>InterPro vs GO (full) vs Combined Dataset</h2>
 <div class="green-box">
-<p>The unsupervised UMAP results using either the <strong>GO matrix</strong>, <strong>InterPro matrix</strong> or <strong>both matrices combined as one</strong> are given in the following 3 subsections.</p>
-<p>Generally, <strong>the GO dataset was more informative</strong> and provided more compact/cohesive classification of the proteins vs the InterPro dataset.
+<p>The unsupervised UMAP results using either the <strong>full GO matrix</strong>, <strong>InterPro matrix</strong> or <strong>both these matrices combined as one</strong> are given in the following 3 subsections.</p>
+<p><a href="#class-annot1">This</a> protein class annotation is used.</p>
+<p>Generally, <strong>the full GO dataset was more informative</strong> and provided more compact/cohesive classification of the proteins vs the InterPro dataset.
 Using both datasets we don’t see any significant improvement in the position of the UMAP sub-clusters vs using just the GO dataset.</p>
 </div>
 <div id="interpro-dataset" class="section level3 unnumbered">
@@ -1440,9 +1443,9 @@ Using both datasets we don’t see any significant improvement in the position o
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-InterPro/tfc2_umap_14n_interpro.png&#39;</span>)</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-InterPro/tfc2_umap_20n_interpro.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:tfch2-umap-interpro"></span>
-<img src="img/tfch2-InterPro/tfc2_umap_6n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-InterPro/tfc2_umap_10n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-InterPro/tfc2_umap_14n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-InterPro/tfc2_umap_20n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" />
+<img src="img/tfch2-InterPro/tfc2_umap_6n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" /><img src="img/tfch2-InterPro/tfc2_umap_10n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" /><img src="img/tfch2-InterPro/tfc2_umap_14n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" /><img src="img/tfch2-InterPro/tfc2_umap_20n_interpro.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" />
 <p class="caption">
-Figure 24: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.
+Figure 24: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using InterPro domains. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1).
 </p>
 </div>
 </div>
@@ -1452,10 +1455,10 @@ Figure 24: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using Inte
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_10n_go.png&#39;</span>)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_14n_go.png&#39;</span>)</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go.png&#39;</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:tfch2-umap-go"></span>
-<img src="img/tfch2-GO/tfc2_umap_6n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-GO/tfc2_umap_10n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-GO/tfc2_umap_14n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-GO/tfc2_umap_20n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" />
+<div class="figure"><span style="display:block;" id="fig:tfch2-umap-go-full"></span>
+<img src="img/tfch2-GO/tfc2_umap_6n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" /><img src="img/tfch2-GO/tfc2_umap_10n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" /><img src="img/tfch2-GO/tfc2_umap_14n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" /><img src="img/tfch2-GO/tfc2_umap_20n_go.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" />
 <p class="caption">
-Figure 25: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.
+Figure 25: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1).
 </p>
 </div>
 </div>
@@ -1466,9 +1469,9 @@ Figure 25: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO t
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_14n_combined.png&#39;</span>)</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_20n_combined.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:tfch2-umap-combined"></span>
-<img src="img/tfch2-combined/tfc2_umap_6n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-combined/tfc2_umap_10n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-combined/tfc2_umap_14n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" /><img src="img/tfch2-combined/tfc2_umap_20n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation." width="50%" />
+<img src="img/tfch2-combined/tfc2_umap_6n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1)." width="50%" /><img src="img/tfch2-combined/tfc2_umap_10n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1)." width="50%" /><img src="img/tfch2-combined/tfc2_umap_14n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1)." width="50%" /><img src="img/tfch2-combined/tfc2_umap_20n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1)." width="50%" />
 <p class="caption">
-Figure 26: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation.
+Figure 26: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1).
 </p>
 </div>
 </div>
@@ -1476,23 +1479,16 @@ Figure 26: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using both
 <div id="cluster-annotated-umap---go-dataset" class="section level2 unnumbered">
 <h2>Cluster Annotated UMAP - GO Dataset</h2>
 <p>We use the UMAP embedding (<strong>GO dataset, 20 neighbors</strong>) to discuss several interesting cases of proteins that seem to belong in different clusters than they should be, based on the protein class annotation:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_GO_cluster_annot.png&#39;</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:tfch2-umap-go-annot"></span>
-<img src="img/tfch2-GO/tfc2_umap_20n_GO_cluster_annot.png" alt="Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms (20 neighbors). Data points (proteins) have been colored according to their their respective class annotation. Boxes signify the different protein clusters created by UMAP." width="1050" />
-<p class="caption">
-Figure 27: Unsupervised UMAP of the TFcheckpoint v2 dataset annotated using GO terms (20 neighbors). Data points (proteins) have been colored according to their their respective class annotation. Boxes signify the different protein clusters created by UMAP.
-</p>
-</div>
 <div class="green-box">
 <ul>
-<li>See <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfch2_umap_20n_GO_cluster_annot.csv">file</a> with the protein ids, gene names, cluster ids and annotated class.</li>
+<li>See <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/TODO.csv">file</a> with the protein ids, gene names, cluster ids and annotated class.</li>
 </ul>
 </div>
 </div>
 </div>
 <div id="r-session-info" class="section level1 unnumbered">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>xfun<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>xfun<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 20.04.3 LTS
@@ -1547,6 +1543,9 @@ Carbon, S., E. Douglass, N. Dunn, B. Good, N. L. Harris, S. E. Lewis, C. J. Mung
 </div>
 <div id="ref-Chawla2013" class="csl-entry">
 Chawla, Konika, Sushil Tripathi, Liv Thommesen, Astrid Lægreid, and Martin Kuiper. 2013. <span>“<span class="nocase">TFcheckpoint: A curated compendium of specific DNA-binding RNA polymerase II transcription factors</span>.”</span> <em>Bioinformatics</em> 29 (19): 2519–20. <a href="https://doi.org/10.1093/bioinformatics/btt432">https://doi.org/10.1093/bioinformatics/btt432</a>.
+</div>
+<div id="ref-Kim2021" class="csl-entry">
+Kim, Gi Bae, Ye Gao, Bernhard O. Palsson, and Sang Yup Lee. 2021. <span>“<span class="nocase">DeepTFactor: A deep learning-based tool for the prediction of transcription factors</span>.”</span> <em>Proceedings of the National Academy of Sciences of the United States of America</em> 118 (2). <a href="https://doi.org/10.1073/pnas.2021171118">https://doi.org/10.1073/pnas.2021171118</a>.
 </div>
 <div id="ref-Lovering2021" class="csl-entry">
 Lovering, Ruth C., Pascale Gaudet, Marcio L. Acencio, Alex Ignatchenko, Arttu Jolma, Oriol Fornes, Martin Kuiper, et al. 2021. <span>“<span class="nocase">A GO catalogue of human DNA-binding transcription factors</span>.”</span> <em>Biochimica Et Biophysica Acta (BBA) - Gene Regulatory Mechanisms</em>, October, 194765. <a href="https://doi.org/10.1016/J.BBAGRM.2021.194765">https://doi.org/10.1016/J.BBAGRM.2021.194765</a>.
