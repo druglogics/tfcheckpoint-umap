@@ -23,4 +23,7 @@ fig:sumap-14n-schmeier
 fig:sumap-14n-schmeier-w1
 fig:tfch2-umap-interpro
 fig:tfch2-umap-go-full
+fig:tfch2-umap-go-no-iea
 fig:tfch2-umap-combined
+fig:tfch2-umap-go-2nd-cotf-coloring
+fig:tfch2-umap-go-deeptf-coloring

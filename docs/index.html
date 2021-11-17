@@ -911,13 +911,20 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#analysis-new-dataset"><i class="fa fa-check"></i>Analysis (New Dataset)</a>
 <ul>
-<li class="chapter" data-level="" data-path=""><a href="#class-annot1"><i class="fa fa-check"></i>Protein Class Annotation 1</a></li>
-<li class="chapter" data-level="" data-path=""><a href="#interpro-vs-go-full-vs-combined-dataset"><i class="fa fa-check"></i>InterPro vs GO (full) vs Combined Dataset</a>
+<li class="chapter" data-level="" data-path=""><a href="#class-annot"><i class="fa fa-check"></i>Protein Class Annotation</a>
+<ul>
+<li class="chapter" data-level="" data-path=""><a href="#cotf-class1"><i class="fa fa-check"></i>coTF Annotation 1</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#cotf-class2"><i class="fa fa-check"></i>coTF Annotation 2</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#interpro-vs-go-vs-combined-dataset"><i class="fa fa-check"></i>InterPro vs GO vs Combined Dataset</a>
 <ul>
 <li class="chapter" data-level="" data-path=""><a href="#interpro-dataset"><i class="fa fa-check"></i>InterPro Dataset</a></li>
-<li class="chapter" data-level="" data-path=""><a href="#go-dataset"><i class="fa fa-check"></i>GO Dataset</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#go-full-dataset"><i class="fa fa-check"></i>GO (full) Dataset</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#go-no-iea-dataset"><i class="fa fa-check"></i>GO (no IEA) Dataset</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#combined-dataset"><i class="fa fa-check"></i>Combined Dataset</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path=""><a href="#nd-cotf-color-annotation-in-umap-using-go-embeddings"><i class="fa fa-check"></i>2nd coTF color annotation in UMAP using GO embeddings</a></li>
+<li class="chapter" data-level="" data-path=""><a href="#deeptf-color-annotation-in-umap-using-go-embeddings"><i class="fa fa-check"></i>DeepTF color annotation in UMAP using GO embeddings</a></li>
 <li class="chapter" data-level="" data-path=""><a href="#cluster-annotated-umap---go-dataset"><i class="fa fa-check"></i>Cluster Annotated UMAP - GO Dataset</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path=""><a href="#r-session-info"><i class="fa fa-check"></i>R session info</a></li>
@@ -945,7 +952,7 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">TFcheckpoint Dataset visualization using UMAP</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 16 November, 2021</em></p>
+<p class="date"><em>Last updated: 17 November, 2021</em></p>
 </div>
 <div id="input" class="section level1 unnumbered">
 <h1>Input</h1>
@@ -1418,23 +1425,96 @@ Figure 23: Supervised UMAP using 14 neighbors. Proteins are colored atop the 2D 
 <h1>Analysis (New Dataset)</h1>
 <div class="blue-box">
 <p>See script <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/new_analysis.R">new_analysis.R</a> for more details.
-We show how to expand the GO and InterPro datasets to 0-1 matrices, how we annotated each protein’s class (as <code>DbTF</code>, <code>coTF</code>, <code>Both</code> or <code>None</code>), run UMAP and produce the following figures.</p>
+We show how to expand the GO and InterPro datasets to 0-1 matrices (get the matrix data in files <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/go_matrices.zip">here</a>), how we annotated each protein’s class (as <code>DbTF</code>, <code>coTF</code>, <code>Both</code> or <code>None</code>), run UMAP and produce the figures.</p>
 </div>
-<div id="class-annot1" class="section level2 unnumbered">
-<h2>Protein Class Annotation 1</h2>
+<div id="class-annot" class="section level2 unnumbered">
+<h2>Protein Class Annotation</h2>
 <p>Each protein in TFch2 can belong to one of the following 4 classes: <code>DbTF</code>, <code>coTF</code>, <code>Both</code> or <code>None</code>.
-Proteins were labeled as DNA-binding transcription factors if they belonged to the online list provided in <span class="citation">(<a href="#ref-Lovering2021" role="doc-biblioref">Lovering et al. 2021</a>)</span> (retrieved 2/11/2021).
-Proteins were labeled as co-transcription factors if they had at least one GO term annotation from this <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coTF_GO_terms.tsv">online list</a>.
-Proteins that belonged to both of these lists were labeled as <code>Both</code>.
-Obviously, proteins that belonged to none of these lists were labeled as <code>None</code>.</p>
+Proteins were labeled as <strong>DNA-binding transcription factors</strong> if they belonged to the online list provided in <span class="citation">(<a href="#ref-Lovering2021" role="doc-biblioref">Lovering et al. 2021</a>)</span> (retrieved 2/11/2021).
+For <strong>coTF labeling</strong>, we used two different annotation strategies explained in the two subsections below.
+Proteins that had both the <code>DbTF</code> and <code>coTF</code> labels were classified as <code>Both</code> and as <code>None</code> if they had neither.</p>
+<div id="cotf-class1" class="section level3 unnumbered">
+<h3>coTF Annotation 1</h3>
+<div class="blue-box">
+<p>Proteins were labeled as co-transcription factors if they had at least one GO term annotation from this <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coTF_GO_terms.tsv">online list</a>.</p>
 </div>
-<div id="interpro-vs-go-full-vs-combined-dataset" class="section level2 unnumbered">
-<h2>InterPro vs GO (full) vs Combined Dataset</h2>
+<p>Given the different GO matrices (with or without IEA) we get different distribution of protein class annotations:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">GO matrix</th>
+<th align="center">Both</th>
+<th align="center">coTF</th>
+<th align="center">DbTF</th>
+<th align="center">None</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Full</td>
+<td align="center">176</td>
+<td align="center">593</td>
+<td align="center">1261</td>
+<td align="center">1812</td>
+</tr>
+<tr class="even">
+<td align="center">no IEA</td>
+<td align="center">90</td>
+<td align="center">463</td>
+<td align="center">1347</td>
+<td align="center">1942</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="cotf-class2" class="section level3 unnumbered">
+<h3>coTF Annotation 2</h3>
+<div class="blue-box">
+<p>Proteins were labeled as co-transcription factors if they had the GO term <code>GO:0003712</code> <strong>and</strong> were in TcoF-DB v2 <span class="citation">(<a href="#ref-Schmeier2017" role="doc-biblioref">Schmeier et al. 2017</a>)</span>.</p>
+</div>
+<p>Given the different GO matrices (with or without IEA) we get different distribution of protein class annotations (note that there are no proteins classified as both DbTFs and coTFs):</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">GO matrix</th>
+<th align="center">Both</th>
+<th align="center">coTF</th>
+<th align="center">DbTF</th>
+<th align="center">None</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Full</td>
+<td align="center">0</td>
+<td align="center">67</td>
+<td align="center">1437</td>
+<td align="center">2338</td>
+</tr>
+<tr class="even">
+<td align="center">no IEA</td>
+<td align="center">0</td>
+<td align="center">57</td>
+<td align="center">1437</td>
+<td align="center">2348</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="interpro-vs-go-vs-combined-dataset" class="section level2 unnumbered">
+<h2>InterPro vs GO vs Combined Dataset</h2>
 <div class="green-box">
-<p>The unsupervised UMAP results using either the <strong>full GO matrix</strong>, <strong>InterPro matrix</strong> or <strong>both these matrices combined as one</strong> are given in the following 3 subsections.</p>
-<p><a href="#class-annot1">This</a> protein class annotation is used.</p>
+<p>In the following 4 subsections, we present the UMAP results using 4 different datasets:</p>
+<ol style="list-style-type: decimal">
+<li>The <strong>InterPro matrix</strong></li>
+<li>The <strong>full GO matrix</strong></li>
+<li>The <strong>no IEA GO matrix</strong></li>
+<li>The <strong>combined full GO matrix and InterPro matrix</strong></li>
+</ol>
+<p>The <a href="#cotf-class1">first coTF class annotation</a> is used in the UMAP coloring.</p>
 <p>Generally, <strong>the full GO dataset was more informative</strong> and provided more compact/cohesive classification of the proteins vs the InterPro dataset.
-Using both datasets we don’t see any significant improvement in the position of the UMAP sub-clusters vs using just the GO dataset.</p>
+Using both datasets we don’t see any significant improvement in the position of the UMAP sub-clusters vs using just the GO (full) matrix.</p>
 </div>
 <div id="interpro-dataset" class="section level3 unnumbered">
 <h3>InterPro Dataset</h3>
@@ -1449,8 +1529,8 @@ Figure 24: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using In
 </p>
 </div>
 </div>
-<div id="go-dataset" class="section level3 unnumbered">
-<h3>GO Dataset</h3>
+<div id="go-full-dataset" class="section level3 unnumbered">
+<h3>GO (full) Dataset</h3>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_6n_go.png&#39;</span>)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_10n_go.png&#39;</span>)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_14n_go.png&#39;</span>)</span>
@@ -1462,18 +1542,59 @@ Figure 25: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO
 </p>
 </div>
 </div>
+<div id="go-no-iea-dataset" class="section level3 unnumbered">
+<h3>GO (no IEA) Dataset</h3>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_6n_go_no_iea.png&#39;</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_10n_go_no_iea.png&#39;</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_14n_go_no_iea.png&#39;</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_no_iea.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:tfch2-umap-go-no-iea"></span>
+<img src="img/tfch2-GO/tfc2_umap_6n_go_no_iea.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms with no IEA. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" /><img src="img/tfch2-GO/tfc2_umap_10n_go_no_iea.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms with no IEA. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" /><img src="img/tfch2-GO/tfc2_umap_14n_go_no_iea.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms with no IEA. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" /><img src="img/tfch2-GO/tfc2_umap_20n_go_no_iea.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms with no IEA. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1)." width="50%" />
+<p class="caption">
+Figure 26: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms with no IEA. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1).
+</p>
+</div>
+</div>
 <div id="combined-dataset" class="section level3 unnumbered">
 <h3>Combined Dataset</h3>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_6n_combined.png&#39;</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_10n_combined.png&#39;</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_14n_combined.png&#39;</span>)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_20n_combined.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_6n_combined.png&#39;</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_10n_combined.png&#39;</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_14n_combined.png&#39;</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-combined/tfc2_umap_20n_combined.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:tfch2-umap-combined"></span>
 <img src="img/tfch2-combined/tfc2_umap_6n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1)." width="50%" /><img src="img/tfch2-combined/tfc2_umap_10n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1)." width="50%" /><img src="img/tfch2-combined/tfc2_umap_14n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1)." width="50%" /><img src="img/tfch2-combined/tfc2_umap_20n_combined.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1)." width="50%" />
 <p class="caption">
-Figure 26: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1).
+Figure 27: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using both InterPro domains and GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their respective class annotation (1).
 </p>
 </div>
+</div>
+</div>
+<div id="nd-cotf-color-annotation-in-umap-using-go-embeddings" class="section level2 unnumbered">
+<h2>2nd coTF color annotation in UMAP using GO embeddings</h2>
+<ul>
+<li>The <a href="#cotf-class2">second coTF class annotation</a> is used in the UMAP coloring.</li>
+</ul>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_class_2.png&#39;</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_no_iea_class_2.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:tfch2-umap-go-2nd-cotf-coloring"></span>
+<img src="img/tfch2-GO/tfc2_umap_20n_go_class_2.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2)." width="50%" /><img src="img/tfch2-GO/tfc2_umap_20n_go_no_iea_class_2.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2)." width="50%" />
+<p class="caption">
+Figure 28: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2).
+</p>
+</div>
+</div>
+<div id="deeptf-color-annotation-in-umap-using-go-embeddings" class="section level2 unnumbered">
+<h2>DeepTF color annotation in UMAP using GO embeddings</h2>
+<ul>
+<li>Proteins with no DeepTF score are colored black</li>
+</ul>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_deeptf.png&#39;</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:tfch2-umap-go-deeptf-coloring"></span>
+<img src="img/tfch2-GO/tfc2_umap_20n_go_deeptf.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective DeepTF score." width="50%" /><img src="img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective DeepTF score." width="50%" />
+<p class="caption">
+Figure 29: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective DeepTF score.
+</p>
 </div>
 </div>
 <div id="cluster-annotated-umap---go-dataset" class="section level2 unnumbered">
@@ -1488,7 +1609,7 @@ Figure 26: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using bo
 </div>
 <div id="r-session-info" class="section level1 unnumbered">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>xfun<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>xfun<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 20.04.3 LTS
