@@ -359,7 +359,7 @@ Proteins that had both the `DbTF` and `coTF` labels were classified as `Both` an
 
 :::{.blue-box}
 Proteins were labeled as co-transcription factors if they had at least one GO term annotation from this [online list](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coTF_GO_terms.tsv).
-This is a very *relaxed*, uncurated definition for a coTF and it's mainly used for coloring the UMAP embedding of the InterPro domain dataset.
+This is a very *relaxed* definition for a coTF and will mainly be used for coloring the UMAP embedding of the InterPro domain dataset.
 :::
 
 Given the different GO matrices (full, without IEA, and only with IEA GO terms) we get different distribution of protein class annotations:
@@ -373,15 +373,21 @@ Given the different GO matrices (full, without IEA, and only with IEA GO terms) 
 ### coTF Annotation 2 {-#cotf-class2}
 
 :::{.blue-box}
-Proteins were labeled as co-transcription factors if they had the GO term `GO:0003712` **and** were in TcoF-DB v2 [@Schmeier2017].
+Proteins were labeled as co-transcription factors if they had either the GO term `GO:0003712` or one of its child terms (see file [here](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coreg_GO_terms_16112021.tsv), produced 16/11/2021) **OR** they were annotated as coTFs in TcoF-DB v2 [@Schmeier2017] (see file used with ids [here](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/cotfs_from_tfcof_db_tfc2_master_16112021.tsv)).
 :::
 
-Given the different GO matrices (with or without IEA) we get different distribution of protein class annotations (note that there are no proteins classified as both DbTFs and coTFs):
+Given the different GO matrices (all GO terms vs all without IEA) we get different distribution of protein class annotations (note that there are no proteins classified as both DbTFs and coTFs):
 
 | GO matrix | Both | coTF | DbTF | None |
 |:-:|:-:|:-:|:-:|:-:|
-| Full   | 0 | 67 | 1437 | 2338 |
-| no IEA | 0 | 57 | 1437 | 2348 |
+| Full   | 15 | 1170 | 1422 | 1235 |
+| no IEA | 13 | 1151 | 1424 | 1254 |
+
+:::{.orange-box}
+- The only-IEA matrix is not used with this coloring since in the next section we will see that it does not distinguish the protein UMAP clusters as well as the other two.
+**Curation matters!**
+- Using this curation-focused labeling of DbTFs and coTFs, we now observe just a very small number of proteins belonging to `Both` classes.
+:::
 
 ## InterPro vs GO vs Combined Dataset {-}
 
@@ -448,9 +454,10 @@ knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_14n_combined.png')
 knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_20n_combined.png')
 ```
 
-## 2nd coTF color annotation in UMAP using GO embeddings {-}
+## 2nd coTF color annotation in UMAP using GO embeddings {-#go-umap}
 
-- The [second coTF class annotation](#cotf-class2) is used in the UMAP coloring.
+- The [2nd coTF class annotation](#cotf-class2) is used in the below UMAP figures for coloring.
+- We use the UMAP embedding of two GO matrices: (1) the full and (2) the one with IEA GO terms removed
 
 ```{r tfch2-umap-go-2nd-cotf-coloring, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2).'}
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_class_2.png')
@@ -460,22 +467,16 @@ knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_no_iea_class_2.png
 ## DeepTF color annotation in UMAP using GO embeddings {-}
 
 - Proteins with no DeepTF score are colored black
+- We use the UMAP embedding of two GO matrices: (1) the full and (2) the one with IEA GO terms removed
 
 ```{r tfch2-umap-go-deeptf-coloring, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective DeepTF score.'}
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_deeptf.png')
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png')
 ```
 
-## Cluster Annotated UMAP - GO Dataset {-}
-
-We use the UMAP embedding (**GO dataset, 20 neighbors**) to discuss several interesting cases of proteins that seem to belong in different clusters than they should be, based on the protein class annotation:
-
-```{r tfch2-umap-go-annot, eval=FALSE, include=FALSE, fig.cap='Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (20 neighbors). Data points (proteins) have been colored according to their their respective class annotation. Boxes signify the different protein clusters created by UMAP.'}
-knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_GO_cluster_annot.png')
-```
-
 :::{.green-box}
-- See [file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/TODO.csv) with the protein ids, gene names, cluster ids and annotated class.
+- DeepTF seems to correctly predict the DbTFs in the right-up cluster (score close to 1)
+- Most proteins for which we couldn't predict any score are in the no-TF/coTF left-down cluster
 :::
 
 # R session info {-}
