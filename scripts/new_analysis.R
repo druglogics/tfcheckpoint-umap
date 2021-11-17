@@ -14,6 +14,7 @@ domains     = data_tbl %>% pull(`Interpro domains`)
 gene_names  = data_tbl %>% pull(Name)
 go_terms    = data_tbl %>% pull(`GO annotations`)
 go_terms_no_iea = data_tbl %>% pull(`GO annotations no IEA`)
+deeptf_scores   = data_tbl %>% pull(`DeepTF score`)
 
 # If matrices have already been stored as compressed R objects, don't rebuild them!
 protein_domain_rds_file        = 'data/protein_domain_mat.rds'
@@ -57,7 +58,8 @@ if ((!file.exists(protein_domain_rds_file)) | (!file.exists(protein_go_rds_file)
     # get the InterPro domains for that protein ID
     domain_vec = data_tbl %>%
       filter(Entry == id) %>%
-      pull(`Interpro domains`)
+      pull(`Interpro domains`) %>%
+      unique()
 
     # ... and set them to 1 in the matrix
     if (!is.na(domain_vec)) {
@@ -73,7 +75,8 @@ if ((!file.exists(protein_domain_rds_file)) | (!file.exists(protein_go_rds_file)
     # get the GO terms for that protein ID
     go_term_vec = data_tbl %>%
       filter(Entry == id) %>%
-      pull(`GO annotations`)
+      pull(`GO annotations`) %>%
+      unique()
 
     # ... and set them to 1 in the matrix
     if (!is.na(go_term_vec)) {
@@ -89,7 +92,8 @@ if ((!file.exists(protein_domain_rds_file)) | (!file.exists(protein_go_rds_file)
     # get the GO terms for that protein ID
     go_term_vec = data_tbl %>%
       filter(Entry == id) %>%
-      pull(`GO annotations no IEA`)
+      pull(`GO annotations no IEA`) %>%
+      unique()
 
     # ... and set them to 1 in the matrix
     if (!is.na(go_term_vec)) {
@@ -163,7 +167,12 @@ stopifnot(all(cotf_go_terms %in% total_go_terms_no_iea))
 # TFch2 Protein Annotation ('relaxed', No 1)             #
 # Annotate which proteins are DbTFs, coTFs, None or Both #
 ##########################################################
+
+# Rule for coTFs: have at least one of the GO terms most likely associated with coTFs
+
 cotf_ids = rownames(protein_go_mat)[rowSums(protein_go_mat[,cotf_go_terms]) > 0] # 769 proteins
+# with the GO matrix with no IEA-supported terms, coTFs are going to be less
+cotf_ids_no_iea = rownames(protein_go_no_iea_mat)[rowSums(protein_go_no_iea_mat[,cotf_go_terms]) > 0] # 553 proteins
 
 protein_class_1 = sapply(protein_ids, function(id) {
   if (id %in% dbtf_ids & id %in% cotf_ids) {
@@ -177,6 +186,23 @@ protein_class_1 = sapply(protein_ids, function(id) {
   }
   return('None')
 })
+
+protein_class_1 %>% table()
+
+protein_class_1_no_iea = sapply(protein_ids, function(id) {
+  if (id %in% dbtf_ids & id %in% cotf_ids_no_iea) {
+    return('Both')
+  }
+  if (id %in% dbtf_ids) {
+    return('DbTF')
+  }
+  if (id %in% cotf_ids_no_iea) {
+    return('coTF')
+  }
+  return('None')
+})
+
+protein_class_1_no_iea %>% table()
 
 ########################################
 # Unsupervised UMAP on InterPro matrix #
@@ -267,9 +293,9 @@ for (n_neighbors in neighbors) {
   }
 }
 
-######################################################
-# Unsupervised UMAP on combined GO + InterPro matrix #
-######################################################
+#############################################################
+# Unsupervised UMAP on combined GO (full) + InterPro matrix #
+#############################################################
 combined_mat = cbind(protein_go_mat, protein_domain_mat)
 
 neighbors = c(2,6,10,14,20)
@@ -307,22 +333,208 @@ for (n_neighbors in neighbors) {
       guides(colour = guide_legend(title = "Class",
         label.theme = element_text(size = 12),
         override.aes = list(shape = 19, size = 12))) +
-      labs(title = paste0("TFcheckpoint2 (GO + InterPro) - UMAP (", n_neighbors," Neighbors)")) +
+      labs(title = paste0("TFcheckpoint2 (GO full + InterPro) - UMAP (", n_neighbors," Neighbors)")) +
       theme_classic() +
       theme(plot.title = element_text(hjust = 0.5))
     ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
   }
 }
 
-# dbTFs (from GREEKC catalogue)
-coTFs from GO (GO:0003712)
-coTFs from TcoFdb (Schmeier)
-coTF in both GO:0003712 and TcoFdb
-both dbTF and coTF from either GO or TcoFdb
-(possibly Lambert and/or TFClass)
-Zinc-finger dbTFs
+
+###########################################
+# Unsupervised UMAP on GO matrix (no IEA) #
+###########################################
+neighbors = c(2,6,10,14,20)
+for (n_neighbors in neighbors) {
+  print(paste0('Number of neighbors: ', n_neighbors))
+
+  data_file = paste0('data/tfc2_umap_', n_neighbors, 'n_go_no_iea.rds')
+  if (!file.exists(data_file)) {
+    set.seed(42)
+    go_umap = uwot::umap(X = protein_go_no_iea_mat, n_threads = 4,
+      n_neighbors = n_neighbors, metric = 'euclidean',
+      verbose = TRUE)
+    saveRDS(object = go_umap, file = data_file)
+  }
+}
+
+# save plots (coloring with protein class annotation 1)
+for (n_neighbors in neighbors) {
+  print(paste0('Number of neighbors: ', n_neighbors))
+
+  image_file = paste0('img/tfch2-GO/tfc2_umap_', n_neighbors, 'n_go_no_iea.png')
+
+  if (!file.exists(image_file)) {
+    umap_file = paste0('data/tfc2_umap_', n_neighbors, 'n_go_no_iea.rds')
+    go_umap = readRDS(file = umap_file)
+
+    go_umap %>%
+      `colnames<-` (c("X", "Y")) %>%
+      tibble::as_tibble() %>%
+      tibble::add_column(
+        protein_class = protein_class_1_no_iea %>% unname() %>% as.factor()) %>%
+      ggplot(aes(x = X, y = Y, color = protein_class)) +
+      geom_point(size = 0.1) +
+      scale_colour_brewer(palette = "Set1") +
+      guides(colour = guide_legend(title = "Class",
+        label.theme = element_text(size = 12),
+        override.aes = list(shape = 19, size = 12))) +
+      labs(title = paste0("TFcheckpoint2 (GO - no IEA) - UMAP (", n_neighbors," Neighbors)")) +
+      theme_classic() +
+      theme(plot.title = element_text(hjust = 0.5))
+    ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+  }
+}
+
+##########################################################
+# TFch2 Protein Annotation (No 2)                        #
+# Annotate which proteins are DbTFs, coTFs, None or Both #
+##########################################################
+
+# Rule for coTFs: have the GO:0003712 term and be in the Tcof-DB [@Schmeier2017]
+cotf_genes    = gene_names[which(protein_go_mat[,'GO:0003712'] == 1)] # 129
+cotf_schmeier = readr::read_csv(file = 'data/TcoF-DB_v2.csv') %>% pull(Symbol) # 958
+
+cotf_common = intersect(cotf_schmeier, cotf_genes) # 67 (we use this)
+#cotf_union  = union(cotf_schmeier, cotf_genes) # 1087 (too many!)
+
+# get the ids from gene names
+cotf_ids = sapply(cotf_common, function(cotf_name) {
+  protein_ids[which(gene_names == cotf_name)]
+}) %>% unname()
+
+protein_class_2 = sapply(protein_ids, function(id) {
+  if (id %in% dbtf_ids & id %in% cotf_ids) {
+    return('Both')
+  }
+  if (id %in% dbtf_ids) {
+    return('DbTF')
+  }
+  if (id %in% cotf_ids) {
+    return('coTF')
+  }
+  return('None')
+})
+
+protein_class_2 %>% table() # no proteins in `Both` class
+
+# with the GO matrix with no IEA-supported terms, coTFs are going to be less
+cotf_genes_no_iea  = gene_names[which(protein_go_no_iea_mat[,'GO:0003712'] == 1)] # 116
+cotf_common_no_iea = intersect(cotf_schmeier, cotf_genes_no_iea) # 57
+cotf_ids_no_iea = sapply(cotf_common_no_iea, function(cotf_name) {
+  protein_ids[which(gene_names == cotf_name)]
+}) %>% unname()
+
+protein_class_2_no_iea = sapply(protein_ids, function(id) {
+  if (id %in% dbtf_ids & id %in% cotf_ids_no_iea) {
+    return('Both')
+  }
+  if (id %in% dbtf_ids) {
+    return('DbTF')
+  }
+  if (id %in% cotf_ids_no_iea) {
+    return('coTF')
+  }
+  return('None')
+})
+
+protein_class_2_no_iea %>% table() # no proteins in `Both` class
+
+##############################################
+# Color GO UMAP using 2nd protein annotation #
+##############################################
+
+# full GO dataset
+umap_file  = paste0('data/tfc2_umap_20n_go.rds')
+go_umap    = readRDS(file = umap_file)
+image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_class_2.png')
+
+set1_col = RColorBrewer::brewer.pal(n = 4, 'Set1')
+
+go_umap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(
+    protein_class = protein_class_2 %>% unname() %>% as.factor()) %>%
+  ggplot(aes(x = X, y = Y, color = protein_class)) +
+  geom_point(size = 0.1) +
+  # to have the same colors as previous images
+  scale_color_manual(values = c("coTF" = set1_col[2], "DbTF" = set1_col[3], "None" = set1_col[4])) +
+  guides(colour = guide_legend(title = "Class (2)",
+    label.theme = element_text(size = 12),
+    override.aes = list(shape = 19, size = 12))) +
+  labs(title = paste0("TFcheckpoint2 (GO) - UMAP (20 Neighbors)")) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+
+# no IEA GO dataset
+umap_file = paste0('data/tfc2_umap_20n_go_no_iea.rds')
+go_umap = readRDS(file = umap_file)
+image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_no_iea_class_2.png')
+
+go_umap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(
+    protein_class = protein_class_2_no_iea %>% unname() %>% as.factor()) %>%
+  ggplot(aes(x = X, y = Y, color = protein_class)) +
+  geom_point(size = 0.1) +
+  # to have the same colors as previous images
+  scale_color_manual(values = c("coTF" = set1_col[2], "DbTF" = set1_col[3], "None" = set1_col[4])) +
+  guides(colour = guide_legend(title = "Class (2)",
+    label.theme = element_text(size = 12),
+    override.aes = list(shape = 19, size = 12))) +
+  labs(title = paste0("TFcheckpoint2 (GO - no IEA) - UMAP (20 Neighbors)")) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+
+#######################################
+# Color GO UMAP using DeepTF scoring  #
+#######################################
+
+# full GO dataset
+umap_file  = paste0('data/tfc2_umap_20n_go.rds')
+go_umap    = readRDS(file = umap_file)
+image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_deeptf.png')
+
+go_umap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(`DeepTF score` = deeptf_scores) %>%
+  ggplot(aes(x = X, y = Y, color = `DeepTF score`)) +
+  geom_point(size = 0.1) +
+  # low => `None`, high = `DbTF`
+  scale_colour_gradient2(low = set1_col[4], high = set1_col[3],
+    na.value = 'black', midpoint = 0.5, guide = guide_colourbar(barheight = 10, draw.llim = TRUE)) +
+  labs(title = paste0("TFcheckpoint2 (GO) - UMAP (20 Neighbors)")) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+
+# no IEA GO dataset
+umap_file  = paste0('data/tfc2_umap_20n_go_no_iea.rds')
+go_umap    = readRDS(file = umap_file)
+image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png')
+
+go_umap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(`DeepTF score` = deeptf_scores) %>%
+  ggplot(aes(x = X, y = Y, color = `DeepTF score`)) +
+  geom_point(size = 0.1) +
+  # low => `None`, high = `DbTF`
+  scale_colour_gradient2(low = set1_col[4], high = set1_col[3],
+    na.value = 'black', midpoint = 0.5, guide = guide_colourbar(barheight = 10, draw.llim = TRUE)) +
+  labs(title = paste0("TFcheckpoint2 (GO - no IEA) - UMAP (20 Neighbors)")) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
 
 
+
+if(FALSE) {
 #########################################################################
 # Annotate UMAP result (GO dataset, 20 Neighbors) with 'boxed' clusters #
 #########################################################################
@@ -415,3 +627,5 @@ data_tbl %>% filter(cluster_id == 2) %>% count(protein_class)
 data_tbl %>%
   select(protein_id, gene_name, protein_class, cluster_id) %>%
   readr::write_csv(file = 'data/tfch2_umap_20n_GO_cluster_annot.csv')
+
+}
