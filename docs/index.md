@@ -556,7 +556,7 @@ Given the different GO matrices (full, without IEA, and only with IEA GO terms) 
 Proteins were labeled as co-transcription factors if they had either the GO term `GO:0003712` or one of its child terms (see file [here](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coreg_GO_terms_16112021.tsv), produced 16/11/2021) **OR** they were annotated as coTFs in TcoF-DB v2 [@Schmeier2017] (see file used with ids [here](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/cotfs_from_tfcof_db_tfc2_master_16112021.tsv)).
 :::
 
-Given the different GO matrices (all GO terms vs all without IEA) we get different distribution of protein class annotations (note that there are no proteins classified as both DbTFs and coTFs):
+Given the different GO matrices (all GO terms vs all without IEA) we get different distribution of protein class annotations:
 
 | GO matrix | Both | coTF | DbTF | None |
 |:-:|:-:|:-:|:-:|:-:|
