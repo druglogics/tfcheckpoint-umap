@@ -342,33 +342,56 @@ knitr::include_graphics(path = 'img/sumap/tf_sumap_14n_w1_schmeier.png')
 
 :::{.blue-box}
 See script [new_analysis.R](https://github.com/druglogics/tfcheckpoint-umap/blob/main/scripts/new_analysis.R) for more details.
-We show how to expand the GO and InterPro datasets to 0-1 matrices, how we annotated each protein's class (as `DbTF`, `coTF`, `Both` or `None`), run UMAP and produce the following figures.
+We show how to expand the GO and InterPro datasets to 0-1 matrices (get the matrix data in files [here](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/go_matrices.zip)), how we annotated each protein's class (as `DbTF`, `coTF`, `Both` or `None`), run UMAP and produce the figures.
 :::
 
-## Protein Class Annotation 1 {-#class-annot1}
+## Protein Class Annotation {-#class-annot}
 
 Each protein in TFch2 can belong to one of the following 4 classes: `DbTF`, `coTF`, `Both` or `None`.
-Proteins were labeled as DNA-binding transcription factors if they belonged to the online list provided in [@Lovering2021] (retrieved 2/11/2021).
-Proteins were labeled as co-transcription factors if they had at least one GO term annotation from this [online list](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coTF_GO_terms.tsv).
-Proteins that belonged to both of these lists were labeled as `Both`.
-Obviously, proteins that belonged to none of these lists were labeled as `None`.
+Proteins were labeled as **DNA-binding transcription factors** if they belonged to the online list provided in [@Lovering2021] (retrieved 2/11/2021).
+For **coTF labeling**, we used two different annotation strategies explained in the two subsections below.
+Proteins that had both the `DbTF` and `coTF` labels were classified as `Both` and as `None` if they had neither.
 
-Given the previous description, and the different GO matrices (with or without IEA) we get this distribution of the different protein classes:
+### coTF Annotation 1 {-#cotf-class1}
+
+:::{.blue-box}
+Proteins were labeled as co-transcription factors if they had at least one GO term annotation from this [online list](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/coTF_GO_terms.tsv).
+:::
+
+Given the different GO matrices (with or without IEA) we get different distribution of protein class annotations:
 
 | GO matrix | Both | coTF | DbTF | None |
 |:-:|:-:|:-:|:-:|:-:|
 | Full   | 176 | 593 | 1261 | 1812 |
 | no IEA |  90 | 463 | 1347 | 1942 |
 
-## InterPro vs GO (full) vs Combined Dataset {-}
+### coTF Annotation 2 {-#cotf-class2}
+
+:::{.blue-box}
+Proteins were labeled as co-transcription factors if they had the GO term `GO:0003712` **and** were in TcoF-DB v2 [@Schmeier2017].
+:::
+
+Given the different GO matrices (with or without IEA) we get different distribution of protein class annotations (note that there are no proteins classified as both DbTFs and coTFs):
+
+| GO matrix | Both | coTF | DbTF | None |
+|:-:|:-:|:-:|:-:|:-:|
+| Full   | 0 | 67 | 1437 | 2338 |
+| no IEA | 0 | 57 | 1437 | 2348 |
+
+## InterPro vs GO vs Combined Dataset {-}
 
 :::{.green-box}
-The unsupervised UMAP results using either the **full GO matrix**, **InterPro matrix** or **both these matrices combined as one** are given in the following 3 subsections.
+In the following 4 subsections, we present the UMAP results using 4 different datasets:
 
-[This](#class-annot1) protein class annotation is used.
+1. The **InterPro matrix**
+2. The **full GO matrix**
+3. The **no IEA GO matrix**
+4. The **combined full GO matrix and InterPro matrix**
+
+The [first coTF class annotation](#cotf-class1) is used in the UMAP coloring.
 
 Generally, **the full GO dataset was more informative** and provided more compact/cohesive classification of the proteins vs the InterPro dataset.
-Using both datasets we don't see any significant improvement in the position of the UMAP sub-clusters vs using just the GO dataset.
+Using both datasets we don't see any significant improvement in the position of the UMAP sub-clusters vs using just the GO (full) matrix.
 :::
 
 ### InterPro Dataset {-}
@@ -380,13 +403,22 @@ knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_14n_interpro.png')
 knitr::include_graphics(path = 'img/tfch2-InterPro/tfc2_umap_20n_interpro.png')
 ```
 
-### GO Dataset {-}
+### GO (full) Dataset {-}
 
 ```{r tfch2-umap-go-full, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1).'}
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_6n_go.png')
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_10n_go.png')
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_14n_go.png')
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go.png')
+```
+
+### GO (no IEA) Dataset {-}
+
+```{r tfch2-umap-go-no-iea, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms with no IEA. Different values of the neighbors parameter per figure. Data points (proteins) have been colored according to their their respective class annotation (1).'}
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_6n_go_no_iea.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_10n_go_no_iea.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_14n_go_no_iea.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_no_iea.png')
 ```
 
 ### Combined Dataset {-}
@@ -396,6 +428,24 @@ knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_6n_combined.png')
 knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_10n_combined.png')
 knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_14n_combined.png')
 knitr::include_graphics(path = 'img/tfch2-combined/tfc2_umap_20n_combined.png')
+```
+
+## 2nd coTF color annotation in UMAP using GO embeddings {-}
+
+- The [second coTF class annotation](#cotf-class2) is used in the UMAP coloring.
+
+```{r tfch2-umap-go-2nd-cotf-coloring, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2).'}
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_class_2.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_no_iea_class_2.png')
+```
+
+## DeepTF color annotation in UMAP using GO embeddings {-}
+
+- Proteins with no DeepTF score are colored black
+
+```{r tfch2-umap-go-deeptf-coloring, fig.show='hold', out.width='50%', fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective DeepTF score.'}
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_deeptf.png')
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png')
 ```
 
 ## Cluster Annotated UMAP - GO Dataset {-}
