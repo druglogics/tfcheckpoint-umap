@@ -552,13 +552,94 @@ go_umap %>%
   ggplot(aes(x = X, y = Y, color = protein_class)) +
   geom_point(size = 0.1) +
   scale_colour_brewer(palette = "Set1") +
-  guides(colour = guide_legend(title = "Class (2)",
+  guides(colour = guide_legend(title = "Class",
     label.theme = element_text(size = 12),
     override.aes = list(shape = 19, size = 12))) +
   labs(title = paste0("TFcheckpoint2 (GO) - UMAP (20 Neighbors)")) +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5))
 ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+
+# full GO dataset + boxify clusters + saving to file the cluster ids
+image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes.png')
+
+go_umap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(
+    protein_class = protein_class_2 %>% unname() %>% as.factor()) %>%
+  ggplot(aes(x = X, y = Y, color = protein_class)) +
+  geom_point(size = 0.1) +
+  scale_colour_brewer(palette = "Set1") +
+  guides(colour = guide_legend(title = "Class",
+    label.theme = element_text(size = 12),
+    override.aes = list(shape = 19, size = 12))) +
+  labs(title = paste0("TFcheckpoint2 (GO) - UMAP (20 Neighbors)")) +
+  # 1st cluster
+  annotate("rect", xmin = -21, xmax = -19, ymin = -4, ymax = -2,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = -20, y = 0, size = 8, label = "1") +
+  # 2nd cluster
+  annotate("rect", xmin = -17, xmax = -9, ymin = -10, ymax = -3,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = -13, y = -1, size = 8, label = "2") +
+  # 3rd cluster
+  annotate("rect", xmin = 18, xmax = 20, ymin = 11.5, ymax = 13.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 16.5, y = 12.5, size = 8, label = "3") +
+  # 4rd cluster
+  annotate("rect", xmin = 18.3, xmax = 20.3, ymin = 15.5, ymax = 17.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 17, y = 16.5, size = 8, label = "4") +
+  # 5th cluster
+  annotate("rect", xmin = 23, xmax = 26, ymin = 16.5, ymax = 18.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 24.5, y = 20, size = 8, label = "5") +
+  # 6th cluster
+  annotate("rect", xmin = 21, xmax = 27, ymin = 10, ymax = 14.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 28.5, y = 12.5, size = 8, label = "6") +
+  # 7th cluster
+  annotate("rect", xmin = 26, xmax = 29, ymin = 6.6, ymax = 8.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 28, y = 5, size = 8, label = "7") +
+  # 8th cluster
+  annotate("rect", xmin = 21, xmax = 24, ymin = 4.5, ymax = 9,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 19.5, y = 7, size = 8, label = "8") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
+
+cluster_data_tbl = go_umap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(
+    protein_id    = protein_ids,
+    gene_name     = gene_names,
+    protein_class = protein_class_2 %>% unname() %>% as.factor()) %>%
+  mutate(cluster_id = case_when(
+    (X > -21  & X < -19 & Y > -4 & Y < -2) ~ 1,
+    (X > -17  & X < -9  & Y > -10 & Y < -3 ) ~ 2,
+    (X > 18   & X < 20   & Y > 11.5 & Y < 13.5) ~ 3,
+    (X > 18.3 & X < 20.3 & Y > 15.5 & Y < 17.5 ) ~ 4,
+    (X > 23   & X < 26  & Y > 16.5  & Y < 18.5 ) ~ 5,
+    (X > 21   & X < 27  & Y > 10  & Y < 14.5 ) ~ 6,
+    (X > 26   & X < 29  & Y > 6.6 & Y < 8.5) ~ 7,
+    (X > 21 & X < 24 & Y > 4.5 & Y < 9 ) ~ 8,
+    TRUE ~ 0 # there shouldn't be any point here!
+  ))
+
+# check: no '0' cluster ids
+cluster_data_tbl %>% count(cluster_id)
+
+# distribution of protein classes in cluster 2
+cluster_data_tbl %>% filter(cluster_id == 2) %>% count(protein_class)
+
+# save to CSV
+cluster_data_tbl %>%
+  dplyr::select(protein_id, gene_name, protein_class, cluster_id) %>%
+  readr::write_csv(file = 'data/tfch2_umap_20n_GO_cluster_annot.csv')
 
 # no IEA GO dataset
 umap_file = paste0('data/tfc2_umap_20n_go_no_iea.rds')
@@ -573,7 +654,7 @@ go_umap %>%
   ggplot(aes(x = X, y = Y, color = protein_class)) +
   geom_point(size = 0.1) +
   scale_colour_brewer(palette = "Set1") +
-  guides(colour = guide_legend(title = "Class (2)",
+  guides(colour = guide_legend(title = "Class",
     label.theme = element_text(size = 12),
     override.aes = list(shape = 19, size = 12))) +
   labs(title = paste0("TFcheckpoint2 (GO - no IEA) - UMAP (20 Neighbors)")) +
@@ -623,8 +704,12 @@ go_umap %>%
   theme(plot.title = element_text(hjust = 0.5))
 ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
 
+#######
+# END #
+#######
 
 if(FALSE) {
+# Old code
 #########################################################################
 # Annotate UMAP result (GO dataset, 20 Neighbors) with 'boxed' clusters #
 #########################################################################
