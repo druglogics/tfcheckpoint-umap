@@ -952,7 +952,7 @@ div.csl-indent {
 <div id="header">
 <h1 class="title">TFcheckpoint Dataset visualization using UMAP</h1>
 <p class="author"><em><a href="https://github.com/bblodfon">John Zobolas</a></em></p>
-<p class="date"><em>Last updated: 17 November, 2021</em></p>
+<p class="date"><em>Last updated: 18 November, 2021</em></p>
 </div>
 <div id="input" class="section level1 unnumbered">
 <h1>Input</h1>
@@ -974,7 +974,7 @@ It has been updated to include several co-TFs and other unclassified proteins si
 <div id="old-dataset" class="section level2 unnumbered">
 <h2>Old Dataset</h2>
 <p>The form of the dataset is as follows: a total of <span class="math inline">\(4705\)</span> proteins, each one represented by a row, are enriched with GO annotations (a total of <span class="math inline">\(8621\)</span> GO terms <span class="citation">(<a href="#ref-Carbon2019" role="doc-biblioref">Carbon et al. 2019</a>)</span>) that indicate the presence (<span class="math inline">\(1\)</span>) or absence (<span class="math inline">\(0\)</span>) of a particular molecular function.
-The dataset is provided as a <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/genes2go_result_tfcheckpoint2_data.tsv">tab-delimited file</a>.</p>
+The dataset is provided as a <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/genes2go_result_tfcheckpoint2_data.zip">tab-delimited zipped file</a>.</p>
 <div class="green-box">
 <p>Analysis on this dataset was performed <strong>November 2020</strong>.</p>
 </div>
@@ -1618,6 +1618,16 @@ Figure 28: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using bo
 Figure 29: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2).
 </p>
 </div>
+<div class="green-box">
+<p>For the results attained with <strong>the full GO matrix</strong>, we boxify UMAP’s clusters and <a href="https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfch2_umap_20n_GO_cluster_annot.csv">provide a file</a> with the cluster ids as shown in the figure below:</p>
+</div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes.png&#39;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:tfch2-boxified-umap"></span>
+<img src="img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using all GO terms. 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2). Boxes correspond to the 8 UMAP clusters." width="1050" />
+<p class="caption">
+Figure 30: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using all GO terms. 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2). Boxes correspond to the 8 UMAP clusters.
+</p>
+</div>
 </div>
 <div id="deeptf-color-annotation-in-umap-using-go-embeddings" class="section level2 unnumbered">
 <h2>DeepTF color annotation in UMAP using GO embeddings</h2>
@@ -1625,12 +1635,12 @@ Figure 29: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO
 <li>Proteins with no DeepTF score are colored black</li>
 <li>We use the UMAP embedding of two GO matrices: (1) the full and (2) the one with IEA GO terms removed</li>
 </ul>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_deeptf.png&#39;</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_deeptf.png&#39;</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="at">path =</span> <span class="st">&#39;img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png&#39;</span>)</span></code></pre></div>
 <div class="figure"><span style="display:block;" id="fig:tfch2-umap-go-deeptf-coloring"></span>
 <img src="img/tfch2-GO/tfc2_umap_20n_go_deeptf.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective DeepTF score." width="50%" /><img src="img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective DeepTF score." width="50%" />
 <p class="caption">
-Figure 30: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective DeepTF score.
+Figure 31: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective DeepTF score.
 </p>
 </div>
 <div class="green-box">
@@ -1643,7 +1653,7 @@ Figure 30: Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO
 </div>
 <div id="r-session-info" class="section level1 unnumbered">
 <h1>R session info</h1>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>xfun<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r fold-show"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>xfun<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 20.04.3 LTS

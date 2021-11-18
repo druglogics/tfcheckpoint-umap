@@ -1,7 +1,7 @@
 ---
 title: "TFcheckpoint Dataset visualization using UMAP"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 17 November, 2021"
+date: "Last updated: 18 November, 2021"
 description: "Description"
 url: 'https\://druglogics.github.io/tfcheckpoint-umap/'
 github-repo: "druglogics/tfcheckpoint-umap"
@@ -34,7 +34,7 @@ It has been updated to include several co-TFs and other unclassified proteins si
 ## Old Dataset {-}
 
 The form of the dataset is as follows: a total of $4705$ proteins, each one represented by a row, are enriched with GO annotations (a total of $8621$ GO terms [@Carbon2019]) that indicate the presence ($1$) or absence ($0$) of a particular molecular function. 
-The dataset is provided as a [tab-delimited file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/genes2go_result_tfcheckpoint2_data.tsv).
+The dataset is provided as a [tab-delimited zipped file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/genes2go_result_tfcheckpoint2_data.zip).
 
 :::{.green-box}
 Analysis on this dataset was performed **November 2020**.
@@ -678,6 +678,20 @@ knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_no_iea_class_2.png
 <div class="figure">
 <img src="img/tfch2-GO/tfc2_umap_20n_go_class_2.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2)." width="50%" /><img src="img/tfch2-GO/tfc2_umap_20n_go_no_iea_class_2.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2)." width="50%" />
 <p class="caption">(\#fig:tfch2-umap-go-2nd-cotf-coloring)Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using GO terms (with and without IEA). 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2).</p>
+</div>
+
+:::{.green-box}
+For the results attained with **the full GO matrix**, we boxify UMAP's clusters and [provide a file](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/tfch2_umap_20n_GO_cluster_annot.csv) with the cluster ids as shown in the figure below:
+:::
+
+
+```r
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes.png')
+```
+
+<div class="figure">
+<img src="img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using all GO terms. 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2). Boxes correspond to the 8 UMAP clusters." width="1050" />
+<p class="caption">(\#fig:tfch2-boxified-umap)Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using all GO terms. 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2). Boxes correspond to the 8 UMAP clusters.</p>
 </div>
 
 ## DeepTF color annotation in UMAP using GO embeddings {-}
