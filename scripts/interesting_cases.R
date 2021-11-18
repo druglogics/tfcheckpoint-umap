@@ -4,6 +4,7 @@ library(readr)
 library(ggplot2)
 
 # genes-to-GO terms data
+# unzip the `data/genes2go_result_tfcheckpoint2_data.zip` first!!!
 gg_data = readr::read_delim(file = 'data/genes2go_result_tfcheckpoint2_data.tsv',
   delim = '\t', skip = 2, progress = TRUE)
 
