@@ -633,12 +633,24 @@ cluster_data_tbl = go_umap %>%
 # check: no '0' cluster ids
 cluster_data_tbl %>% count(cluster_id)
 
-# distribution of protein classes in cluster 2
+# distribution of protein classes in cluster 2 (example)
 cluster_data_tbl %>% filter(cluster_id == 2) %>% count(protein_class)
+
+# add new cluster column for publication
+cluster_data_tbl = cluster_data_tbl %>% mutate(cluster_id_new = case_when(
+  cluster_id == 1 ~ '1B',
+  cluster_id == 2 ~ '1A',
+  cluster_id == 3 ~ '2E',
+  cluster_id == 4 ~ '2C',
+  cluster_id == 5 ~ '2F',
+  cluster_id == 6 ~ '2A',
+  cluster_id == 7 ~ '2D',
+  cluster_id == 8 ~ '2B'
+))
 
 # save to CSV
 cluster_data_tbl %>%
-  dplyr::select(protein_id, gene_name, protein_class, cluster_id) %>%
+  dplyr::select(protein_id:cluster_id_new) %>%
   readr::write_csv(file = 'data/tfch2_umap_20n_GO_cluster_annot.csv')
 
 # no IEA GO dataset
