@@ -675,6 +675,7 @@ go_umap %>%
   scale_colour_brewer(palette = "Set1") +
   guides(colour = guide_legend(title = "Class",
     label.theme = element_text(size = 12),
+    title.theme = element_text(size = 18),
     override.aes = list(shape = 19, size = 12))) +
   labs(title = "TFcheckpoint2 (GO) - UMAP (20 Neighbors)") +
   # 1B cluster
