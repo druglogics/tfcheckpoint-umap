@@ -538,9 +538,9 @@ protein_class_2_no_iea %>% table()
 ##############################################
 
 # full GO dataset
-umap_file  = paste0('data/tfc2_umap_20n_go.rds')
+umap_file  = 'data/tfc2_umap_20n_go.rds'
 go_umap    = readRDS(file = umap_file)
-image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_class_2.png')
+image_file = 'img/tfch2-GO/tfc2_umap_20n_go_class_2.png'
 
 set1_col = RColorBrewer::brewer.pal(n = 4, 'Set1')
 
@@ -555,13 +555,13 @@ go_umap %>%
   guides(colour = guide_legend(title = "Class",
     label.theme = element_text(size = 12),
     override.aes = list(shape = 19, size = 12))) +
-  labs(title = paste0("TFcheckpoint2 (GO) - UMAP (20 Neighbors)")) +
+  labs(title = "TFcheckpoint2 (GO) - UMAP (20 Neighbors)") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5))
 ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
 
 # full GO dataset + boxify clusters + saving to file the cluster ids
-image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes.png')
+image_file = 'img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes.png'
 
 go_umap %>%
   `colnames<-` (c("X", "Y")) %>%
@@ -574,7 +574,7 @@ go_umap %>%
   guides(colour = guide_legend(title = "Class",
     label.theme = element_text(size = 12),
     override.aes = list(shape = 19, size = 12))) +
-  labs(title = paste0("TFcheckpoint2 (GO) - UMAP (20 Neighbors)")) +
+  labs(title = "TFcheckpoint2 (GO) - UMAP (20 Neighbors)") +
   # 1st cluster
   annotate("rect", xmin = -21, xmax = -19, ymin = -4, ymax = -2,
     alpha = 0.05, size = 0.3, color = 'black') +
@@ -642,9 +642,9 @@ cluster_data_tbl %>%
   readr::write_csv(file = 'data/tfch2_umap_20n_GO_cluster_annot.csv')
 
 # no IEA GO dataset
-umap_file = paste0('data/tfc2_umap_20n_go_no_iea.rds')
+umap_file = 'data/tfc2_umap_20n_go_no_iea.rds'
 go_umap = readRDS(file = umap_file)
-image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_no_iea_class_2.png')
+image_file = 'img/tfch2-GO/tfc2_umap_20n_go_no_iea_class_2.png'
 
 go_umap %>%
   `colnames<-` (c("X", "Y")) %>%
@@ -657,7 +657,7 @@ go_umap %>%
   guides(colour = guide_legend(title = "Class",
     label.theme = element_text(size = 12),
     override.aes = list(shape = 19, size = 12))) +
-  labs(title = paste0("TFcheckpoint2 (GO - no IEA) - UMAP (20 Neighbors)")) +
+  labs(title = "TFcheckpoint2 (GO - no IEA) - UMAP (20 Neighbors)") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5))
 ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
@@ -667,9 +667,9 @@ ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
 #######################################
 
 # full GO dataset
-umap_file  = paste0('data/tfc2_umap_20n_go.rds')
+umap_file  = 'data/tfc2_umap_20n_go.rds'
 go_umap    = readRDS(file = umap_file)
-image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_deeptf.png')
+image_file = 'img/tfch2-GO/tfc2_umap_20n_go_deeptf.png'
 
 go_umap %>%
   `colnames<-` (c("X", "Y")) %>%
@@ -680,15 +680,15 @@ go_umap %>%
   # low => `None`, high = `DbTF`
   scale_colour_gradient2(low = set1_col[4], high = set1_col[3],
     na.value = 'black', midpoint = 0.5, guide = guide_colourbar(barheight = 10, draw.llim = TRUE)) +
-  labs(title = paste0("TFcheckpoint2 (GO) - UMAP (20 Neighbors)")) +
+  labs(title = "TFcheckpoint2 (GO) - UMAP (20 Neighbors)") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5))
 ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
 
 # no IEA GO dataset
-umap_file  = paste0('data/tfc2_umap_20n_go_no_iea.rds')
+umap_file  = 'data/tfc2_umap_20n_go_no_iea.rds'
 go_umap    = readRDS(file = umap_file)
-image_file = paste0('img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png')
+image_file = 'img/tfch2-GO/tfc2_umap_20n_go_no_iea_deeptf.png'
 
 go_umap %>%
   `colnames<-` (c("X", "Y")) %>%
@@ -699,7 +699,7 @@ go_umap %>%
   # low => `None`, high = `DbTF`
   scale_colour_gradient2(low = set1_col[4], high = set1_col[3],
     na.value = 'black', midpoint = 0.5, guide = guide_colourbar(barheight = 10, draw.llim = TRUE)) +
-  labs(title = paste0("TFcheckpoint2 (GO - no IEA) - UMAP (20 Neighbors)")) +
+  labs(title = "TFcheckpoint2 (GO - no IEA) - UMAP (20 Neighbors)") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5))
 ggsave(filename = image_file, width = 7, height = 5, dpi = 'print')
@@ -713,7 +713,7 @@ if(FALSE) {
 #########################################################################
 # Annotate UMAP result (GO dataset, 20 Neighbors) with 'boxed' clusters #
 #########################################################################
-umap_file = paste0('data/tfc2_umap_20n_go.rds')
+umap_file = 'data/tfc2_umap_20n_go.rds'
 go_umap_20n = readRDS(file = umap_file)
 
 # Trying some clustering methods to find the clusters (DBSCAN seems to be the best!)
