@@ -1,7 +1,7 @@
 ---
 title: "TFcheckpoint Dataset visualization using UMAP"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 18 November, 2021"
+date: "Last updated: 06 December, 2021"
 description: "Description"
 url: 'https\://druglogics.github.io/tfcheckpoint-umap/'
 github-repo: "druglogics/tfcheckpoint-umap"
@@ -24,6 +24,7 @@ library(readr)
 library(ggplot2)
 library(uwot)
 library(VennDiagram)
+library(ggforce)
 ```
 
 # Intro {-}
@@ -694,6 +695,19 @@ knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes
 <p class="caption">(\#fig:tfch2-boxified-umap)Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using all GO terms. 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2). Boxes correspond to the 8 UMAP clusters.</p>
 </div>
 
+:::{#boxified-umap .blue-box}
+Using a more hierarchical renaming convention:
+:::
+
+```r
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes_new_cluster_ids.png')
+```
+
+<div class="figure">
+<img src="img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes_new_cluster_ids.png" alt="Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using all GO terms. 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2). Boxes correspond to the 8 UMAP clusters. Ellipses correspond to 2 protein superclusters. Subclusters are annotated using alphabetical letters and correspond to increasing cluster sizes." width="1050" />
+<p class="caption">(\#fig:tfch2-boxified-umap2)Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using all GO terms. 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2). Boxes correspond to the 8 UMAP clusters. Ellipses correspond to 2 protein superclusters. Subclusters are annotated using alphabetical letters and correspond to increasing cluster sizes.</p>
+</div>
+
 ## DeepTF color annotation in UMAP using GO embeddings {-}
 
 - Proteins with no DeepTF score are colored black
@@ -745,25 +759,26 @@ Package version:
   evaluate_0.14        fansi_0.5.0          farver_2.1.0        
   fastmap_1.1.0        FNN_1.1.3            formatR_1.11        
   fs_1.5.0             futile.logger_1.4.3  futile.options_1.0.1
-  generics_0.1.0       ggplot2_3.3.5        glue_1.4.2          
-  graphics_3.6.3       grDevices_3.6.3      grid_3.6.3          
-  gtable_0.3.0         highr_0.9            hms_1.1.1           
-  htmltools_0.5.2      irlba_2.3.3          isoband_0.2.5       
-  jquerylib_0.1.4      jsonlite_1.7.2       knitr_1.36          
-  labeling_0.4.2       lambda.r_1.2.4       lattice_0.20-45     
-  lifecycle_1.0.1      magrittr_2.0.1       MASS_7.3.54         
-  Matrix_1.3-4         methods_3.6.3        mgcv_1.8.36         
-  munsell_0.5.0        nlme_3.1.153         pillar_1.6.3        
-  pkgconfig_2.0.3      png_0.1-7            prettyunits_1.1.1   
-  progress_1.2.2       purrr_0.3.4          R6_2.5.1            
-  rappdirs_0.3.3       RColorBrewer_1.1.2   Rcpp_1.0.7          
-  RcppAnnoy_0.0.19     RcppEigen_0.3.3.9.1  RcppProgress_0.4.2  
-  readr_2.0.2          rlang_0.4.11         rmarkdown_2.11      
-  RSpectra_0.16.0      sass_0.4.0           scales_1.1.1        
-  sitmo_2.0.1          splines_3.6.3        stats_3.6.3         
-  stringi_1.7.5        stringr_1.4.0        tibble_3.1.5        
-  tidyr_1.1.4          tidyselect_1.1.1     tinytex_0.34        
-  tools_3.6.3          tzdb_0.1.2           utf8_1.2.2          
+  generics_0.1.0       ggforce_0.3.3        ggplot2_3.3.5       
+  glue_1.4.2           graphics_3.6.3       grDevices_3.6.3     
+  grid_3.6.3           gtable_0.3.0         highr_0.9           
+  hms_1.1.1            htmltools_0.5.2      irlba_2.3.3         
+  isoband_0.2.5        jquerylib_0.1.4      jsonlite_1.7.2      
+  knitr_1.36           labeling_0.4.2       lambda.r_1.2.4      
+  lattice_0.20-45      lifecycle_1.0.1      magrittr_2.0.1      
+  MASS_7.3-54          Matrix_1.3-4         methods_3.6.3       
+  mgcv_1.8.36          munsell_0.5.0        nlme_3.1.153        
+  pillar_1.6.3         pkgconfig_2.0.3      png_0.1-7           
+  polyclip_1.10-0      prettyunits_1.1.1    progress_1.2.2      
+  purrr_0.3.4          R6_2.5.1             rappdirs_0.3.3      
+  RColorBrewer_1.1.2   Rcpp_1.0.7           RcppAnnoy_0.0.19    
+  RcppEigen_0.3.3.9.1  RcppProgress_0.4.2   readr_2.0.2         
+  rlang_0.4.11         rmarkdown_2.11       RSpectra_0.16.0     
+  sass_0.4.0           scales_1.1.1         sitmo_2.0.1         
+  splines_3.6.3        stats_3.6.3          stringi_1.7.5       
+  stringr_1.4.0        tibble_3.1.5         tidyr_1.1.4         
+  tidyselect_1.1.1     tinytex_0.34         tools_3.6.3         
+  tweenr_1.0.2         tzdb_0.1.2           utf8_1.2.2          
   utils_3.6.3          uwot_0.1.10          vctrs_0.3.8         
   VennDiagram_1.6.20   viridisLite_0.4.0    vroom_1.5.5         
   withr_2.4.2          xfun_0.26            yaml_2.2.1          

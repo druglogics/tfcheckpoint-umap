@@ -28,4 +28,5 @@ fig:tfch2-umap-go-only-iea
 fig:tfch2-umap-combined
 fig:tfch2-umap-go-2nd-cotf-coloring
 fig:tfch2-boxified-umap
+fig:tfch2-boxified-umap2
 fig:tfch2-umap-go-deeptf-coloring
