@@ -4,6 +4,7 @@ library(tidyr)
 library(readr)
 library(uwot)
 library(ggplot2)
+library(ggforce)
 
 # Read data in TFch2 (GO data from November 8th) => 3842 proteins
 # Format
@@ -652,6 +653,72 @@ cluster_data_tbl = cluster_data_tbl %>% mutate(cluster_id_new = case_when(
 cluster_data_tbl %>%
   dplyr::select(protein_id:cluster_id_new) %>%
   readr::write_csv(file = 'data/tfch2_umap_20n_GO_cluster_annot.csv')
+
+# full GO dataset + boxify clusters with new cluster id names + add superclusters
+png_file   = 'img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes_new_cluster_ids.png'
+pdf_file   = 'img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes_new_cluster_ids.pdf'
+
+# add supercluster description (1 => non-DbTF, 2 => DbTF)
+cluster_data_tbl = cluster_data_tbl %>%
+  mutate(desc = case_when(
+    grepl(pattern = '1', x = cluster_id_new) ~ 'non-DbTF (1)',
+    TRUE ~ 'DbTF (2)'))
+
+go_umap %>%
+  `colnames<-` (c("X", "Y")) %>%
+  tibble::as_tibble() %>%
+  tibble::add_column(
+    protein_class = protein_class_2 %>% unname() %>% as.factor(),
+    desc          = cluster_data_tbl %>% pull(desc) %>% as.factor()) %>%
+  ggplot(aes(x = X, y = Y, color = protein_class)) +
+  geom_point(size = 0.1) +
+  scale_colour_brewer(palette = "Set1") +
+  guides(colour = guide_legend(title = "Class",
+    label.theme = element_text(size = 12),
+    override.aes = list(shape = 19, size = 12))) +
+  labs(title = "TFcheckpoint2 (GO) - UMAP (20 Neighbors)") +
+  # 1B cluster
+  annotate("rect", xmin = -21, xmax = -19, ymin = -4, ymax = -2,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = -22, y = -5, size = 8, label = "B") +
+  # 1A cluster
+  annotate("rect", xmin = -17, xmax = -9, ymin = -10, ymax = -3,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = -13, y = -1, size = 8, label = "A") +
+  # 2E cluster
+  annotate("rect", xmin = 18, xmax = 20, ymin = 11.5, ymax = 13.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 16.5, y = 12.5, size = 8, label = "E") +
+  # 2C cluster
+  annotate("rect", xmin = 18.3, xmax = 20.3, ymin = 15.5, ymax = 17.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 17, y = 16.5, size = 8, label = "C") +
+  # 2F cluster
+  annotate("rect", xmin = 23, xmax = 26, ymin = 16.5, ymax = 18.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 24.5, y = 20, size = 8, label = "F") +
+  # 2A cluster
+  annotate("rect", xmin = 21, xmax = 27, ymin = 10, ymax = 14.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 28.5, y = 12.5, size = 8, label = "A") +
+  # 2D cluster
+  annotate("rect", xmin = 26, xmax = 29, ymin = 6.6, ymax = 8.5,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 28, y = 5, size = 8, label = "D") +
+  # 2B cluster
+  annotate("rect", xmin = 21, xmax = 24, ymin = 4.5, ymax = 9,
+    alpha = 0.05, size = 0.3, color = 'black') +
+  annotate("text", x = 19.5, y = 7, size = 8, label = "B") +
+  # add ellipses
+  ggforce::geom_mark_ellipse(
+    aes(group = desc, description = desc),
+    expand = unit(8, "mm"), show.legend = FALSE, label.fontsize = 14) +
+  theme_classic() +
+  xlim(-25, 30) + # do not obscure eclipses
+  ylim(-12, 22) +
+  theme(plot.title = element_text(hjust = 0.5))
+ggsave(filename = png_file, width = 7, height = 5)
+ggsave(filename = pdf_file, width = 7, height = 5, device = cairo_pdf)
 
 # no IEA GO dataset
 umap_file = 'data/tfc2_umap_20n_go_no_iea.rds'

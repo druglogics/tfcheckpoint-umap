@@ -23,6 +23,7 @@ library(readr)
 library(ggplot2)
 library(uwot)
 library(VennDiagram)
+library(ggforce)
 ```
 
 # Intro {-}
@@ -470,6 +471,13 @@ For the results attained with **the full GO matrix**, we boxify UMAP's clusters 
 
 ```{r tfch2-boxified-umap, fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using all GO terms. 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2). Boxes correspond to the 8 UMAP clusters.'}
 knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes.png')
+```
+
+:::{#boxified-umap .blue-box}
+Using a more hierarchical renaming convention:
+:::
+```{r tfch2-boxified-umap2, fig.cap = 'Unsupervised UMAP of the TFcheckpoint v2.0 dataset annotated using all GO terms. 20 neighbors. Data points (proteins) have been colored according to their respective class annotation (2). Boxes correspond to the 8 UMAP clusters. Ellipses correspond to 2 protein superclusters. Subclusters are annotated using alphabetical letters and correspond to increasing cluster sizes.'}
+knitr::include_graphics(path = 'img/tfch2-GO/tfc2_umap_20n_go_class_2_with_boxes_new_cluster_ids.png')
 ```
 
 ## DeepTF color annotation in UMAP using GO embeddings {-}
