@@ -181,7 +181,7 @@ rowSums(protein_go_no_iea_mat) %>% sort(decreasing = T) %>% head(20) # less GO t
 
 ####################################
 # Read GREEKC DbTF list            #
-# See commit 6cd92c8 for more info #
+# See commit 910b52f for more info #
 ####################################
 greekc_dbtfs_tbl = readr::read_csv(file = 'data/dbTF_online_02112021.csv',
   col_select = c("id", "symbol"))
