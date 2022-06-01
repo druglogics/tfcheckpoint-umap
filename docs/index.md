@@ -1,7 +1,7 @@
 ---
 title: "TFcheckpoint Dataset visualization using UMAP"
 author: "[John Zobolas](https://github.com/bblodfon)"
-date: "Last updated: 06 December, 2021"
+date: "Last updated: 17 December, 2021"
 description: "Description"
 url: 'https\://druglogics.github.io/tfcheckpoint-umap/'
 github-repo: "druglogics/tfcheckpoint-umap"
@@ -532,7 +532,7 @@ We show how to expand the GO and InterPro datasets to 0-1 matrices, how we annot
 ## Protein Class Annotation {-#class-annot}
 
 Each protein in TFch2 can belong to one of the following 4 classes: `DbTF`, `coTF`, `Both` or `None`.
-Proteins were labeled as **DNA-binding transcription factors** if they belonged to the online list provided in [@Lovering2021] (retrieved 2/11/2021).
+Proteins were labeled as **DNA-binding transcription factors** if they belonged to the [online list](https://www.ebi.ac.uk/QuickGO/services/geneproduct/targetset/dbTF) provided in [@Lovering2021] (retrieved 2/11/2021, see file [here](https://github.com/druglogics/tfcheckpoint-umap/blob/main/data/dbTF_online_02112021.csv)).
 For **coTF labeling**, we used two different annotation strategies explained in the two subsections below.
 Proteins that had both the `DbTF` and `coTF` labels were classified as `Both` and as `None` if they had neither.
 
